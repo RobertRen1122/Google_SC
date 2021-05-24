@@ -188,8 +188,19 @@ void Server::newConnection(){
             std::bind(&Server::attemptSignup, this, client, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3));
     connect(client, &ServerSocket::changeProfile, this,
             std::bind(&Server::changeProfile, this, client, std::placeholders::_1));
+    connect(client, &ServerSocket::signout, this, &Server::signout);
     clients.append(client);
     qDebug() << "New client Connected";
+}
+
+void Server::signout(QString &ID){
+    active_users.removeOne(ID);
+
+    qDebug()<<"Current users:";
+    foreach(const QString& ID, active_users) {
+        qDebug()<<ID<<": "<<all_users[ID]["username"];
+    }
+    qDebug()<<"";
 }
 
 void Server::userConnectionError(ServerSocket *client, QAbstractSocket::SocketError socketError){

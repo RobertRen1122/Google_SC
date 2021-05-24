@@ -10,6 +10,7 @@ class Client : public QObject{
 public:
     explicit Client(QObject *parent = nullptr);
     void connectToServer();
+    void signout();
 
     QHash<QString,QString> profile;
     void updateProfile();
@@ -39,7 +40,6 @@ public slots:
 
 private slots:
     void onReadyRead();
-
 
 };
 

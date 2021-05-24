@@ -25,16 +25,7 @@ LoginWindow::LoginWindow(QWidget *parent) :
     ui->_or_text_signup->hide();
     ui->google_signup->hide();
 
-    QFile file("../Client/keep_me.json");
-    file.open(QIODevice::ReadOnly | QIODevice::Text);
-    QJsonDocument data = QJsonDocument::fromJson(file.readAll());
-    file.close();
-    QJsonObject keep_json = data.object();
-    ui->Keep_me->setChecked(keep_json.value("keep_me").toBool());
-    if (keep_json.value("keep_me").toBool()){
-        ui->username->setText(keep_json.value("username").toString());
-        ui->password->setText(keep_json.value("password").toString());
-    }
+    keep_me();
 
     // alignment adjustment
     ui->username->setAlignment(Qt::AlignCenter);
@@ -191,7 +182,18 @@ void LoginWindow::loggedIn(){
     }
 }
 
-
+void LoginWindow::keep_me(){
+    QFile file("../Client/keep_me.json");
+    file.open(QIODevice::ReadOnly | QIODevice::Text);
+    QJsonDocument data = QJsonDocument::fromJson(file.readAll());
+    file.close();
+    QJsonObject keep_json = data.object();
+    ui->Keep_me->setChecked(keep_json.value("keep_me").toBool());
+    if (keep_json.value("keep_me").toBool()){
+        ui->username->setText(keep_json.value("username").toString());
+        ui->password->setText(keep_json.value("password").toString());
+    }
+}
 
 
 void LoginWindow::on_goto_signup_clicked(){
@@ -236,6 +238,7 @@ void LoginWindow::on_back_clicked()
     ui->google_signup->hide();
     ui->_or_text->show();
     ui->google->show();
+    keep_me();
 }
 
 void LoginWindow::displayError(const QString &error){

@@ -251,5 +251,15 @@ void MainWindow::on_settingbutton_clicked()
 
 void MainWindow::on_dictionary_2_clicked()
 {
-   ui->stackedWidget->setCurrentWidget(ui->dictionary);
+    ui->stackedWidget->setCurrentWidget(ui->dictionary);
+}
+
+
+void MainWindow::on_signout_clicked()
+{
+    ui->stackedWidget->setCurrentWidget(ui->dictionary);
+    this->hide();
+    login->show();
+    login->keep_me();
+    client->signout();
 }

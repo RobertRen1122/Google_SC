@@ -121,8 +121,11 @@ void ServerSocket::jsonReceived(const QJsonObject &data)
             }
         }
         emit changeProfile(profile);
+    //signout
+    }else if (typeVal.toString().compare(QLatin1String("signout"))==0) {
+        emit signout(ID);
+        ID="";
     }
-
 }
 
 

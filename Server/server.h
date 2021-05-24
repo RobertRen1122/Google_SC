@@ -26,6 +26,7 @@ signals:
 private slots:
     void newConnection();
     void userConnectionError(ServerSocket* client, QAbstractSocket::SocketError socketError);
+    void signout(QString &ID);
 
     void attemptLogin(ServerSocket* client, const QString &username, const QString &password);
     void attemptSignup(ServerSocket* client, const QString &email, const QString &username, const QString &password);

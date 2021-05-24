@@ -18,6 +18,7 @@ public:
     bool validate_email(const QString &email);
     bool validate_pwd(const QString &password);
 
+    void keep_me();
 private:
     Ui::LoginWindow *ui;
     QPoint m_startPoint;

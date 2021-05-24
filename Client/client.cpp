@@ -105,6 +105,16 @@ void Client::attemptSignup(const QString &email,const QString &username,const QS
     clientStream << QJsonDocument(message).toJson();
 }
 
+void Client::signout(){
+    QDataStream clientStream(socket);
+    clientStream.setVersion(QDataStream::Qt_5_7);
+    // Create the JSON we want to send
+    QJsonObject message;
+    message[QStringLiteral("type")] = QStringLiteral("signout");
+    // send the JSON using QDataStream
+    clientStream << QJsonDocument(message).toJson();
+}
+
 // ------------------------------ helper functions ------------------------------
 
 void Client::onReadyRead()

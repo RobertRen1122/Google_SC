@@ -40,6 +40,7 @@ private slots:
     void on_settingbutton_clicked();
     void on_dictionary_2_clicked();
     void on_changeProfile_clicked();
+    void on_signout_clicked();
 };
 
 

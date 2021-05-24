@@ -27,6 +27,7 @@ private:
 signals:
     //QTcpSocket signals
     void connectionError(QAbstractSocket::SocketError socketError);
+    void signout(QString &ID);
     //signals fired after analyzing message from the client
     void attemptLogin(const QString &username,const QString &password);
     void attemptSignup(const QString &email,const QString &username,const QString &password);
