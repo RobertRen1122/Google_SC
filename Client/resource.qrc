@@ -1,0 +1,13 @@
+<RCC>
+    <qresource prefix="/images">
+        <file>pic/padlock.png</file>
+        <file>pic/profile.png</file>
+        <file>pic/google.png</file>
+        <file>pic/fingerprint.png</file>
+        <file>pic/thumb-up.png</file>
+        <file>pic/left-arrow.png</file>
+        <file>pic/left-arrow1.png</file>
+        <file>pic/settings (1).png</file>
+        <file>pic/edit.png</file>
+    </qresource>
+</RCC>

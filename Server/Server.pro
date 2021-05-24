@@ -21,3 +21,6 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 HEADERS += \
     server.h \
     serversocket.h
+
+DISTFILES += \
+    all_users.json

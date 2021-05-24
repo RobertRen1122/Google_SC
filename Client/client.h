@@ -11,6 +11,9 @@ public:
     explicit Client(QObject *parent = nullptr);
     void connectToServer();
 
+    QHash<QString,QString> profile;
+    void updateProfile();
+
 private:
     QTcpSocket* socket;
     void jsonReceived(const QJsonObject &data);
@@ -20,15 +23,17 @@ signals:
     void connected();
     void serverError(QAbstractSocket::SocketError socketError);
     //signals fired after analyzing message from the server
-    //void userError(const QString &reason);
-    //void loggedIn();
+    void loginError(const QString &reason);
+    void loggedIn();
+    void informationRecieved();
     //void messageReceived(const QString &sender, const QString &text);
+    void profileChanged();
+    void profileError(const QString &reason);
 
 public slots:
-    //void attemptSignup(const QString &username,const QString &password);
-    //void attemptLogin(const QString &username,const QString &password);
+    void attemptLogin(const QString &username,const QString &password);
+    void attemptSignup(const QString &email,const QString &username,const QString &password);
 
-    //void updateProfile();
     //void newConversation();
     //void sendMessage();
 
