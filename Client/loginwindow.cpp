@@ -180,3 +180,4 @@ void LoginWindow::mouseMoveEvent(QMouseEvent *event)
 {
     this->move(event->globalPos() + m_startPoint);
 }
+

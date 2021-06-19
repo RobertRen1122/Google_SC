@@ -105,9 +105,8 @@ MainWindow::MainWindow(QWidget *parent) :
         item->setTextAlignment(Qt::AlignCenter);
     }
 
-
-
 }
+
 MainWindow::~MainWindow()
 {
     delete loading;
@@ -129,8 +128,6 @@ void MainWindow::loginError(const QString &reason){
 }
 
 void MainWindow::loggedIn(){
-
-
     login->hide();
     loading->show();
 }
@@ -384,7 +381,14 @@ void MainWindow::on_settingbutton_clicked()
     ui->stackedWidget->setCurrentWidget(ui->Profile);
 }
 
-void MainWindow::on_dictionary_2_clicked()
-{
+void MainWindow::on_dictionary_2_clicked(){
    ui->stackedWidget->setCurrentWidget(ui->dictionary);
 }
+
+
+void MainWindow::on_signout_clicked()
+{
+   this->hide();
+   login->show();
+}
+

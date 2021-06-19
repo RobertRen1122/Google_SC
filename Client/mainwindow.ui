@@ -582,7 +582,7 @@ background-color: none;
          <item>
           <widget class="QStackedWidget" name="stackedWidget">
            <property name="currentIndex">
-            <number>1</number>
+            <number>0</number>
            </property>
            <widget class="QWidget" name="Profile">
             <property name="styleSheet">
@@ -867,8 +867,8 @@ background-color: none;
                              <rect>
                               <x>0</x>
                               <y>0</y>
-                              <width>482</width>
-                              <height>843</height>
+                              <width>481</width>
+                              <height>745</height>
                              </rect>
                             </property>
                             <layout class="QVBoxLayout" name="verticalLayout_11">
