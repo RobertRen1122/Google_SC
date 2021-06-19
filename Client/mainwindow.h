@@ -23,6 +23,12 @@ private:
     LoginWindow* login;
     Client* client;
     QPoint m_startPoint;
+    // Added for resizing window
+    QPoint mpos; //For dragging, relative mouse position to upper left
+    QPoint global_mpos; //For resizing, global mouse position at mouse click
+    QPoint rs_mpos; //for resizing
+    int storeWidth; //fix window size at mouseclick for resizing
+    int storeHeight;
 
 signals:
 
