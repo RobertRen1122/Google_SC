@@ -37,58 +37,67 @@ border-radius: 20px;
      <layout class="QVBoxLayout" name="verticalLayout" stretch="1,25">
       <item>
        <widget class="QWidget" name="title" native="true">
-        <widget class="QPushButton" name="close_butt">
-         <property name="geometry">
-          <rect>
-           <x>1181</x>
-           <y>10</y>
-           <width>24</width>
-           <height>24</height>
-          </rect>
-         </property>
-         <property name="font">
-          <font>
-           <family>Poppins</family>
-           <weight>75</weight>
-           <bold>true</bold>
-          </font>
-         </property>
-         <property name="styleSheet">
-          <string notr="true">QPushButton{
-border: 1px solid #707070;
-border-radius: 10px;
-background:#DD6243;
-color: #707070;
-}
-QPushButton:hover{
-border: 1px solid #E8907A;
-border-radius: 10px;
-background:#E8907A;
-color: #FFFBDB;
-}</string>
-         </property>
-         <property name="text">
-          <string>x</string>
-         </property>
-        </widget>
-        <widget class="QPushButton" name="minimize_butt">
-         <property name="geometry">
-          <rect>
-           <x>1150</x>
-           <y>10</y>
-           <width>24</width>
-           <height>24</height>
-          </rect>
-         </property>
-         <property name="font">
-          <font>
-           <family>Poppins</family>
-           <weight>75</weight>
-           <bold>true</bold>
-          </font>
-         </property>
-         <property name="styleSheet">
-          <string notr="true">QPushButton{
+        <property name="layoutDirection">
+         <enum>Qt::LeftToRight</enum>
+        </property>
+        <layout class="QHBoxLayout" name="horizontalLayout_5">
+         <item>
+          <widget class="QLabel" name="label_2">
+           <property name="text">
+            <string>Hi, there.</string>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignCenter</set>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QWidget" name="titlebuttons" native="true">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="minimumSize">
+            <size>
+             <width>102</width>
+             <height>0</height>
+            </size>
+           </property>
+           <property name="maximumSize">
+            <size>
+             <width>102</width>
+             <height>16777215</height>
+            </size>
+           </property>
+           <property name="styleSheet">
+            <string notr="true"/>
+           </property>
+           <layout class="QHBoxLayout" name="horizontalLayout_4">
+            <item>
+             <widget class="QPushButton" name="minimize_butt">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="minimumSize">
+               <size>
+                <width>24</width>
+                <height>24</height>
+               </size>
+              </property>
+              <property name="font">
+               <font>
+                <family>Poppins</family>
+                <weight>75</weight>
+                <bold>true</bold>
+               </font>
+              </property>
+              <property name="styleSheet">
+               <string notr="true">QPushButton{
 border: 1px solid #707070;
 border-radius: 10px;
 background:#FFFBDB;
@@ -100,11 +109,96 @@ border-radius: 10px;
 background:#535249;
 color: #FFFBDB;
 }</string>
-         </property>
-         <property name="text">
-          <string>-</string>
-         </property>
-        </widget>
+              </property>
+              <property name="text">
+               <string>-</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QPushButton" name="minimize_butt_2">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="minimumSize">
+               <size>
+                <width>24</width>
+                <height>24</height>
+               </size>
+              </property>
+              <property name="font">
+               <font>
+                <family>Poppins</family>
+                <weight>75</weight>
+                <bold>true</bold>
+               </font>
+              </property>
+              <property name="styleSheet">
+               <string notr="true">QPushButton{
+border: 1px solid #707070;
+border-radius: 10px;
+background:#FFFBDB;
+color: #707070;
+}
+QPushButton:hover{
+border: 1px solid #535249;
+border-radius: 10px;
+background:#535249;
+color: #FFFBDB;
+}</string>
+              </property>
+              <property name="text">
+               <string>+</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QPushButton" name="close_butt">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="minimumSize">
+               <size>
+                <width>24</width>
+                <height>24</height>
+               </size>
+              </property>
+              <property name="font">
+               <font>
+                <family>Poppins</family>
+                <weight>75</weight>
+                <bold>true</bold>
+               </font>
+              </property>
+              <property name="styleSheet">
+               <string notr="true">QPushButton{
+border: 1px solid #707070;
+border-radius: 10px;
+background:#DD6243;
+color: #707070;
+}
+QPushButton:hover{
+border: 1px solid #E8907A;
+border-radius: 10px;
+background:#E8907A;
+color: #FFFBDB;
+}</string>
+              </property>
+              <property name="text">
+               <string>x</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </widget>
+         </item>
+        </layout>
        </widget>
       </item>
       <item>
@@ -582,7 +676,7 @@ background-color: none;
          <item>
           <widget class="QStackedWidget" name="stackedWidget">
            <property name="currentIndex">
-            <number>1</number>
+            <number>0</number>
            </property>
            <widget class="QWidget" name="Profile">
             <property name="styleSheet">
@@ -689,7 +783,8 @@ color: rgb(255, 255, 255);
                              </sizepolicy>
                             </property>
                             <property name="styleSheet">
-                             <string notr="true"/>
+                             <string notr="true">border-radius: 15px;
+</string>
                             </property>
                             <property name="text">
                              <string/>
@@ -789,7 +884,7 @@ QPushButton#signout:hover{
                              </rect>
                             </property>
                             <property name="text">
-                             <string>PushButton</string>
+                             <string>Save</string>
                             </property>
                            </widget>
                            <widget class="QLabel" name="profileError">
@@ -802,7 +897,7 @@ QPushButton#signout:hover{
                              </rect>
                             </property>
                             <property name="text">
-                             <string>TextLabel</string>
+                             <string>Error output</string>
                             </property>
                            </widget>
                           </widget>
@@ -894,7 +989,7 @@ background-color: none;
                               <x>0</x>
                               <y>0</y>
                               <width>482</width>
-                              <height>794</height>
+                              <height>843</height>
                              </rect>
                             </property>
                             <layout class="QVBoxLayout" name="verticalLayout_11">
