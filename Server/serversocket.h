@@ -10,14 +10,16 @@ class ServerSocket : public QObject{
 public:
     explicit ServerSocket(QObject *parent = nullptr);
     ~ServerSocket();
-
     void setSocket(QTcpSocket *socket);
     void disconnectFromClient();
 
-    void loginSuccessful();
+    void loginSuccessful(const QString &username);
     void loginError(const QString &reason);
+    QString ID;
 
     void sendPersonalInfo(QHash<QString,QString> &user);
+    void changeProfileSuccess();
+    void changeProfileError(const QString &reason, QHash<QString,QString> &profile);
 private:
     QTcpSocket *socket;
     void jsonReceived(const QJsonObject &data);
@@ -25,19 +27,15 @@ private:
 signals:
     //QTcpSocket signals
     void connectionError(QAbstractSocket::SocketError socketError);
+    void signout(QString &ID);
     //signals fired after analyzing message from the client
     void attemptLogin(const QString &username,const QString &password);
-    void attemptSignup(const QString &username,const QString &password);
-    //void changeProfile();
+    void attemptSignup(const QString &email,const QString &username,const QString &password);
+    void changeProfile(QHash<QString,QString> profile);
     //void newConversation();
 
 public slots:
-    //void loginSuccess(const QString &username,const QString &password);
-    //void userError(const QString &username,const QString &password);
 
-    //void profileInformation();
-    //void matchFound();
-    //void messageRecieved();
 
 private slots:
     void onReadyRead();

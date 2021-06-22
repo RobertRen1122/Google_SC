@@ -10,9 +10,11 @@ class Client : public QObject{
 public:
     explicit Client(QObject *parent = nullptr);
     void connectToServer();
+    void signout();
 
-    bool login;
     QHash<QString,QString> profile;
+    void updateProfile();
+
 private:
     QTcpSocket* socket;
     void jsonReceived(const QJsonObject &data);
@@ -26,18 +28,18 @@ signals:
     void loggedIn();
     void informationRecieved();
     //void messageReceived(const QString &sender, const QString &text);
+    void profileChanged();
+    void profileError(const QString &reason);
 
 public slots:
     void attemptLogin(const QString &username,const QString &password);
-    void attemptSignup(const QString &username,const QString &password);
+    void attemptSignup(const QString &email,const QString &username,const QString &password);
 
-    //void updateProfile();
     //void newConversation();
     //void sendMessage();
 
 private slots:
     void onReadyRead();
-
 
 };
 

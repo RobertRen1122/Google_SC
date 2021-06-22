@@ -9,7 +9,7 @@
 ServerSocket::ServerSocket(QObject *parent) :
     QObject(parent)
 {
-
+    ID="";
 }
 
 void ServerSocket::setSocket(QTcpSocket *clientSocket){
@@ -24,6 +24,29 @@ ServerSocket::~ServerSocket(){
     delete socket;
 }
 
+void ServerSocket::loginSuccessful(const QString &ID){
+    this->ID=ID;
+    QDataStream clientStream(socket);
+    clientStream.setVersion(QDataStream::Qt_5_7);
+    // Create the JSON we want to send
+    QJsonObject message;
+    message[QStringLiteral("type")] = QStringLiteral("login");
+    message[QStringLiteral("success")] = true;
+    // send the JSON using QDataStream
+    clientStream << QJsonDocument(message).toJson();
+}
+
+void ServerSocket::loginError(const QString &reason){
+    QDataStream clientStream(socket);
+    clientStream.setVersion(QDataStream::Qt_5_7);
+    // Create the JSON we want to send
+    QJsonObject message;
+    message[QStringLiteral("type")] = QStringLiteral("login");
+    message[QStringLiteral("success")] = false;
+    message[QStringLiteral("reason")] = reason;
+    // send the JSON using QDataStream
+    clientStream << QJsonDocument(message).toJson();
+}
 
 void ServerSocket::sendPersonalInfo(QHash<QString,QString> &user){
     QDataStream clientStream(socket);
@@ -39,34 +62,40 @@ void ServerSocket::sendPersonalInfo(QHash<QString,QString> &user){
     clientStream << QJsonDocument(message).toJson();
 }
 
-
-
-void ServerSocket::loginError(const QString &reason){
+void ServerSocket::changeProfileSuccess(){
     QDataStream clientStream(socket);
     clientStream.setVersion(QDataStream::Qt_5_7);
     // Create the JSON we want to send
     QJsonObject message;
-    message[QStringLiteral("type")] = QStringLiteral("login");
-    message[QStringLiteral("success")] = false;
-    message[QStringLiteral("reason")] = reason;
-    // send the JSON using QDataStream
-    clientStream << QJsonDocument(message).toJson();
-}
-
-void ServerSocket::loginSuccessful(){
-    QDataStream clientStream(socket);
-    clientStream.setVersion(QDataStream::Qt_5_7);
-    // Create the JSON we want to send
-    QJsonObject message;
-    message[QStringLiteral("type")] = QStringLiteral("login");
+    message[QStringLiteral("type")] = QStringLiteral("profile change");
     message[QStringLiteral("success")] = true;
     // send the JSON using QDataStream
     clientStream << QJsonDocument(message).toJson();
 }
 
+void ServerSocket::changeProfileError(const QString &reason, QHash<QString,QString> &profile){
+    QDataStream clientStream(socket);
+    clientStream.setVersion(QDataStream::Qt_5_7);
+    // Create the JSON we want to send
+    QJsonObject message;
+    message[QStringLiteral("type")] = QStringLiteral("profile change");
+    message[QStringLiteral("success")] = false;
+    message[QStringLiteral("reason")] = reason;
+    foreach(const QString& key, profile.keys()) {
+        message[key] = profile[key];
+    }
+    // send the JSON using QDataStream
+    clientStream << QJsonDocument(message).toJson();
+}
 
 void ServerSocket::jsonReceived(const QJsonObject &data)
 {
+    qDebug()<<"message";
+    foreach(const QString& key, data.keys()){
+        qDebug()<<key<<"->"<<data.value(key).toString();
+    }
+    qDebug()<<"";
+
     const QJsonValue typeVal = data.value(QLatin1String("type"));
     // message regarding login
     if (typeVal.toString().compare(QLatin1String("login"))==0) {
@@ -76,11 +105,26 @@ void ServerSocket::jsonReceived(const QJsonObject &data)
         const QString password = passwordVal.toString();
         emit attemptLogin(username,password);
     }else if (typeVal.toString().compare(QLatin1String("signup"))==0) {
+        const QJsonValue emailVal = data.value(QLatin1String("email"));
+        const QString email = emailVal.toString();
         const QJsonValue usernameVal = data.value(QLatin1String("username"));
         const QString username = usernameVal.toString();
         const QJsonValue passwordVal = data.value(QLatin1String("password"));
         const QString password = passwordVal.toString();
-        emit attemptSignup(username,password);
+        emit attemptSignup(email,username,password);
+    //change profile
+    }else if (typeVal.toString().compare(QLatin1String("profile change"))==0) {
+        QHash<QString,QString> profile;
+        foreach(const QString& key, data.keys()){
+            if(key!="type"){
+                profile.insert(key,data.value(key).toString());
+            }
+        }
+        emit changeProfile(profile);
+    //signout
+    }else if (typeVal.toString().compare(QLatin1String("signout"))==0) {
+        emit signout(ID);
+        ID="";
     }
 }
 

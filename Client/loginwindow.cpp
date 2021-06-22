@@ -6,6 +6,10 @@
 #include <QWidget>
 #include <QPainter>
 #include <QPainterPath>
+#include <QFile>
+#include <QJsonDocument>
+#include <QJsonObject>
+#include <QJsonValue>
 
 LoginWindow::LoginWindow(QWidget *parent) :
     QWidget(parent),
@@ -18,9 +22,7 @@ LoginWindow::LoginWindow(QWidget *parent) :
     ui->back->hide();
     ui->pwd_confirmation->hide();
     ui->reconfirm_logo->hide();
-    ui->_or_text_signup->hide();
-    ui->google_signup->hide();
-
+    keep_me();
 
     // alignment adjustment
     ui->username->setAlignment(Qt::AlignCenter);
@@ -97,7 +99,6 @@ LoginWindow::LoginWindow(QWidget *parent) :
     opacity->setOpacity(0.9);
     (ui->background)->setGraphicsEffect(opacity);
 
-
     setWindowFlags(Qt::FramelessWindowHint);
     setAttribute(Qt::WA_NoSystemBackground);
     setAttribute(Qt::WA_TranslucentBackground);
@@ -108,12 +109,89 @@ LoginWindow::~LoginWindow(){
 }
 
 
+bool LoginWindow::validate_email(const QString &email){
+    //ADD STUFF HERE
+    if (email.contains("@")==false){
+        return false;
+    }
+    return true;
+}
+
+bool LoginWindow::validate_pwd(const QString &password){
+    //ADD STUFF HERE
+    if (password==""){
+        return false;
+    }
+    return true;
+}
+
+void LoginWindow::on_signup_clicked(){
+    ui->error->setText("");
+    QString email = ui->email->text();
+    QString username = ui->username->text();
+    QString password = ui->password->text();
+    QString confirm = ui->pwd_confirmation->text();
+    if (!validate_email(email)){
+        ui->error->setText("Email is not valid");
+    }else if(username==""){
+        ui->error->setText("Username is empty");
+    }else if (!validate_pwd(password)){
+        ui->error->setText("Password is not valid");
+    }else if (password!=confirm){
+        ui->error->setText("Password did not match");
+    }else{
+        emit attemptSignup(email,username,password);
+    }
+}
+
 void LoginWindow::on_login_clicked(){
     ui->error->setText("");
     QString username = ui->username->text();
     QString password = ui->password->text();
     emit attemptLogin(username,password);
 }
+
+void LoginWindow::loggedIn(){
+    if (ui->Keep_me->isChecked()){
+        QJsonObject keep_json;
+        keep_json.insert("username",ui->username->text());
+        keep_json.insert("password",ui->password->text());
+        keep_json.insert("keep_me",true);
+        QJsonDocument data;
+        data.setObject(keep_json);
+        //save to json file
+        QFile file("../Client/keep_me.json");
+        file.open(QFile::WriteOnly | QFile::Text | QFile::Truncate);
+        file.write(data.toJson());
+        file.close();
+    }else{
+        QJsonObject keep_json;
+        keep_json.insert("username",ui->username->text());
+        keep_json.insert("password",ui->password->text());
+        keep_json.insert("keep_me",false);
+        QJsonDocument data;
+        data.setObject(keep_json);
+        //save to json file
+        QFile file("../Client/keep_me.json");
+        file.open(QFile::WriteOnly | QFile::Text | QFile::Truncate);
+        file.write(data.toJson());
+        file.close();
+    }
+}
+
+void LoginWindow::keep_me(){
+    QFile file("../Client/keep_me.json");
+    file.open(QIODevice::ReadOnly | QIODevice::Text);
+    QJsonDocument data = QJsonDocument::fromJson(file.readAll());
+    file.close();
+    QJsonObject keep_json = data.object();
+    ui->Keep_me->setChecked(keep_json.value("keep_me").toBool());
+    if (keep_json.value("keep_me").toBool()){
+        ui->username->setText(keep_json.value("username").toString());
+        ui->password->setText(keep_json.value("password").toString());
+    }
+}
+
 
 void LoginWindow::on_goto_signup_clicked(){
     ui->error->setText("");
@@ -130,10 +208,8 @@ void LoginWindow::on_goto_signup_clicked(){
     ui->email_logo->show();
     ui->pwd_confirmation->show();
     ui->reconfirm_logo->show();
-    ui->_or_text_signup->show();
-    ui->google_signup->show();
-    ui->_or_text->hide();
-    ui->google->hide();
+    ui->username->setPlaceholderText("Enter Username");
+
 
 }
 
@@ -153,22 +229,15 @@ void LoginWindow::on_back_clicked()
     ui->forgot_password->show();
     ui->pwd_confirmation->hide();
     ui->reconfirm_logo->hide();
-    ui->_or_text_signup->hide();
-    ui->google_signup->hide();
-    ui->_or_text->show();
-    ui->google->show();
-}
+    ui->username->setPlaceholderText("Enter Username/ Email");
 
-void LoginWindow::on_signup_clicked(){
-    ui->error->setText("");
-    QString username = ui->username->text();
-    QString password = ui->password->text();
-    emit attemptSignup(username,password);
+    keep_me();
 }
 
 void LoginWindow::displayError(const QString &error){
     ui->error->setText(error);
 }
+
 void LoginWindow::mousePressEvent(QMouseEvent *event)
     {
         if (event->button() == Qt::LeftButton) {
@@ -180,4 +249,3 @@ void LoginWindow::mouseMoveEvent(QMouseEvent *event)
 {
     this->move(event->globalPos() + m_startPoint);
 }
-

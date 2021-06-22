@@ -11,8 +11,7 @@ CONFIG -= app_bundle
 SOURCES += \
         main.cpp \
         server.cpp \
-        serversocket.cpp \
-        user.cpp
+        serversocket.cpp
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
@@ -21,8 +20,7 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 
 HEADERS += \
     server.h \
-    serversocket.h \
-    user.h
+    serversocket.h
 
 DISTFILES += \
-    registered_users.json
+    all_users.json

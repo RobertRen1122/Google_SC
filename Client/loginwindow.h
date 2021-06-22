@@ -15,13 +15,20 @@ public:
     void mousePressEvent(QMouseEvent *event);
     void mouseMoveEvent(QMouseEvent *event);
 
+    bool validate_email(const QString &email);
+    bool validate_pwd(const QString &password);
+
+    void keep_me();
 private:
     Ui::LoginWindow *ui;
     QPoint m_startPoint;
 
 signals:
-    void attemptSignup(const QString &username,const QString &password);
+    void attemptSignup(const QString &email,const QString &username,const QString &password);
     void attemptLogin(const QString &username,const QString &password);
+
+public slots:
+    void loggedIn();
 
 private slots:
     void on_login_clicked();

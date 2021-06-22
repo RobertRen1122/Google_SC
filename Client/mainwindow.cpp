@@ -1,3 +1,4 @@
+
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
@@ -6,10 +7,6 @@
 #include <QCloseEvent>
 #include <QStyledItemDelegate>
 #include <QGraphicsDropShadowEffect>
-
-//#include <QApplication> // only for the timer
-//#include <QtGui>
-//#include <qobject.h>
 
 
 MainWindow::MainWindow(QWidget *parent) :
@@ -26,10 +23,12 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(login,&LoginWindow::attemptLogin, client,&Client::attemptLogin);
     connect(login,&LoginWindow::attemptSignup, client,&Client::attemptSignup);
     connect(client,&Client::loggedIn, this,&MainWindow::loggedIn);
+    connect(client,&Client::loggedIn, login,&LoginWindow::loggedIn);
     connect(client,&Client::loginError, this,&MainWindow::loginError);
+    //profile
     connect(client,&Client::informationRecieved, this,&MainWindow::startApplication);
-
-
+    connect(client,&Client::profileChanged, this,&MainWindow::profileChanged);
+    connect(client,&Client::profileError, this,&MainWindow::profileError);
 
     //initialization
     ui->setupUi(this);
@@ -43,6 +42,20 @@ MainWindow::MainWindow(QWidget *parent) :
     setWindowFlags(Qt::FramelessWindowHint);
     setAttribute(Qt::WA_NoSystemBackground);
     setAttribute(Qt::WA_TranslucentBackground);
+
+    /* stack widget
+    QHBoxLayout *layout = new QHBoxLayout(this);
+    QStackedWidget *stack = new QStackedWidget(this);
+    connect(sidebar, &Sidebar::show_profile,
+            stack, std::bind(&QStackedWidget::setCurrentIndex, stack, 0));
+    connect(sidebar, &Sidebar::show_chat,
+            stack, std::bind(&QStackedWidget::setCurrentIndex, stack, 1));
+    stack->addWidget(profile);
+    stack->addWidget(chat);
+    layout->addWidget(sidebar);
+    layout->addWidget(stack);
+    this->setLayout(layout);
+    */
 
     QGraphicsDropShadowEffect* shadowEffect = new QGraphicsDropShadowEffect(this);
     shadowEffect->setColor(QColor(0,0,0,120));
@@ -86,7 +99,6 @@ MainWindow::MainWindow(QWidget *parent) :
     palette5.setColor(QPalette::PlaceholderText, QColor(255,255,255,255));
     (ui->enter_email)->setPalette(palette5);
 
-
     ui->pro_comboBox->view()->window()->setWindowFlags(Qt::Popup|Qt::FramelessWindowHint|Qt::NoDropShadowWindowHint);
     ui->pro_comboBox->view()->window()->setAttribute(Qt::WA_TranslucentBackground);
     ui->language_1st_com->view()->window()->setWindowFlags(Qt::Popup|Qt::FramelessWindowHint|Qt::NoDropShadowWindowHint);
@@ -96,24 +108,19 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->language_3rd_com->view()->window()->setWindowFlags(Qt::Popup|Qt::FramelessWindowHint|Qt::NoDropShadowWindowHint);
     ui->language_3rd_com->view()->window()->setAttribute(Qt::WA_TranslucentBackground);
 
-
-
     client->connectToServer();
     for(int i = 0; i < ui->user_list->count(); ++i)
     {
         QListWidgetItem* item = ui->user_list->item(i);
         item->setTextAlignment(Qt::AlignCenter);
     }
-
 }
-
 MainWindow::~MainWindow()
 {
     delete loading;
     delete login;
     delete ui;
 }
-
 
 void MainWindow::startApplication(){
     loading->hide();
@@ -122,6 +129,30 @@ void MainWindow::startApplication(){
 
 }
 
+void MainWindow::profileError(const QString &reason){
+    ui->profileError->setText(reason);
+}
+
+void MainWindow::profileChanged(){
+    ui->profileError->setText("Profile changed!");
+}
+
+void MainWindow::on_changeProfile_clicked(){
+    if(ui->username_enter->text()==""){
+        ui->profileError->setText("username is not empty");
+    }else if(!login->validate_email(ui->enter_email->text())){
+        ui->profileError->setText("Email is not valid");
+    }else{
+        client->profile["username"]=ui->username_enter->text();
+        client->profile["email"]=ui->enter_email->text();
+        client->profile["intro"]=ui->textEdit->toPlainText();
+        client->profile["pronoun"]=ui->pro_comboBox->currentText();
+        client->profile["language1"]=ui->language_1st_com->currentText();
+        client->profile["language2"]=ui->language_2nd_com->currentText();
+        client->profile["language3"]=ui->language_3rd_com->currentText();
+        client->updateProfile();
+    }
+}
 
 void MainWindow::loginError(const QString &reason){
     login->displayError(reason);
@@ -192,8 +223,7 @@ void MainWindow::serverError(QAbstractSocket::SocketError socketError){
     this->close();
 }
 
-void MainWindow::mousePressEvent(QMouseEvent *event)
-    {
+void MainWindow::mousePressEvent(QMouseEvent *event){
         //commented out because we have other variables for resizing!
 //        if (event->button() == Qt::LeftButton) {
 //            m_startPoint = frameGeometry().topLeft() - event->globalPos();
@@ -219,7 +249,7 @@ void MainWindow::mousePressEvent(QMouseEvent *event)
              event->accept();
 
          }
-    }
+}
 
 void MainWindow::mouseMoveEvent(QMouseEvent *event)
 {
@@ -379,17 +409,28 @@ void MainWindow::mouseMoveEvent(QMouseEvent *event)
 void MainWindow::on_settingbutton_clicked()
 {
     ui->stackedWidget->setCurrentWidget(ui->Profile);
+
+    ui->profileError->setText("");
+    ui->username_enter->setText(client->profile["username"]);
+    ui->enter_email->setText(client->profile["email"]);
+    ui->textEdit->setText(client->profile["intro"]);
+    ui->pro_comboBox->setCurrentIndex(ui->pro_comboBox->findText(client->profile["pronoun"]));
+    ui->language_1st_com->setCurrentIndex(ui->language_1st_com->findText(client->profile["language1"]));
+    ui->language_2nd_com->setCurrentIndex(ui->language_2nd_com->findText(client->profile["language2"]));
+    ui->language_3rd_com->setCurrentIndex(ui->language_3rd_com->findText(client->profile["language3"]));
 }
 
-void MainWindow::on_dictionary_2_clicked(){
-   ui->stackedWidget->setCurrentWidget(ui->dictionary);
+void MainWindow::on_dictionary_2_clicked()
+{
+    ui->stackedWidget->setCurrentWidget(ui->dictionary);
 }
 
 
 void MainWindow::on_signout_clicked()
 {
-   this->hide();
-   login->show();
+    ui->stackedWidget->setCurrentWidget(ui->dictionary);
+    this->hide();
+    login->show();
+    login->keep_me();
+    client->signout();
 }
-
-//good job
