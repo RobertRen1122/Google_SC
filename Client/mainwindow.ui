@@ -798,8 +798,7 @@ color: rgb(255, 255, 255);
                              </sizepolicy>
                             </property>
                             <property name="styleSheet">
-                             <string notr="true">border-radius: 15px;
-border:1px solid</string>
+                             <string notr="true">border-radius: 15px;</string>
                             </property>
                             <property name="text">
                              <string/>
