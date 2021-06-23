@@ -7,7 +7,7 @@
 #include <QCloseEvent>
 #include <QStyledItemDelegate>
 #include <QGraphicsDropShadowEffect>
-
+#include <QFileDialog>
 
 MainWindow::MainWindow(QWidget *parent) :
     QWidget(parent),
@@ -451,5 +451,24 @@ void MainWindow::on_maximize_butt_clicked()
 void MainWindow::on_minimize_butt_clicked()
 {
     this->setWindowState(this->windowState()^Qt::WindowMinimized);
+}
+
+
+
+void MainWindow::on_changeprofilepic_clicked()
+{
+    QString filename = QFileDialog::getOpenFileName(this, tr("Choose"), "", tr("Images (*.png *.jpg *.jpeg *bmp *.gif)"));
+    if (QString::compare(filename, QString()) != 0){
+        QImage image;
+        bool valid = image.load(filename);
+        if(valid){
+            image = image.scaledToWidth(ui->displayprofile->width(), Qt::SmoothTransformation);
+            ui->displayprofile->setPixmap(QPixmap::fromImage(image));
+            ui->user_pic->setPixmap(QPixmap::fromImage(image));
+        }
+        else{
+            //handle error
+        }
+    }
 }
 
