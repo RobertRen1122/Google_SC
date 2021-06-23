@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1250</width>
+    <width>1350</width>
     <height>950</height>
    </rect>
   </property>
@@ -91,9 +91,9 @@ border-radius: 20px;
               </property>
               <property name="font">
                <font>
-                <family>Webdings</family>
-                <weight>50</weight>
-                <bold>false</bold>
+                <family>Poppins</family>
+                <weight>75</weight>
+                <bold>true</bold>
                </font>
               </property>
               <property name="styleSheet">
@@ -111,7 +111,7 @@ color: #FFFBDB;
 }</string>
               </property>
               <property name="text">
-               <string>0</string>
+               <string>-</string>
               </property>
              </widget>
             </item>
@@ -206,9 +206,12 @@ color: #FFFBDB;
         <property name="styleSheet">
          <string notr="true"/>
         </property>
-        <layout class="QHBoxLayout" name="horizontalLayout" stretch="0,0">
+        <layout class="QHBoxLayout" name="horizontalLayout" stretch="0,0,0">
          <property name="spacing">
-          <number>25</number>
+          <number>10</number>
+         </property>
+         <property name="leftMargin">
+          <number>9</number>
          </property>
          <property name="topMargin">
           <number>9</number>
@@ -676,7 +679,7 @@ background-color: none;
          <item>
           <widget class="QStackedWidget" name="stackedWidget">
            <property name="currentIndex">
-            <number>0</number>
+            <number>1</number>
            </property>
            <widget class="QWidget" name="Profile">
             <property name="styleSheet">
@@ -755,7 +758,7 @@ color: rgb(255, 255, 255);
                         <property name="styleSheet">
                          <string notr="true">background-color: none;</string>
                         </property>
-                        <layout class="QVBoxLayout" name="verticalLayout_9" stretch="6">
+                        <layout class="QVBoxLayout" name="verticalLayout_9" stretch="0">
                          <property name="spacing">
                           <number>9</number>
                          </property>
@@ -764,16 +767,28 @@ color: rgb(255, 255, 255);
                          </property>
                          <item>
                           <widget class="QWidget" name="widget_4" native="true">
+                           <property name="sizePolicy">
+                            <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
+                             <horstretch>0</horstretch>
+                             <verstretch>0</verstretch>
+                            </sizepolicy>
+                           </property>
+                           <property name="minimumSize">
+                            <size>
+                             <width>180</width>
+                             <height>0</height>
+                            </size>
+                           </property>
                            <property name="styleSheet">
                             <string notr="true">color: #FFFFFF;</string>
                            </property>
                            <widget class="QLabel" name="displayprofile">
                             <property name="geometry">
                              <rect>
-                              <x>40</x>
-                              <y>20</y>
-                              <width>150</width>
-                              <height>150</height>
+                              <x>30</x>
+                              <y>39</y>
+                              <width>131</width>
+                              <height>131</height>
                              </rect>
                             </property>
                             <property name="sizePolicy">
@@ -783,7 +798,8 @@ color: rgb(255, 255, 255);
                              </sizepolicy>
                             </property>
                             <property name="styleSheet">
-                             <string notr="true">border-radius: 75px;</string>
+                             <string notr="true">border-radius: 15px;
+</string>
                             </property>
                             <property name="text">
                              <string/>
@@ -798,8 +814,8 @@ color: rgb(255, 255, 255);
                            <widget class="QPushButton" name="changeprofilepic">
                             <property name="geometry">
                              <rect>
-                              <x>150</x>
-                              <y>20</y>
+                              <x>130</x>
+                              <y>40</y>
                               <width>36</width>
                               <height>36</height>
                              </rect>
@@ -827,9 +843,9 @@ border: 1px solid black;
                            <widget class="QPushButton" name="signout">
                             <property name="geometry">
                              <rect>
-                              <x>40</x>
+                              <x>30</x>
                               <y>190</y>
-                              <width>150</width>
+                              <width>131</width>
                               <height>54</height>
                              </rect>
                             </property>
@@ -876,11 +892,29 @@ QPushButton#signout:hover{
                            <widget class="QPushButton" name="changeProfile">
                             <property name="geometry">
                              <rect>
-                              <x>0</x>
-                              <y>310</y>
-                              <width>216</width>
-                              <height>21</height>
+                              <x>30</x>
+                              <y>260</y>
+                              <width>131</width>
+                              <height>31</height>
                              </rect>
+                            </property>
+                            <property name="font">
+                             <font>
+                              <family>Poppins</family>
+                              <pointsize>10</pointsize>
+                              <weight>75</weight>
+                              <bold>true</bold>
+                             </font>
+                            </property>
+                            <property name="styleSheet">
+                             <string notr="true">QPushButton#changeProfile{
+	border: 1px solid rgb(255, 255, 255);
+	border-radius: 15px;
+}
+
+QPushButton#changeProfile:hover{
+	background-color: rgb(221, 255, 165);
+}</string>
                             </property>
                             <property name="text">
                              <string>Save</string>
@@ -889,14 +923,28 @@ QPushButton#signout:hover{
                            <widget class="QLabel" name="profileError">
                             <property name="geometry">
                              <rect>
-                              <x>90</x>
-                              <y>280</y>
-                              <width>47</width>
-                              <height>13</height>
+                              <x>30</x>
+                              <y>330</y>
+                              <width>131</width>
+                              <height>20</height>
                              </rect>
                             </property>
+                            <property name="font">
+                             <font>
+                              <family>Poppins</family>
+                              <pointsize>10</pointsize>
+                              <weight>75</weight>
+                              <bold>true</bold>
+                             </font>
+                            </property>
+                            <property name="styleSheet">
+                             <string notr="true">color: rgb(255, 0, 0);</string>
+                            </property>
                             <property name="text">
-                             <string>Error output</string>
+                             <string/>
+                            </property>
+                            <property name="alignment">
+                             <set>Qt::AlignCenter</set>
                             </property>
                            </widget>
                           </widget>
@@ -907,7 +955,7 @@ QPushButton#signout:hover{
                       <item>
                        <widget class="QWidget" name="widget_2" native="true">
                         <property name="sizePolicy">
-                         <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                         <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
                           <horstretch>0</horstretch>
                           <verstretch>0</verstretch>
                          </sizepolicy>
@@ -919,10 +967,10 @@ background-color: none;
                         </property>
                         <layout class="QHBoxLayout" name="horizontalLayout_3">
                          <property name="leftMargin">
-                          <number>60</number>
+                          <number>20</number>
                          </property>
                          <property name="rightMargin">
-                          <number>30</number>
+                          <number>20</number>
                          </property>
                          <item>
                           <widget class="QScrollArea" name="scrollArea">
@@ -986,8 +1034,8 @@ background-color: none;
                             <property name="geometry">
                              <rect>
                               <x>0</x>
-                              <y>0</y>
-                              <width>482</width>
+                              <y>-174</y>
+                              <width>417</width>
                               <height>843</height>
                              </rect>
                             </property>
@@ -1753,6 +1801,28 @@ color: white;
              </property>
             </widget>
            </widget>
+          </widget>
+         </item>
+         <item>
+          <widget class="QWidget" name="dic_widget" native="true">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="minimumSize">
+            <size>
+             <width>256</width>
+             <height>0</height>
+            </size>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">QWidget#dic_widget{
+border-radius: 30px;
+	background-color: qlineargradient(spread:pad, x1:1, y1:0, x2:1, y2:1, stop:0 rgba(100, 127, 194, 255), stop:1 rgba(123, 149, 216, 87));
+}</string>
+           </property>
           </widget>
          </item>
         </layout>

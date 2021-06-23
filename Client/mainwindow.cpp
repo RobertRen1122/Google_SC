@@ -35,6 +35,7 @@ MainWindow::MainWindow(QWidget *parent) :
     this->hide();
     login->hide();
     loading->show();
+    ui->dic_widget->hide();
     //title bar buttons
     connect(ui->close_butt, SIGNAL(clicked()), SLOT(close()));
     connect(ui->minimize_butt, SIGNAL(clicked()), SLOT(showMinimized()));
@@ -422,7 +423,12 @@ void MainWindow::on_settingbutton_clicked()
 
 void MainWindow::on_dictionary_2_clicked()
 {
-    ui->stackedWidget->setCurrentWidget(ui->dictionary);
+//    ui->stackedWidget->setCurrentWidget(ui->dictionary);
+    if(ui->dic_widget->isHidden()){
+        ui->dic_widget->show();}
+    else{
+        ui->dic_widget->hide();
+    }
 }
 
 
