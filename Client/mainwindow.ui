@@ -799,7 +799,7 @@ color: rgb(255, 255, 255);
                             </property>
                             <property name="styleSheet">
                              <string notr="true">border-radius: 15px;
-</string>
+border:1px solid</string>
                             </property>
                             <property name="text">
                              <string/>

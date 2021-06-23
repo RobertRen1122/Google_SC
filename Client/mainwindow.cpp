@@ -8,6 +8,10 @@
 #include <QStyledItemDelegate>
 #include <QGraphicsDropShadowEffect>
 #include <QFileDialog>
+#include <QPixmap>
+#include <QBitmap>
+#include <QPainter>
+#include <QLabel>
 
 MainWindow::MainWindow(QWidget *parent) :
     QWidget(parent),
@@ -176,7 +180,6 @@ void MainWindow::serverError(QAbstractSocket::SocketError socketError){
         break;
     case QAbstractSocket::RemoteHostClosedError:
         QMessageBox::critical(this, tr("Error"), tr("The host closed the connection"));
-        break;
     case QAbstractSocket::ProxyConnectionRefusedError:
         QMessageBox::critical(this, tr("Error"), tr("The proxy refused the connection"));
         break;
@@ -454,21 +457,30 @@ void MainWindow::on_minimize_butt_clicked()
 }
 
 
+QPixmap PixmapToRound(const QPixmap &src, int radius)
+{
+    if (src.isNull()) {
+        return QPixmap();
+    }
+    QSize size(8*radius, 8*radius);
+    QBitmap mask(size);
+    QPainter painter(&mask);
+    painter.setRenderHint(QPainter::Antialiasing);
+    painter.setRenderHint(QPainter::SmoothPixmapTransform);
+    painter.fillRect(0, 0, size.width(), size.height(), Qt::white);
+    painter.setBrush(QColor(0, 0, 0));
+    painter.drawRoundedRect(0, 0, size.width(), size.height(), 99, 99);
+    QPixmap image = src.scaled(size);
+    image.setMask(mask);
+    return image;
+}
 
 void MainWindow::on_changeprofilepic_clicked()
 {
     QString filename = QFileDialog::getOpenFileName(this, tr("Choose"), "", tr("Images (*.png *.jpg *.jpeg *bmp *.gif)"));
-    if (QString::compare(filename, QString()) != 0){
-        QImage image;
-        bool valid = image.load(filename);
-        if(valid){
-            image = image.scaledToWidth(ui->displayprofile->width(), Qt::SmoothTransformation);
-            ui->displayprofile->setPixmap(QPixmap::fromImage(image));
-            ui->user_pic->setPixmap(QPixmap::fromImage(image));
-        }
-        else{
-            //handle error
-        }
-    }
+    QPixmap source(filename);
+    QPixmap scaled = PixmapToRound(source,65);
+    ui->displayprofile->setPixmap(scaled);
+    QPixmap scaled_1 = PixmapToRound(source,50);
+    ui->user_pic->setPixmap(scaled_1);
 }
-
