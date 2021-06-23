@@ -443,6 +443,13 @@ void MainWindow::on_signout_clicked()
 
 void MainWindow::on_maximize_butt_clicked()
 {
-    this->setWindowState(Qt::WindowMaximized);
+
+    this->setWindowState(this->windowState()^Qt::WindowFullScreen);
+}
+
+
+void MainWindow::on_minimize_butt_clicked()
+{
+    this->setWindowState(this->windowState()^Qt::WindowMinimized);
 }
 
