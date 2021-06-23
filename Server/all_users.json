@@ -1,32 +1,12 @@
 {
     "0": {
-        "email": "BOT@gmail.com",
-        "intro": "",
-        "language1": "English (Canada)",
-        "language2": "English (Canada)",
-        "language3": "English (Canada)",
-        "password": "1234",
-        "pronoun": "They/ Them/ Their",
-        "username": "doggy"
-    },
-    "1": {
-        "email": "robert@ren",
+        "email": "robert.ren@mail.utoronto.ca",
         "intro": "This is your intro.",
         "language1": "none",
         "language2": "none",
         "language3": "none",
-        "password": "4321",
+        "password": "robertren",
         "pronoun": "none",
-        "username": "carrot"
-    },
-    "2": {
-        "email": "f@g",
-        "intro": "This is your intro.",
-        "language1": "",
-        "language2": "",
-        "language3": "",
-        "password": "i",
-        "pronoun": "",
-        "username": "h"
+        "username": "Robert666"
     }
 }
