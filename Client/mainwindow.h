@@ -47,6 +47,7 @@ private slots:
     void on_dictionary_2_clicked();
     void on_changeProfile_clicked();
     void on_signout_clicked();
+    void on_maximize_butt_clicked();
 };
 
 

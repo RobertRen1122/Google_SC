@@ -440,3 +440,9 @@ void MainWindow::on_signout_clicked()
     login->keep_me();
     client->signout();
 }
+
+void MainWindow::on_maximize_butt_clicked()
+{
+    this->setWindowState(Qt::WindowMaximized);
+}
+
