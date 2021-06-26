@@ -12,6 +12,7 @@
 #include <QPixmap>
 #include <QSizePolicy>
 #include <stdio.h>
+#include <QBitMap>
 
 
 MainWindow::MainWindow(QWidget *parent) :
