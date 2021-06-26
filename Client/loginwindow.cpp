@@ -22,9 +22,6 @@ LoginWindow::LoginWindow(QWidget *parent) :
     ui->back->hide();
     ui->pwd_confirmation->hide();
     ui->reconfirm_logo->hide();
-    ui->_or_text_signup->hide();
-    ui->google_signup->hide();
-
     keep_me();
 
     // alignment adjustment
@@ -211,10 +208,8 @@ void LoginWindow::on_goto_signup_clicked(){
     ui->email_logo->show();
     ui->pwd_confirmation->show();
     ui->reconfirm_logo->show();
-    ui->_or_text_signup->show();
-    ui->google_signup->show();
-    ui->_or_text->hide();
-    ui->google->hide();
+    ui->username->setPlaceholderText("Enter Username");
+
 
 }
 
@@ -234,10 +229,8 @@ void LoginWindow::on_back_clicked()
     ui->forgot_password->show();
     ui->pwd_confirmation->hide();
     ui->reconfirm_logo->hide();
-    ui->_or_text_signup->hide();
-    ui->google_signup->hide();
-    ui->_or_text->show();
-    ui->google->show();
+    ui->username->setPlaceholderText("Enter Username/ Email");
+
     keep_me();
 }
 

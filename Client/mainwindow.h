@@ -47,6 +47,17 @@ private slots:
     void on_dictionary_2_clicked();
     void on_changeProfile_clicked();
     void on_signout_clicked();
+    void on_new_conversation_clicked();
+
+    void on_maximize_butt_clicked();
+    void on_minimize_butt_clicked();
+    void on_changeprofilepic_clicked();
+    void on_pushButton_clicked();
+    void msg_send(QString content);
+    void msg_receive(QString content);
+    QString cur_time(void);
+    void on_user_list_clicked(const QModelIndex &index);
+    void on_info_butt_clicked();
 };
 
 

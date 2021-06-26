@@ -155,7 +155,7 @@ padding-left:40px;
     <bool>false</bool>
    </property>
    <property name="placeholderText">
-    <string>Enter Username</string>
+    <string>Enter Username/ Email</string>
    </property>
    <property name="clearButtonEnabled">
     <bool>true</bool>
@@ -165,7 +165,7 @@ padding-left:40px;
    <property name="geometry">
     <rect>
      <x>130</x>
-     <y>440</y>
+     <y>400</y>
      <width>181</width>
      <height>16</height>
     </rect>
@@ -260,31 +260,6 @@ color: #FFFBDB;
     <string>x</string>
    </property>
   </widget>
-  <widget class="QLabel" name="_or_text">
-   <property name="geometry">
-    <rect>
-     <x>203</x>
-     <y>370</y>
-     <width>41</width>
-     <height>20</height>
-    </rect>
-   </property>
-   <property name="font">
-    <font>
-     <family>Poppins</family>
-     <weight>50</weight>
-     <bold>false</bold>
-    </font>
-   </property>
-   <property name="styleSheet">
-    <string notr="true">QLabel{
-color: #F5F5F5;
-}</string>
-   </property>
-   <property name="text">
-    <string>—  or  —</string>
-   </property>
-  </widget>
   <widget class="QRadioButton" name="Keep_me">
    <property name="geometry">
     <rect>
@@ -322,7 +297,7 @@ border-radius: 5px;
    <property name="geometry">
     <rect>
      <x>180</x>
-     <y>460</y>
+     <y>440</y>
      <width>88</width>
      <height>37</height>
     </rect>
@@ -350,44 +325,6 @@ color: #FFFFFF
    </property>
    <property name="text">
     <string>LOG IN</string>
-   </property>
-  </widget>
-  <widget class="QPushButton" name="google">
-   <property name="geometry">
-    <rect>
-     <x>203</x>
-     <y>390</y>
-     <width>41</width>
-     <height>41</height>
-    </rect>
-   </property>
-   <property name="styleSheet">
-    <string notr="true">QPushButton{
-background-color: None;
-border: None;
-}
-QPushButton:hover{
-background-color: None;
-border: 1px solid #F5F5F5;
-border-radius: 17px;
-}
-</string>
-   </property>
-   <property name="text">
-    <string/>
-   </property>
-   <property name="icon">
-    <iconset resource="resource.qrc">
-     <normaloff>:/images/pic/google.png</normaloff>:/images/pic/google.png</iconset>
-   </property>
-   <property name="iconSize">
-    <size>
-     <width>35</width>
-     <height>35</height>
-    </size>
-   </property>
-   <property name="checkable">
-    <bool>false</bool>
    </property>
   </widget>
   <widget class="QPushButton" name="back">
@@ -486,6 +423,15 @@ padding-left:40px;
 
 </string>
    </property>
+   <property name="inputMethodHints">
+    <set>Qt::ImhNoAutoUppercase|Qt::ImhNoPredictiveText|Qt::ImhSensitiveData</set>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+   <property name="echoMode">
+    <enum>QLineEdit::PasswordEchoOnEdit</enum>
+   </property>
    <property name="placeholderText">
     <string>Enter Password</string>
    </property>
@@ -497,7 +443,7 @@ padding-left:40px;
    <property name="geometry">
     <rect>
      <x>120</x>
-     <y>510</y>
+     <y>500</y>
      <width>208</width>
      <height>27</height>
     </rect>
@@ -691,6 +637,12 @@ padding-left:40px;
 
 </string>
    </property>
+   <property name="inputMethodHints">
+    <set>Qt::ImhNoAutoUppercase|Qt::ImhNoPredictiveText|Qt::ImhSensitiveData</set>
+   </property>
+   <property name="echoMode">
+    <enum>QLineEdit::PasswordEchoOnEdit</enum>
+   </property>
    <property name="placeholderText">
     <string>Confirm Password</string>
    </property>
@@ -730,69 +682,6 @@ border: None;
     </size>
    </property>
   </widget>
-  <widget class="QLabel" name="_or_text_signup">
-   <property name="geometry">
-    <rect>
-     <x>200</x>
-     <y>380</y>
-     <width>41</width>
-     <height>20</height>
-    </rect>
-   </property>
-   <property name="font">
-    <font>
-     <family>Poppins</family>
-     <weight>50</weight>
-     <bold>false</bold>
-    </font>
-   </property>
-   <property name="styleSheet">
-    <string notr="true">QLabel{
-color: #F5F5F5;
-}</string>
-   </property>
-   <property name="text">
-    <string>—  or  —</string>
-   </property>
-  </widget>
-  <widget class="QPushButton" name="google_signup">
-   <property name="geometry">
-    <rect>
-     <x>200</x>
-     <y>400</y>
-     <width>41</width>
-     <height>41</height>
-    </rect>
-   </property>
-   <property name="styleSheet">
-    <string notr="true">QPushButton{
-background-color: None;
-border: None;
-}
-QPushButton:hover{
-background-color: None;
-border: 1px solid #F5F5F5;
-border-radius: 17px;
-}
-</string>
-   </property>
-   <property name="text">
-    <string/>
-   </property>
-   <property name="icon">
-    <iconset resource="resource.qrc">
-     <normaloff>:/images/pic/google.png</normaloff>:/images/pic/google.png</iconset>
-   </property>
-   <property name="iconSize">
-    <size>
-     <width>35</width>
-     <height>35</height>
-    </size>
-   </property>
-   <property name="checkable">
-    <bool>false</bool>
-   </property>
-  </widget>
   <zorder>background</zorder>
   <zorder>WELCOME</zorder>
   <zorder>minimize_butt</zorder>
@@ -800,10 +689,8 @@ border-radius: 17px;
   <zorder>error</zorder>
   <zorder>signup</zorder>
   <zorder>close_butt</zorder>
-  <zorder>_or_text</zorder>
   <zorder>Keep_me</zorder>
   <zorder>login</zorder>
-  <zorder>google</zorder>
   <zorder>back</zorder>
   <zorder>forgot_password</zorder>
   <zorder>password</zorder>
@@ -814,8 +701,6 @@ border-radius: 17px;
   <zorder>email_logo</zorder>
   <zorder>pwd_confirmation</zorder>
   <zorder>reconfirm_logo</zorder>
-  <zorder>_or_text_signup</zorder>
-  <zorder>google_signup</zorder>
  </widget>
  <resources>
   <include location="resource.qrc"/>
