@@ -727,7 +727,8 @@ background-color: none;
 }</string>
            </property>
            <property name="currentIndex">
-            <number>1</number>
+            <number>2</number>
+            
            </property>
            <widget class="QWidget" name="Profile">
             <property name="styleSheet">
@@ -1845,7 +1846,7 @@ color: white;
            </widget>
            <widget class="QWidget" name="chat">
             <property name="styleSheet">
-             <string notr="true"> </string>
+             <string notr="true"/>
             </property>
             <layout class="QVBoxLayout" name="verticalLayout_32">
              <item>
@@ -2570,7 +2571,9 @@ border-radius: 20px
                                        <string notr="true">QLabel#intro_ti_3{
 background-color: none;
 font: bold 14pt &quot;Poppins&quot;;
-color: white;
+
+color: rgba(100, 127, 194, 255);
+
 border-top:1px solid rgba(101, 128, 195, 120);
 margin-top:15px;
 }</string>
@@ -2593,7 +2596,9 @@ margin-top:15px;
 background-color:rgba(255, 255, 255, 0);
 border:none;
 border-bottom:1px solid rgba(101, 128, 195, 120);
-color: white;
+
+color: rgba(100, 127, 194, 255);
+
 	font: 12pt &quot;Poppins&quot;;
 }
 
@@ -2669,7 +2674,9 @@ QScrollArea {
                                     <string notr="true">QLabel#perferred_pro_info{
 background-color: none;
 font: bold 9pt &quot;Poppins&quot;;
-color: white;
+
+color: rgba(100, 127, 194, 255);
+
 }</string>
                                    </property>
                                    <property name="text">
@@ -2696,7 +2703,9 @@ color: white;
 background-color:rgba(255, 255, 255, 0);
 border:none;
 border-bottom:1px solid rgba(101, 128, 195, 120);
-color: white;
+
+color: rgba(100, 127, 194, 255);
+
 font: 12pt &quot;Poppins&quot;;
 }</string>
                                    </property>
@@ -2714,7 +2723,9 @@ font: 12pt &quot;Poppins&quot;;
                                     <string notr="true">QLabel{
 background-color: none;
 font: bold 9pt &quot;Poppins&quot;;
-color: white;
+
+color: rgba(100, 127, 194, 255);
+
 }</string>
                                    </property>
                                    <property name="text">
@@ -2741,7 +2752,9 @@ color: white;
 background-color:rgba(255, 255, 255, 0);
 border:none;
 border-bottom:1px solid rgba(101, 128, 195, 120);
-color: white;
+
+color: rgba(100, 127, 194, 255);
+
 font: 12pt &quot;Poppins&quot;;
 }</string>
                                    </property>
@@ -2759,7 +2772,9 @@ font: 12pt &quot;Poppins&quot;;
                                     <string notr="true">QLabel{
 background-color: none;
 font: bold 9pt &quot;Poppins&quot;;
-color: white;
+
+color: rgba(100, 127, 194, 255);
+
 }</string>
                                    </property>
                                    <property name="text">
@@ -2786,7 +2801,9 @@ color: white;
 background-color:rgba(255, 255, 255, 0);
 border:none;
 border-bottom:1px solid rgba(101, 128, 195, 120);
-color: white;
+
+color: rgba(100, 127, 194, 255);
+
 font: 12pt &quot;Poppins&quot;;
 }</string>
                                    </property>
@@ -2804,7 +2821,9 @@ font: 12pt &quot;Poppins&quot;;
                                     <string notr="true">QLabel{
 background-color: none;
 font: bold 9pt &quot;Poppins&quot;;
-color: white;
+
+color: rgba(100, 127, 194, 255);
+
 }</string>
                                    </property>
                                    <property name="text">
@@ -2831,7 +2850,9 @@ color: white;
 background-color:rgba(255, 255, 255, 0);
 border:none;
 border-bottom:1px solid rgba(101, 128, 195, 120);
-color: white;
+
+color: rgba(100, 127, 194, 255);
+
 font: 12pt &quot;Poppins&quot;;
 }</string>
                                    </property>
