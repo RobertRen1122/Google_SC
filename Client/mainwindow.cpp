@@ -416,7 +416,6 @@ void MainWindow::mouseMoveEvent(QMouseEvent *event)
 
 }
 
-
 void MainWindow::on_settingbutton_clicked()
 {
     ui->stackedWidget->setCurrentWidget(ui->Profile);
@@ -441,7 +440,6 @@ void MainWindow::on_dictionary_2_clicked()
     }
 }
 
-
 void MainWindow::on_signout_clicked()
 {
     ui->stackedWidget->setCurrentWidget(ui->chat);
@@ -456,14 +454,11 @@ void MainWindow::on_new_conversation_clicked()
     ui->stackedWidget->setCurrentWidget(ui->chat);
 }
 
-
-
 void MainWindow::on_maximize_butt_clicked()
 {
 
     this->setWindowState(this->windowState()^Qt::WindowFullScreen);
 }
-
 
 void MainWindow::on_minimize_butt_clicked()
 {
@@ -504,6 +499,7 @@ void MainWindow::on_pushButton_clicked()
     msg_send(msg,"no time");
     msg_receive(msg, "no time");
 }
+
 void MainWindow::msg_send(QString content, QString time_in){
     QWidget *window = new QWidget;
     QLabel *text_msg = new QLabel(this);
@@ -581,16 +577,37 @@ void MainWindow::msg_receive(QString content, QString time_in){
     ui->layout_scroll->insertWidget(count_num-1,complex);
     ui->chat_input->setText("");
 }
+
 QString MainWindow::cur_time(const QString intime){
     if(intime=="no time"){
     QString time = "12:03";
     return time;}
 }
 
+void MainWindow::remove ( QLayout* layout )
+{
+    QLayoutItem* child;
+    while ( layout->count() != 0 ) {
+        child = layout->takeAt ( 0 );
+        if ( child->layout() != 0 ) {
+            remove ( child->layout() );
+        } else if ( child->widget() != 0 ) {
+            delete child->widget();
+        }
+
+        delete child;
+    }
+}
+
 void MainWindow::on_user_list_clicked(const QModelIndex &index)
 {
     QString itemText = index.data(Qt::DisplayRole).toString();
-    qDebug("%s", qUtf8Printable(itemText));
+    QString past_name = ui->chat_username->text();
+    if(itemText!=past_name){
+        remove(ui->layout_scroll);
+        ui->layout_scroll->addStretch(0);
+        ui->chat_username->setText(itemText);}
+
 }
 
 void MainWindow::on_info_butt_clicked()
@@ -602,3 +619,4 @@ void MainWindow::on_pushButton_2_clicked()
 {
     ui->stackedWidget->setCurrentWidget(ui->chat);
 }
+

@@ -17,6 +17,7 @@ public:
     void mousePressEvent(QMouseEvent *event);
     void mouseMoveEvent(QMouseEvent *event);
 
+
 private:
     Ui::MainWindow *ui;
     LoadingWindow* loading;
@@ -59,6 +60,7 @@ private slots:
     void on_user_list_clicked(const QModelIndex &index);
     void on_info_butt_clicked();
     void on_pushButton_2_clicked();
+    void remove ( QLayout* layout);
 };
 
 
