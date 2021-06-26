@@ -53,11 +53,12 @@ private slots:
     void on_minimize_butt_clicked();
     void on_changeprofilepic_clicked();
     void on_pushButton_clicked();
-    void msg_send(QString content);
-    void msg_receive(QString content);
-    QString cur_time(void);
+    void msg_send(QString content, QString time_in);
+    void msg_receive(QString content, QString time_in);
+    QString cur_time(const QString intime);
     void on_user_list_clicked(const QModelIndex &index);
     void on_info_butt_clicked();
+    void on_pushButton_2_clicked();
 };
 
 

@@ -123,6 +123,7 @@ MainWindow::MainWindow(QWidget *parent) :
     if (ui->user_list->count() > 0) {
       ui->user_list->item(0)->setSelected(true);
     }
+    ui->stackedWidget->setCurrentWidget(ui->chat);
 
 }
 MainWindow::~MainWindow()
@@ -500,10 +501,10 @@ void MainWindow::on_changeprofilepic_clicked()
 void MainWindow::on_pushButton_clicked()
 {
     QString msg = ui->chat_input->text();
-    msg_send(msg);
-    msg_receive(msg);
+    msg_send(msg,"no time");
+    msg_receive(msg, "no time");
 }
-void MainWindow::msg_send(QString content){
+void MainWindow::msg_send(QString content, QString time_in){
     QWidget *window = new QWidget;
     QLabel *text_msg = new QLabel(this);
     text_msg->setText(content);
@@ -530,7 +531,7 @@ void MainWindow::msg_send(QString content){
     QVBoxLayout *H_layout = new QVBoxLayout(complex);
     H_layout->addWidget(window);
     QLabel *time = new QLabel(this);
-    time->setText(cur_time());
+    time->setText(cur_time(time_in));
     time->setAlignment(Qt::AlignRight);
     time->setFont(t);
     H_layout->addWidget(time);
@@ -542,7 +543,7 @@ void MainWindow::msg_send(QString content){
     ui->chat_input->setText("");
 }
 
-void MainWindow::msg_receive(QString content){
+void MainWindow::msg_receive(QString content, QString time_in){
     QWidget *window = new QWidget;
     QLabel *text_msg = new QLabel(this);
     text_msg->setText(content);
@@ -570,7 +571,7 @@ void MainWindow::msg_receive(QString content){
     QVBoxLayout *H_layout = new QVBoxLayout(complex);
     H_layout->addWidget(window);
     QLabel *time = new QLabel(this);
-    time->setText(cur_time());
+    time->setText(cur_time(time_in));
     time->setFont(t);
     H_layout->addWidget(time);
 
@@ -580,9 +581,10 @@ void MainWindow::msg_receive(QString content){
     ui->layout_scroll->insertWidget(count_num-1,complex);
     ui->chat_input->setText("");
 }
-QString MainWindow::cur_time(){
+QString MainWindow::cur_time(const QString intime){
+    if(intime=="no time"){
     QString time = "12:03";
-    return time;
+    return time;}
 }
 
 void MainWindow::on_user_list_clicked(const QModelIndex &index)
@@ -594,4 +596,9 @@ void MainWindow::on_user_list_clicked(const QModelIndex &index)
 void MainWindow::on_info_butt_clicked()
 {
     ui->stackedWidget->setCurrentWidget(ui->chat_profile);
+}
+
+void MainWindow::on_pushButton_2_clicked()
+{
+    ui->stackedWidget->setCurrentWidget(ui->chat);
 }
