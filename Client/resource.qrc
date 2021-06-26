@@ -9,5 +9,7 @@
         <file>pic/left-arrow1.png</file>
         <file>pic/settings (1).png</file>
         <file>pic/edit.png</file>
+        <file>pic/search.png</file>
+        <file>pic/ellipsis.png</file>
     </qresource>
 </RCC>

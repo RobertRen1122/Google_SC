@@ -8,10 +8,11 @@
 #include <QStyledItemDelegate>
 #include <QGraphicsDropShadowEffect>
 #include <QFileDialog>
-#include <QPixmap>
-#include <QBitmap>
 #include <QPainter>
-#include <QLabel>
+#include <QPixmap>
+#include <QSizePolicy>
+#include <stdio.h>
+
 
 MainWindow::MainWindow(QWidget *parent) :
     QWidget(parent),
@@ -119,6 +120,10 @@ MainWindow::MainWindow(QWidget *parent) :
         QListWidgetItem* item = ui->user_list->item(i);
         item->setTextAlignment(Qt::AlignCenter);
     }
+    if (ui->user_list->count() > 0) {
+      ui->user_list->item(0)->setSelected(true);
+    }
+
 }
 MainWindow::~MainWindow()
 {
@@ -180,6 +185,7 @@ void MainWindow::serverError(QAbstractSocket::SocketError socketError){
         break;
     case QAbstractSocket::RemoteHostClosedError:
         QMessageBox::critical(this, tr("Error"), tr("The host closed the connection"));
+        break;
     case QAbstractSocket::ProxyConnectionRefusedError:
         QMessageBox::critical(this, tr("Error"), tr("The proxy refused the connection"));
         break;
@@ -437,12 +443,19 @@ void MainWindow::on_dictionary_2_clicked()
 
 void MainWindow::on_signout_clicked()
 {
-    ui->stackedWidget->setCurrentWidget(ui->dictionary);
+    ui->stackedWidget->setCurrentWidget(ui->chat);
     this->hide();
     login->show();
     login->keep_me();
     client->signout();
 }
+
+void MainWindow::on_new_conversation_clicked()
+{
+    ui->stackedWidget->setCurrentWidget(ui->chat);
+}
+
+
 
 void MainWindow::on_maximize_butt_clicked()
 {
@@ -455,7 +468,6 @@ void MainWindow::on_minimize_butt_clicked()
 {
     this->setWindowState(this->windowState()^Qt::WindowMinimized);
 }
-
 
 QPixmap PixmapToRound(const QPixmap &src, int radius)
 {
@@ -483,4 +495,103 @@ void MainWindow::on_changeprofilepic_clicked()
     ui->displayprofile->setPixmap(scaled);
     QPixmap scaled_1 = PixmapToRound(source,50);
     ui->user_pic->setPixmap(scaled_1);
+}
+
+void MainWindow::on_pushButton_clicked()
+{
+    QString msg = ui->chat_input->text();
+    msg_send(msg);
+    msg_receive(msg);
+}
+void MainWindow::msg_send(QString content){
+    QWidget *window = new QWidget;
+    QLabel *text_msg = new QLabel(this);
+    text_msg->setText(content);
+    text_msg->setStyleSheet("QLabel{background-color:#6781C3;"
+                            " color:#EBF0FF;"
+                            " border:1px solid rgba(0,0,0,0);"
+                            " border-radius:25px;"
+                            " padding-left:15px;"
+                            " padding-right:15px;"
+                            " padding-top:15px;"
+                            " padding-bottom:15px;}");
+    text_msg->setWordWrap(true);
+    text_msg->setMaximumWidth(500);
+    text_msg->setMinimumHeight(50);
+    text_msg->setSizePolicy(QSizePolicy::Maximum,QSizePolicy::Minimum);
+    QHBoxLayout *layout = new QHBoxLayout(window);
+    layout->addStretch(0);
+    QFont f( "Poppins", 11);
+    QFont t("Poppins", 9);
+    text_msg->setFont(f);
+    layout->addWidget(text_msg);
+    QWidget *complex = new QWidget;
+//    complex->setStyleSheet("background-color:yellow");
+    QVBoxLayout *H_layout = new QVBoxLayout(complex);
+    H_layout->addWidget(window);
+    QLabel *time = new QLabel(this);
+    time->setText(cur_time());
+    time->setAlignment(Qt::AlignRight);
+    time->setFont(t);
+    H_layout->addWidget(time);
+
+    int count_num = ui->chat_content->layout()->count();
+//    printf("num is %d",count_num);
+
+    ui->layout_scroll->insertWidget(count_num-1,complex);
+    ui->chat_input->setText("");
+}
+
+void MainWindow::msg_receive(QString content){
+    QWidget *window = new QWidget;
+    QLabel *text_msg = new QLabel(this);
+    text_msg->setText(content);
+    text_msg->setStyleSheet("QLabel{background-color:#EBF0FF;"
+                            "color:#6781C4;"
+                            "border:1px solid rgba(0,0,0,0);"
+                            "border-radius:25px;"
+                            "padding-left:15px;"
+                            "padding-right:15px;"
+                            "padding-top:15px;"
+                            "padding-bottom:15px;}");
+    text_msg->setWordWrap(true);
+    text_msg->setMaximumWidth(500);
+    text_msg->setMinimumHeight(50);
+    text_msg->setSizePolicy(QSizePolicy::Maximum,QSizePolicy::Minimum);
+    QFont f( "Poppins", 11);
+    QFont t("Poppins", 9);
+    text_msg->setFont(f);
+//    window->setMaximumWidth(350);
+    QHBoxLayout *layout = new QHBoxLayout(window);
+    layout->addWidget(text_msg);
+    layout->addStretch(0);
+    QWidget *complex = new QWidget;
+//    complex->setStyleSheet("background-color:yellow");
+    QVBoxLayout *H_layout = new QVBoxLayout(complex);
+    H_layout->addWidget(window);
+    QLabel *time = new QLabel(this);
+    time->setText(cur_time());
+    time->setFont(t);
+    H_layout->addWidget(time);
+
+    int count_num = ui->chat_content->layout()->count();
+//    printf("num is %d",count_num);
+
+    ui->layout_scroll->insertWidget(count_num-1,complex);
+    ui->chat_input->setText("");
+}
+QString MainWindow::cur_time(){
+    QString time = "12:03";
+    return time;
+}
+
+void MainWindow::on_user_list_clicked(const QModelIndex &index)
+{
+    QString itemText = index.data(Qt::DisplayRole).toString();
+    qDebug("%s", qUtf8Printable(itemText));
+}
+
+void MainWindow::on_info_butt_clicked()
+{
+    ui->stackedWidget->setCurrentWidget(ui->chat_profile);
 }

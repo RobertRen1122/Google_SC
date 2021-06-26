@@ -10,10 +10,6 @@
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <QJsonValue>
-#include <regex>
-#include <iostream>
-
-using namespace std;
 
 LoginWindow::LoginWindow(QWidget *parent) :
     QWidget(parent),
@@ -113,47 +109,12 @@ LoginWindow::~LoginWindow(){
 }
 
 
-bool is_email_valid(const std::string& email)
-{
-   // define a regular expression
-   const std::regex pattern
-      ("(\\w+)(\\.|_)?(\\w*)@(\\w+)(\\.(\\w+))+");
-
-   // try to match the string with the regular expression
-   return std::regex_match(email, pattern);
-}
-
 bool LoginWindow::validate_email(const QString &email){
     //ADD STUFF HERE
-    if (is_email_valid(email.toStdString())==false){
+    if (email.contains("@")==false){
         return false;
     }
     return true;
-}
-
-bool is_password_strong(const std::string& pwd){
-    // Regex to check if a string
-      // contains uppercase, lowercase
-      // special character & numeric value
-      const regex pattern("^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d).+$");
-
-      // If the string is empty
-      // then print No
-      if (pwd.empty())
-      {
-        return false;
-      }
-
-      // Print Yes If the string matches
-      // with the Regex
-      if(regex_match(pwd, pattern))
-      {
-        return true;
-      }
-      else
-      {
-        return false;
-      }
 }
 
 bool LoginWindow::validate_pwd(const QString &password){
