@@ -1,7 +1,8 @@
 
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
-
+#include <iomanip>
+#include <ctime>
 #include <QDebug>
 #include <QMessageBox>
 #include <QCloseEvent>
@@ -134,13 +135,12 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->language_3rd_com->view()->window()->setWindowFlags(Qt::Popup|Qt::FramelessWindowHint|Qt::NoDropShadowWindowHint);
     ui->language_3rd_com->view()->window()->setAttribute(Qt::WA_TranslucentBackground);
 //    QString path = client->profile["profile_pic_path"];
-    QString path = "sgfkber2";
-    QPixmap source(path);
-    QPixmap scaled = PixmapToRound(source,65);
-    ui->displayprofile->setPixmap(scaled);
-    QPixmap scaled_1 = PixmapToRound(source,50);
-    ui->user_pic->setPixmap(scaled_1);
-
+//    QString path = "sgfkber2";
+//    QPixmap source(path);
+//    QPixmap scaled = PixmapToRound(source,65);
+//    ui->displayprofile->setPixmap(scaled);
+//    QPixmap scaled_1 = PixmapToRound(source,50);
+//    ui->user_pic->setPixmap(scaled_1);
     client->connectToServer();
     for(int i = 0; i < ui->user_list->count(); ++i)
     {
@@ -150,8 +150,8 @@ MainWindow::MainWindow(QWidget *parent) :
     if (ui->user_list->count() > 0) {
       ui->user_list->item(0)->setSelected(true);
     }
-
 }
+
 MainWindow::~MainWindow()
 {
     delete loading;
@@ -509,6 +509,10 @@ void MainWindow::on_changeprofilepic_clicked()
     QPixmap scaled_1 = PixmapToRound(source,50);
     ui->user_pic->setPixmap(scaled_1);
     client->profile["profile_pic_path"] = filename;
+    source.toImage();
+    // saving image to a new folder
+    // imageObject = new QImage();
+
 }
 
 void MainWindow::on_pushButton_clicked()
@@ -595,8 +599,17 @@ void MainWindow::msg_receive(QString content){
     ui->chat_input->setText("");
 }
 QString MainWindow::cur_time(){
-    QString time = "12:03";
-    return time;
+     time_t rawtime;
+     struct tm * timeinfo;
+     char buffer[80];
+
+     time (&rawtime);
+     timeinfo = localtime(&rawtime);
+
+     strftime(buffer,sizeof(buffer),"%d-%m-%Y %H:%M:%S",timeinfo);
+     std::string str(buffer);
+     QString time = QString::fromStdString(str);
+     return time;
 }
 
 void MainWindow::on_user_list_clicked(const QModelIndex &index)
