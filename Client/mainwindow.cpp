@@ -606,7 +606,7 @@ QString MainWindow::cur_time(){
      time (&rawtime);
      timeinfo = localtime(&rawtime);
 
-     strftime(buffer,sizeof(buffer),"%d-%m-%Y %H:%M:%S",timeinfo);
+     strftime(buffer,sizeof(buffer),"%d-%m-%Y %H:%M",timeinfo);
      std::string str(buffer);
      QString time = QString::fromStdString(str);
      return time;
