@@ -15,6 +15,25 @@
 #include <QBitMap>
 
 
+QPixmap PixmapToRound(const QPixmap &src, int radius)
+{
+    if (src.isNull()) {
+        return QPixmap();
+    }
+    QSize size(8*radius, 8*radius);
+    QBitmap mask(size);
+    QPainter painter(&mask);
+    painter.setRenderHint(QPainter::Antialiasing);
+    painter.setRenderHint(QPainter::SmoothPixmapTransform);
+    painter.fillRect(0, 0, size.width(), size.height(), Qt::white);
+    painter.setBrush(QColor(0, 0, 0));
+    painter.drawRoundedRect(0, 0, size.width(), size.height(), 99, 99);
+    QPixmap image = src.scaled(size);
+    image.setMask(mask);
+    return image;
+}
+
+
 MainWindow::MainWindow(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::MainWindow),
@@ -114,6 +133,13 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->language_2nd_com->view()->window()->setAttribute(Qt::WA_TranslucentBackground);
     ui->language_3rd_com->view()->window()->setWindowFlags(Qt::Popup|Qt::FramelessWindowHint|Qt::NoDropShadowWindowHint);
     ui->language_3rd_com->view()->window()->setAttribute(Qt::WA_TranslucentBackground);
+//    QString path = client->profile["profile_pic_path"];
+    QString path = "sgfkber2";
+    QPixmap source(path);
+    QPixmap scaled = PixmapToRound(source,65);
+    ui->displayprofile->setPixmap(scaled);
+    QPixmap scaled_1 = PixmapToRound(source,50);
+    ui->user_pic->setPixmap(scaled_1);
 
     client->connectToServer();
     for(int i = 0; i < ui->user_list->count(); ++i)
@@ -470,32 +496,19 @@ void MainWindow::on_minimize_butt_clicked()
     this->setWindowState(this->windowState()^Qt::WindowMinimized);
 }
 
-QPixmap PixmapToRound(const QPixmap &src, int radius)
-{
-    if (src.isNull()) {
-        return QPixmap();
-    }
-    QSize size(8*radius, 8*radius);
-    QBitmap mask(size);
-    QPainter painter(&mask);
-    painter.setRenderHint(QPainter::Antialiasing);
-    painter.setRenderHint(QPainter::SmoothPixmapTransform);
-    painter.fillRect(0, 0, size.width(), size.height(), Qt::white);
-    painter.setBrush(QColor(0, 0, 0));
-    painter.drawRoundedRect(0, 0, size.width(), size.height(), 99, 99);
-    QPixmap image = src.scaled(size);
-    image.setMask(mask);
-    return image;
-}
-
 void MainWindow::on_changeprofilepic_clicked()
 {
     QString filename = QFileDialog::getOpenFileName(this, tr("Choose"), "", tr("Images (*.png *.jpg *.jpeg *bmp *.gif)"));
+    if(filename == ""){
+        filename = ":/images/pic/profile.png";
+        //filename = "/Users/robertren/Desktop/Google_SC/Client/pic/profile.png";
+    }
     QPixmap source(filename);
     QPixmap scaled = PixmapToRound(source,65);
     ui->displayprofile->setPixmap(scaled);
     QPixmap scaled_1 = PixmapToRound(source,50);
     ui->user_pic->setPixmap(scaled_1);
+    client->profile["profile_pic_path"] = filename;
 }
 
 void MainWindow::on_pushButton_clicked()
