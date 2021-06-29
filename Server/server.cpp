@@ -71,7 +71,7 @@ void Server::attemptSignup(ServerSocket *client,const QString &email,const QStri
         user.insert("language1","none");
         user.insert("language2","none");
         user.insert("language3","none");
-        user.insert("profile_pic_path", "../Client/pic/profile.png");
+        user.insert("profile_pic_path", ":/images/pic/profile.png");
         all_users.insert(ID,user);
         registered_usernames.insert(username,ID);
         registered_emails.insert(email,ID);
