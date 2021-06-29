@@ -61,6 +61,7 @@ private slots:
     void on_info_butt_clicked();
     void on_pushButton_2_clicked();
     void remove ( QLayout* layout);
+    void user_list_edit();
 };
 
 

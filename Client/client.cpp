@@ -24,7 +24,7 @@ Client::Client(QObject *parent):
 
 void Client::jsonReceived(const QJsonObject &data)
 {
-    qDebug()<<"message";
+    qDebug()<<"messages";
     foreach(const QString& key, data.keys()){
         qDebug()<<key<<"->"<<data.value(key).toString();
     }

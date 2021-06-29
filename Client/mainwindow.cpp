@@ -70,20 +70,6 @@ MainWindow::MainWindow(QWidget *parent) :
     setAttribute(Qt::WA_NoSystemBackground);
     setAttribute(Qt::WA_TranslucentBackground);
 
-    /* stack widget
-    QHBoxLayout *layout = new QHBoxLayout(this);
-    QStackedWidget *stack = new QStackedWidget(this);
-    connect(sidebar, &Sidebar::show_profile,
-            stack, std::bind(&QStackedWidget::setCurrentIndex, stack, 0));
-    connect(sidebar, &Sidebar::show_chat,
-            stack, std::bind(&QStackedWidget::setCurrentIndex, stack, 1));
-    stack->addWidget(profile);
-    stack->addWidget(chat);
-    layout->addWidget(sidebar);
-    layout->addWidget(stack);
-    this->setLayout(layout);
-    */
-
     QGraphicsDropShadowEffect* shadowEffect = new QGraphicsDropShadowEffect(this);
     shadowEffect->setColor(QColor(0,0,0,120));
     shadowEffect->setBlurRadius(25);
@@ -142,15 +128,9 @@ MainWindow::MainWindow(QWidget *parent) :
 //    QPixmap scaled_1 = PixmapToRound(source,50);
 //    ui->user_pic->setPixmap(scaled_1);
     client->connectToServer();
-    for(int i = 0; i < ui->user_list->count(); ++i)
-    {
-        QListWidgetItem* item = ui->user_list->item(i);
-        item->setTextAlignment(Qt::AlignCenter);
-    }
-    if (ui->user_list->count() > 0) {
-      ui->user_list->item(0)->setSelected(true);
-    }
+
     ui->stackedWidget->setCurrentWidget(ui->chat);
+
 }
 
 MainWindow::~MainWindow()
@@ -160,11 +140,21 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
+void MainWindow::user_list_edit(){
+    for(const QString& key: client->friend_messages.keys()){
+        QListWidgetItem *user = new QListWidgetItem;
+        user->setText(key);
+        user->setTextAlignment(Qt::AlignCenter);
+        ui->user_list->addItem(user);
+    }
+    if (ui->user_list->count() > 0) {
+        ui->user_list->item(0)->setSelected(true);
+    }
+}
 void MainWindow::startApplication(){
     loading->hide();
     this->show();
-    //put all info on screen
-    //client->friend_messages.keys() ***
+    user_list_edit();
 }
 
 void MainWindow::profileError(const QString &reason){
@@ -518,7 +508,6 @@ void MainWindow::on_pushButton_clicked()
     msg_receive(msg, "no time");
 }
 
-
 void MainWindow::msg_send(QString content, QString time_in){
     QWidget *window = new QWidget;
     QLabel *text_msg = new QLabel(this);
@@ -629,6 +618,7 @@ void MainWindow::remove ( QLayout* layout )
         delete child;
     }
 }
+
 void MainWindow::on_user_list_clicked(const QModelIndex &index)
 {
     QString itemText = index.data(Qt::DisplayRole).toString();
