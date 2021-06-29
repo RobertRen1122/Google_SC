@@ -509,10 +509,10 @@ void MainWindow::on_changeprofilepic_clicked()
     QPixmap scaled_1 = PixmapToRound(source,50);
     ui->user_pic->setPixmap(scaled_1);
     client->profile["profile_pic_path"] = filename;
-    source.toImage();
-    // saving image to a new folder
-    // imageObject = new QImage();
-
+    QImage img_to_save = scaled_1.toImage();
+    QPixmap pixmap_to_change(":/profilepic/pic/profile.png");
+    pixmap_to_change = source;
+    pixmap_to_change.save("new_profile");
 }
 
 void MainWindow::on_pushButton_clicked()
@@ -521,6 +521,7 @@ void MainWindow::on_pushButton_clicked()
     msg_send(msg);
     msg_receive(msg);
 }
+
 void MainWindow::msg_send(QString content){
     QWidget *window = new QWidget;
     QLabel *text_msg = new QLabel(this);
@@ -539,7 +540,7 @@ void MainWindow::msg_send(QString content){
     text_msg->setSizePolicy(QSizePolicy::Maximum,QSizePolicy::Minimum);
     QHBoxLayout *layout = new QHBoxLayout(window);
     layout->addStretch(0);
-    QFont f( "Poppins", 11);
+    QFont f("Poppins", 11);
     QFont t("Poppins", 9);
     text_msg->setFont(f);
     layout->addWidget(text_msg);
