@@ -6,6 +6,7 @@
         "language2": "",
         "language3": "",
         "password": "1234",
+        "profile_pic_path": ":/images/pic/profile.png",
         "pronoun": "",
         "username": "doggy"
     },
@@ -16,6 +17,7 @@
         "language2": "none",
         "language3": "none",
         "password": "4321",
+        "profile_pic_path": ":/images/pic/profile.png",
         "pronoun": "none",
         "username": "carrot"
     },
@@ -26,7 +28,30 @@
         "language2": "",
         "language3": "",
         "password": "i",
+        "profile_pic_path": ":/images/pic/profile.png",
         "pronoun": "",
         "username": "h"
+    },
+    "3": {
+        "email": "lindyzhai@gmail.com",
+        "intro": "This is your intro.",
+        "language1": "",
+        "language2": "",
+        "language3": "",
+        "password": "123",
+        "profile_pic_path": "/Users/robertren/Desktop/download.jpeg",
+        "pronoun": "",
+        "username": "hello"
+    },
+    "4": {
+        "email": "robertren1320@gmail.com",
+        "intro": "This is your intro.",
+        "language1": "none",
+        "language2": "none",
+        "language3": "none",
+        "password": "1234",
+        "profile_pic_path": ":/images/pic/profile.png",
+        "pronoun": "none",
+        "username": "robo"
     }
 }

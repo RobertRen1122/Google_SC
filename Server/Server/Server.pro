@@ -1,39 +1,26 @@
-QT       += core network gui
+QT += core network
+QT -= gui
 
-greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
-
-CONFIG += c++11
+CONFIG += c++11 console
+CONFIG -= app_bundle
 
 # You can make your code fail to compile if it uses deprecated APIs.
 # In order to do so, uncomment the following line.
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
-    client.cpp \
-    loadingwindow.cpp \
-    loginwindow.cpp \
-    main.cpp \
-    mainwindow.cpp
-
-HEADERS += \
-    client.h \
-    loadingwindow.h \
-    loginwindow.h \
-    mainwindow.h
-
-FORMS += \
-    loadingwindow.ui \
-    loginwindow.ui \
-    mainwindow.ui
+        main.cpp \
+        server.cpp \
+        serversocket.cpp
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
-RESOURCES += \
-    profile_pic.qrc \
-    resource.qrc
+HEADERS += \
+    server.h \
+    serversocket.h
 
 DISTFILES += \
-    keep_me.json
+    all_users.json

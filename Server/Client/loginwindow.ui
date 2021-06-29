@@ -424,13 +424,10 @@ padding-left:40px;
 </string>
    </property>
    <property name="inputMethodHints">
-    <set>Qt::ImhNoAutoUppercase|Qt::ImhNoPredictiveText|Qt::ImhSensitiveData</set>
+    <set>Qt::ImhNone</set>
    </property>
    <property name="text">
     <string/>
-   </property>
-   <property name="echoMode">
-    <enum>QLineEdit::PasswordEchoOnEdit</enum>
    </property>
    <property name="placeholderText">
     <string>Enter Password</string>
@@ -638,10 +635,7 @@ padding-left:40px;
 </string>
    </property>
    <property name="inputMethodHints">
-    <set>Qt::ImhNoAutoUppercase|Qt::ImhNoPredictiveText|Qt::ImhSensitiveData</set>
-   </property>
-   <property name="echoMode">
-    <enum>QLineEdit::PasswordEchoOnEdit</enum>
+    <set>Qt::ImhNone</set>
    </property>
    <property name="placeholderText">
     <string>Confirm Password</string>

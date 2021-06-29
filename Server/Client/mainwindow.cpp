@@ -1,8 +1,7 @@
 
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
-#include <iomanip>
-#include <ctime>
+
 #include <QDebug>
 #include <QMessageBox>
 #include <QCloseEvent>
@@ -10,29 +9,8 @@
 #include <QGraphicsDropShadowEffect>
 #include <QFileDialog>
 #include <QPainter>
-#include <QPixmap>
 #include <QSizePolicy>
 #include <stdio.h>
-#include <QBitMap>
-
-
-QPixmap PixmapToRound(const QPixmap &src, int radius)
-{
-    if (src.isNull()) {
-        return QPixmap();
-    }
-    QSize size(8*radius, 8*radius);
-    QBitmap mask(size);
-    QPainter painter(&mask);
-    painter.setRenderHint(QPainter::Antialiasing);
-    painter.setRenderHint(QPainter::SmoothPixmapTransform);
-    painter.fillRect(0, 0, size.width(), size.height(), Qt::white);
-    painter.setBrush(QColor(0, 0, 0));
-    painter.drawRoundedRect(0, 0, size.width(), size.height(), 99, 99);
-    QPixmap image = src.scaled(size);
-    image.setMask(mask);
-    return image;
-}
 
 
 MainWindow::MainWindow(QWidget *parent) :
@@ -134,24 +112,15 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->language_2nd_com->view()->window()->setAttribute(Qt::WA_TranslucentBackground);
     ui->language_3rd_com->view()->window()->setWindowFlags(Qt::Popup|Qt::FramelessWindowHint|Qt::NoDropShadowWindowHint);
     ui->language_3rd_com->view()->window()->setAttribute(Qt::WA_TranslucentBackground);
-//    QString path = client->profile["profile_pic_path"];
-//    QString path = "sgfkber2";
-//    QPixmap source(path);
-//    QPixmap scaled = PixmapToRound(source,65);
-//    ui->displayprofile->setPixmap(scaled);
-//    QPixmap scaled_1 = PixmapToRound(source,50);
-//    ui->user_pic->setPixmap(scaled_1);
+
     client->connectToServer();
     for(int i = 0; i < ui->user_list->count(); ++i)
     {
         QListWidgetItem* item = ui->user_list->item(i);
         item->setTextAlignment(Qt::AlignCenter);
     }
-    if (ui->user_list->count() > 0) {
-      ui->user_list->item(0)->setSelected(true);
-    }
-}
 
+}
 MainWindow::~MainWindow()
 {
     delete loading;
@@ -496,23 +465,32 @@ void MainWindow::on_minimize_butt_clicked()
     this->setWindowState(this->windowState()^Qt::WindowMinimized);
 }
 
+QPixmap PixmapToRound(const QPixmap &src, int radius)
+{
+    if (src.isNull()) {
+        return QPixmap();
+    }
+    QSize size(8*radius, 8*radius);
+    QBitmap mask(size);
+    QPainter painter(&mask);
+    painter.setRenderHint(QPainter::Antialiasing);
+    painter.setRenderHint(QPainter::SmoothPixmapTransform);
+    painter.fillRect(0, 0, size.width(), size.height(), Qt::white);
+    painter.setBrush(QColor(0, 0, 0));
+    painter.drawRoundedRect(0, 0, size.width(), size.height(), 99, 99);
+    QPixmap image = src.scaled(size);
+    image.setMask(mask);
+    return image;
+}
+
 void MainWindow::on_changeprofilepic_clicked()
 {
     QString filename = QFileDialog::getOpenFileName(this, tr("Choose"), "", tr("Images (*.png *.jpg *.jpeg *bmp *.gif)"));
-    if(filename == ""){
-        filename = ":/images/pic/profile.png";
-        //filename = "/Users/robertren/Desktop/Google_SC/Client/pic/profile.png";
-    }
     QPixmap source(filename);
     QPixmap scaled = PixmapToRound(source,65);
     ui->displayprofile->setPixmap(scaled);
     QPixmap scaled_1 = PixmapToRound(source,50);
     ui->user_pic->setPixmap(scaled_1);
-    client->profile["profile_pic_path"] = filename;
-    QImage img_to_save = scaled_1.toImage();
-    QPixmap pixmap_to_change(":/profilepic/pic/profile.png");
-    pixmap_to_change = source;
-    pixmap_to_change.save("new_profile");
 }
 
 void MainWindow::on_pushButton_clicked()
@@ -521,7 +499,6 @@ void MainWindow::on_pushButton_clicked()
     msg_send(msg);
     msg_receive(msg);
 }
-
 void MainWindow::msg_send(QString content){
     QWidget *window = new QWidget;
     QLabel *text_msg = new QLabel(this);
@@ -540,24 +517,13 @@ void MainWindow::msg_send(QString content){
     text_msg->setSizePolicy(QSizePolicy::Maximum,QSizePolicy::Minimum);
     QHBoxLayout *layout = new QHBoxLayout(window);
     layout->addStretch(0);
-    QFont f("Poppins", 11);
-    QFont t("Poppins", 9);
+    QFont f( "Poppins", 11);
     text_msg->setFont(f);
     layout->addWidget(text_msg);
-    QWidget *complex = new QWidget;
-//    complex->setStyleSheet("background-color:yellow");
-    QVBoxLayout *H_layout = new QVBoxLayout(complex);
-    H_layout->addWidget(window);
-    QLabel *time = new QLabel(this);
-    time->setText(cur_time());
-    time->setAlignment(Qt::AlignRight);
-    time->setFont(t);
-    H_layout->addWidget(time);
 
     int count_num = ui->chat_content->layout()->count();
 //    printf("num is %d",count_num);
-
-    ui->layout_scroll->insertWidget(count_num-1,complex);
+    ui->layout_scroll->insertWidget(count_num-1,window);
     ui->chat_input->setText("");
 }
 
@@ -578,48 +544,15 @@ void MainWindow::msg_receive(QString content){
     text_msg->setMinimumHeight(50);
     text_msg->setSizePolicy(QSizePolicy::Maximum,QSizePolicy::Minimum);
     QFont f( "Poppins", 11);
-    QFont t("Poppins", 9);
     text_msg->setFont(f);
 //    window->setMaximumWidth(350);
     QHBoxLayout *layout = new QHBoxLayout(window);
     layout->addWidget(text_msg);
     layout->addStretch(0);
-    QWidget *complex = new QWidget;
-//    complex->setStyleSheet("background-color:yellow");
-    QVBoxLayout *H_layout = new QVBoxLayout(complex);
-    H_layout->addWidget(window);
-    QLabel *time = new QLabel(this);
-    time->setText(cur_time());
-    time->setFont(t);
-    H_layout->addWidget(time);
 
     int count_num = ui->chat_content->layout()->count();
 //    printf("num is %d",count_num);
 
-    ui->layout_scroll->insertWidget(count_num-1,complex);
+    ui->layout_scroll->insertWidget(count_num-1,window);
     ui->chat_input->setText("");
-}
-QString MainWindow::cur_time(){
-     time_t rawtime;
-     struct tm * timeinfo;
-     char buffer[80];
-
-     time (&rawtime);
-     timeinfo = localtime(&rawtime);
-
-     strftime(buffer,sizeof(buffer),"%d-%m-%Y %H:%M",timeinfo);
-     std::string str(buffer);
-     QString time = QString::fromStdString(str);
-     return time;
-}
-
-void MainWindow::on_user_list_clicked(const QModelIndex &index)
-{
-    QString itemText = index.data(Qt::DisplayRole).toString();
-    qDebug("%s", qUtf8Printable(itemText));
-}
-
-void MainWindow::on_info_butt_clicked()
-{
-    ui->stackedWidget->setCurrentWidget(ui->chat_profile);
 }
