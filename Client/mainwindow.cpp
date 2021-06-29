@@ -580,8 +580,10 @@ void MainWindow::msg_receive(QString content, QString time_in){
 
 QString MainWindow::cur_time(const QString intime){
     if(intime=="no time"){
-    QString time = "12:03";
-    return time;}
+    QString time = "Today 12:03PM";
+    return time;}else{
+        //return history time
+    }
 }
 
 void MainWindow::remove ( QLayout* layout )

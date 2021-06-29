@@ -727,7 +727,7 @@ background-color: none;
 }</string>
            </property>
            <property name="currentIndex">
-            <number>1</number>
+            <number>2</number>
            </property>
            <widget class="QWidget" name="Profile">
             <property name="styleSheet">
@@ -2066,8 +2066,8 @@ background-color: none;
                              <rect>
                               <x>0</x>
                               <y>0</y>
-                              <width>616</width>
-                              <height>696</height>
+                              <width>68</width>
+                              <height>16</height>
                              </rect>
                             </property>
                             <layout class="QVBoxLayout" name="layout_scroll" stretch="0">
