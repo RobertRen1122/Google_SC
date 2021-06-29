@@ -1,57 +1,3 @@
-<<<<<<< HEAD
-{
-    "0": {
-        "email": "lindy@zhai",
-        "intro": "This is your intro.",
-        "language1": "Chinese (Traditional)",
-        "language2": "",
-        "language3": "",
-        "password": "1234",
-        "pronoun": "",
-        "username": "doggy"
-    },
-    "1": {
-        "email": "robert@ren",
-        "intro": "This is your intro.",
-        "language1": "none",
-        "language2": "none",
-        "language3": "none",
-        "password": "4321",
-        "pronoun": "none",
-        "username": "carrot"
-    },
-    "2": {
-        "email": "f@g",
-        "intro": "This is your intro.",
-        "language1": "",
-        "language2": "",
-        "language3": "",
-        "password": "i",
-        "pronoun": "",
-        "username": "h"
-    },
-    "3": {
-        "email": "lindyzhai@gmail.com",
-        "intro": "This is your intro.",
-        "language1": "none",
-        "language2": "none",
-        "language3": "none",
-        "password": "123",
-        "pronoun": "none",
-        "username": "hello"
-    },
-    "4": {
-        "email": "lin@gmail.com",
-        "intro": "This is your intro.",
-        "language1": "none",
-        "language2": "none",
-        "language3": "none",
-        "password": "123",
-        "pronoun": "none",
-        "username": "try"
-    }
-}
-=======
 {
     "0": {
         "email": "lindy@zhai",
@@ -109,4 +55,4 @@
         "username": "robo"
     }
 }
->>>>>>> 341a4053c62c31f61969265637ed645d6e12baea
+

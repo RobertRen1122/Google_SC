@@ -150,11 +150,8 @@ MainWindow::MainWindow(QWidget *parent) :
     if (ui->user_list->count() > 0) {
       ui->user_list->item(0)->setSelected(true);
     }
-<<<<<<< HEAD
     ui->stackedWidget->setCurrentWidget(ui->chat);
 
-=======
->>>>>>> 341a4053c62c31f61969265637ed645d6e12baea
 }
 
 MainWindow::~MainWindow()
@@ -522,11 +519,8 @@ void MainWindow::on_pushButton_clicked()
     msg_receive(msg, "no time");
 }
 
-<<<<<<< HEAD
+
 void MainWindow::msg_send(QString content, QString time_in){
-=======
-void MainWindow::msg_send(QString content){
->>>>>>> 341a4053c62c31f61969265637ed645d6e12baea
     QWidget *window = new QWidget;
     QLabel *text_msg = new QLabel(this);
     text_msg->setText(content);
@@ -603,12 +597,21 @@ void MainWindow::msg_receive(QString content, QString time_in){
     ui->layout_scroll->insertWidget(count_num-1,complex);
     ui->chat_input->setText("");
 }
-<<<<<<< HEAD
 
 QString MainWindow::cur_time(const QString intime){
     if(intime=="no time"){
-    QString time = "Today 12:03PM";
-    return time;}else{
+        time_t rawtime;
+        struct tm * timeinfo;
+        char buffer[80];
+
+        time (&rawtime);
+        timeinfo = localtime(&rawtime);
+
+        strftime(buffer,sizeof(buffer),"%d-%m-%Y %H:%M",timeinfo);
+        std::string str(buffer);
+        QString time = QString::fromStdString(str);
+        return time;
+    }else{
         //return history time
     }
 }
@@ -626,22 +629,7 @@ void MainWindow::remove ( QLayout* layout )
 
         delete child;
     }
-=======
-QString MainWindow::cur_time(){
-     time_t rawtime;
-     struct tm * timeinfo;
-     char buffer[80];
-
-     time (&rawtime);
-     timeinfo = localtime(&rawtime);
-
-     strftime(buffer,sizeof(buffer),"%d-%m-%Y %H:%M",timeinfo);
-     std::string str(buffer);
-     QString time = QString::fromStdString(str);
-     return time;
->>>>>>> 341a4053c62c31f61969265637ed645d6e12baea
 }
-
 void MainWindow::on_user_list_clicked(const QModelIndex &index)
 {
     QString itemText = index.data(Qt::DisplayRole).toString();
@@ -650,7 +638,6 @@ void MainWindow::on_user_list_clicked(const QModelIndex &index)
         remove(ui->layout_scroll);
         ui->layout_scroll->addStretch(0);
         ui->chat_username->setText(itemText);}
-
 }
 
 void MainWindow::on_info_butt_clicked()
