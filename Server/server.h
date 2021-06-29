@@ -21,12 +21,15 @@ private:
     QVector<QString> active_users;
 
     QString new_ID();
+    void remove_user(const QString &ID);
+    void make_friend(const QString &ID1,const QString &ID2);
+
 signals:
 
 private slots:
     void newConnection();
     void userConnectionError(ServerSocket* client, QAbstractSocket::SocketError socketError);
-    void signout(QString &ID);
+    void signout(const QString &ID);
 
     void attemptLogin(ServerSocket* client, const QString &username, const QString &password);
     void attemptSignup(ServerSocket* client, const QString &email, const QString &username, const QString &password);

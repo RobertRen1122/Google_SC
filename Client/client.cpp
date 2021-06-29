@@ -5,12 +5,14 @@
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <QJsonValue>
+#include <QJsonArray>
 #include <QDebug>
 
 Client::Client(QObject *parent):
     QObject(parent),
     socket(new QTcpSocket(this))
 {
+    ID="";
     //connect to signals
     connect(socket, &QTcpSocket::connected, this, &Client::connected);
     connect(socket, &QAbstractSocket::errorOccurred, this,  &Client::serverError);
@@ -41,13 +43,15 @@ void Client::jsonReceived(const QJsonObject &data)
         emit loginError(reasonVal.toString());
     // message regarding profile
     }else if(typeVal.toString().compare(QLatin1String("profile information"))==0) {
-        foreach(const QString& key, data.keys()) {
-            if (key!="type"){
+        for(const QString& key: data.keys()) {
+            if (key!="type" && key!="ID"){
                 QJsonValue value = data.value(key);
                 profile[key]=value.toString();
+            }else if (key=="ID"){
+                QJsonValue value = data.value(key);
+                ID=value.toString();;
             }
         }
-        emit informationRecieved();
     }else if(typeVal.toString().compare(QLatin1String("profile change"))==0) {
         const QJsonValue resultVal = data.value(QLatin1String("success"));
         const bool loginSuccess = resultVal.toBool();
@@ -56,15 +60,33 @@ void Client::jsonReceived(const QJsonObject &data)
             return;
         }
         const QJsonValue reasonVal = data.value(QLatin1String("reason"));
-        foreach(const QString& key, data.keys()){
+        for(const QString& key: data.keys()){
             if(key!="type" and key!="success" and key!="reason"){
                 QJsonValue value = data.value(key);
                 profile[key]=value.toString();
             }
         }
         emit profileError(reasonVal.toString());
-    }
     // message regarding contacts
+    }else if(typeVal.toString().compare(QLatin1String("message information"))==0) {
+        for(const QString& key: data.keys()){
+            if(key!="type"){
+                QJsonArray messages_json = data[key].toArray();
+                QVector<QHash<QString,QString>> messages;
+                for(const QJsonValue& msg: messages_json){
+                    qDebug()<<"11111";
+                    QJsonObject message_json = msg.toObject();
+                    QHash<QString,QString> message;
+                    for(const QString& key2: message_json.keys()){
+                        message[key2]=message_json[key2].toString();
+                    }
+                    messages.push_back(message);
+                }
+                friend_messages[key]=messages;
+            }
+        }
+        emit informationRecieved();
+    }
 }
 
 // ------------------------------ message to server ------------------------------

@@ -5,6 +5,8 @@
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <QJsonValue>
+#include <QJsonArray>
+#include <QDir>
 
 ServerSocket::ServerSocket(QObject *parent) :
     QObject(parent)
@@ -24,28 +26,24 @@ ServerSocket::~ServerSocket(){
     delete socket;
 }
 
-void ServerSocket::loginSuccessful(const QString &ID){
-    this->ID=ID;
+void ServerSocket::sendMessageInfo(const QString &ID){
     QDataStream clientStream(socket);
     clientStream.setVersion(QDataStream::Qt_5_7);
     // Create the JSON we want to send
-    QJsonObject message;
-    message[QStringLiteral("type")] = QStringLiteral("login");
-    message[QStringLiteral("success")] = true;
+    QJsonObject messageInfo;
+    messageInfo[QStringLiteral("type")] = QStringLiteral("message information");
+    QDir dir("../Server/messages/"+ID);
+    QStringList files = dir.entryList(QStringList() << "*.json", QDir::Files);
+    for(const QString& friend_ID: files) {
+        QFile message_file("../Server/messages/"+ID+"/"+friend_ID.split('.')[0]+".json");
+        message_file.open(QIODevice::ReadOnly | QIODevice::Text);
+        QJsonDocument data = QJsonDocument::fromJson(message_file.readAll());
+        message_file.close();
+        QJsonArray friend_messages= data.array();
+        messageInfo[friend_ID.split('.')[0]] = friend_messages;
+    }
     // send the JSON using QDataStream
-    clientStream << QJsonDocument(message).toJson();
-}
-
-void ServerSocket::loginError(const QString &reason){
-    QDataStream clientStream(socket);
-    clientStream.setVersion(QDataStream::Qt_5_7);
-    // Create the JSON we want to send
-    QJsonObject message;
-    message[QStringLiteral("type")] = QStringLiteral("login");
-    message[QStringLiteral("success")] = false;
-    message[QStringLiteral("reason")] = reason;
-    // send the JSON using QDataStream
-    clientStream << QJsonDocument(message).toJson();
+    clientStream << QJsonDocument(messageInfo).toJson();
 }
 
 void ServerSocket::sendPersonalInfo(QHash<QString,QString> &user){
@@ -54,6 +52,7 @@ void ServerSocket::sendPersonalInfo(QHash<QString,QString> &user){
     // Create the JSON we want to send
     QJsonObject message;
     message[QStringLiteral("type")] = QStringLiteral("profile information");
+    message[QStringLiteral("ID")] = ID;
     for(QHash<QString,QString>::iterator i=user.begin(); i!=user.end(); ++i)
     {
         message[i.key()] = i.value();
@@ -84,6 +83,30 @@ void ServerSocket::changeProfileError(const QString &reason, QHash<QString,QStri
     foreach(const QString& key, profile.keys()) {
         message[key] = profile[key];
     }
+    // send the JSON using QDataStream
+    clientStream << QJsonDocument(message).toJson();
+}
+
+void ServerSocket::loginSuccessful(const QString &ID){
+    this->ID=ID;
+    QDataStream clientStream(socket);
+    clientStream.setVersion(QDataStream::Qt_5_7);
+    // Create the JSON we want to send
+    QJsonObject message;
+    message[QStringLiteral("type")] = QStringLiteral("login");
+    message[QStringLiteral("success")] = true;
+    // send the JSON using QDataStream
+    clientStream << QJsonDocument(message).toJson();
+}
+
+void ServerSocket::loginError(const QString &reason){
+    QDataStream clientStream(socket);
+    clientStream.setVersion(QDataStream::Qt_5_7);
+    // Create the JSON we want to send
+    QJsonObject message;
+    message[QStringLiteral("type")] = QStringLiteral("login");
+    message[QStringLiteral("success")] = false;
+    message[QStringLiteral("reason")] = reason;
     // send the JSON using QDataStream
     clientStream << QJsonDocument(message).toJson();
 }

@@ -12,8 +12,12 @@ public:
     void connectToServer();
     void signout();
 
+    QString ID;
     QHash<QString,QString> profile;
     void updateProfile();
+
+    QHash<QString,QVector<QHash<QString,QString>>> friend_messages;
+    QHash<QString,QString> friend_names;
 
 private:
     QTcpSocket* socket;

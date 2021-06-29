@@ -151,7 +151,6 @@ MainWindow::MainWindow(QWidget *parent) :
       ui->user_list->item(0)->setSelected(true);
     }
     ui->stackedWidget->setCurrentWidget(ui->chat);
-
 }
 
 MainWindow::~MainWindow()
@@ -165,7 +164,7 @@ void MainWindow::startApplication(){
     loading->hide();
     this->show();
     //put all info on screen
-
+    //client->friend_messages.keys() ***
 }
 
 void MainWindow::profileError(const QString &reason){

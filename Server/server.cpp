@@ -2,8 +2,10 @@
 
 #include <QDebug>
 #include <QFile>
+#include <QDir>
 #include <QJsonDocument>
 #include <QJsonObject>
+#include <QJsonArray>
 #include <QJsonValue>
 
 Server::Server(QObject *parent) :
@@ -34,10 +36,62 @@ Server::Server(QObject *parent) :
         registered_usernames.insert(user["username"],ID);
         registered_emails.insert(user["email"],ID);
     }
+
+    //manually add friends or remove users here
 }
 
 Server::~Server(){
 
+}
+
+void Server::remove_user(const QString &ID){
+    //active
+    //force signout the user
+    //remove from all_users, registered_emails, and registered_usernames
+    //notify and remove from all active friends
+
+    //permanent
+    //remove from all_users.json
+    QFile file("../Server/all_users.json");
+    file.open(QIODevice::ReadOnly | QIODevice::Text);
+    QJsonDocument data = QJsonDocument::fromJson(file.readAll());
+    file.close();
+    QJsonObject users = data.object();
+    users.remove(ID);
+    data.setObject(users);
+    file.open(QFile::WriteOnly | QFile::Text | QFile::Truncate);
+    file.write(data.toJson());
+    file.close();
+    //remove from all friend folders
+    QDir dir("../Server/messages/"+ID);
+    QStringList files = dir.entryList(QStringList() << "*.json", QDir::Files);
+    foreach(const QString& friend_ID, files) {
+        QFile friend_message("../Server/messages/"+friend_ID.split('.')[0]+"/"+ID+".json");
+        friend_message.remove();
+    }
+    //remove folder from messages
+    dir.removeRecursively();
+}
+
+void Server::make_friend(const QString &ID1,const QString &ID2){
+    //create message json file for ID1
+    QFile file("../Server/messages/"+ID1+"/"+ID2+".json");
+    file.open(QFile::WriteOnly | QFile::Text | QFile::Truncate);
+    QJsonArray jsonArray;
+
+    QJsonDocument jsonDoc;
+    jsonDoc.setArray(jsonArray);
+    file.write(jsonDoc.toJson());
+    file.close();
+    //create message json file for ID2
+    QFile file2("../Server/messages/"+ID2+"/"+ID1+".json");
+    file2.open(QFile::WriteOnly | QFile::Text | QFile::Truncate);
+    QJsonArray jsonArray2;
+
+    QJsonDocument jsonDoc2;
+    jsonDoc2.setArray(jsonArray2);
+    file2.write(jsonDoc2.toJson());
+    file2.close();
 }
 
 //CHANGE STUFF HERE
@@ -67,10 +121,10 @@ void Server::attemptSignup(ServerSocket *client,const QString &email,const QStri
         user.insert("password",password);
         user.insert("email",email);
         user.insert("intro","This is your intro.");
-        user.insert("pronoun","none");
-        user.insert("language1","none");
-        user.insert("language2","none");
-        user.insert("language3","none");
+        user.insert("pronoun","");
+        user.insert("language1","");
+        user.insert("language2","");
+        user.insert("language3","");
         user.insert("profile_pic_path", ":/images/pic/profile.png");
         all_users.insert(ID,user);
         registered_usernames.insert(username,ID);
@@ -91,10 +145,13 @@ void Server::attemptSignup(ServerSocket *client,const QString &email,const QStri
         file.open(QFile::WriteOnly | QFile::Text | QFile::Truncate);
         file.write(data.toJson());
         file.close();
+
+        //initialize and save messages info
+        QDir().mkdir("../Server/messages/"+ID);
+
+        //send info to client
         client->sendPersonalInfo(user);
-
-        //initialize and save message info
-
+        client->sendMessageInfo(ID);
     }
 }
 
@@ -106,6 +163,7 @@ void Server::attemptLogin(ServerSocket *client,const QString &username,const QSt
             //get client info and send
             client->sendPersonalInfo(all_users[registered_usernames[username]]);
             //get message info and send
+            client->sendMessageInfo(registered_usernames[username]);
 
             qDebug()<<"Current users:";
             foreach(const QString& ID, active_users) {
@@ -122,6 +180,7 @@ void Server::attemptLogin(ServerSocket *client,const QString &username,const QSt
             //get client info and send
             client->sendPersonalInfo(all_users[registered_emails[username]]);
             //get message info and send
+            client->sendMessageInfo(registered_emails[username]);
 
             qDebug()<<"Current users:";
             foreach(const QString& ID, active_users) {
@@ -194,7 +253,7 @@ void Server::newConnection(){
     qDebug() << "New client Connected";
 }
 
-void Server::signout(QString &ID){
+void Server::signout(const QString &ID){
     active_users.removeOne(ID);
 
     qDebug()<<"Current users:";
