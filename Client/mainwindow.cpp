@@ -1,7 +1,8 @@
 
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
-
+#include <iomanip>
+#include <ctime>
 #include <QDebug>
 #include <QMessageBox>
 #include <QCloseEvent>
@@ -12,6 +13,26 @@
 #include <QPixmap>
 #include <QSizePolicy>
 #include <stdio.h>
+#include <QBitMap>
+
+
+QPixmap PixmapToRound(const QPixmap &src, int radius)
+{
+    if (src.isNull()) {
+        return QPixmap();
+    }
+    QSize size(8*radius, 8*radius);
+    QBitmap mask(size);
+    QPainter painter(&mask);
+    painter.setRenderHint(QPainter::Antialiasing);
+    painter.setRenderHint(QPainter::SmoothPixmapTransform);
+    painter.fillRect(0, 0, size.width(), size.height(), Qt::white);
+    painter.setBrush(QColor(0, 0, 0));
+    painter.drawRoundedRect(0, 0, size.width(), size.height(), 99, 99);
+    QPixmap image = src.scaled(size);
+    image.setMask(mask);
+    return image;
+}
 
 
 MainWindow::MainWindow(QWidget *parent) :
@@ -113,7 +134,13 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->language_2nd_com->view()->window()->setAttribute(Qt::WA_TranslucentBackground);
     ui->language_3rd_com->view()->window()->setWindowFlags(Qt::Popup|Qt::FramelessWindowHint|Qt::NoDropShadowWindowHint);
     ui->language_3rd_com->view()->window()->setAttribute(Qt::WA_TranslucentBackground);
-
+//    QString path = client->profile["profile_pic_path"];
+//    QString path = "sgfkber2";
+//    QPixmap source(path);
+//    QPixmap scaled = PixmapToRound(source,65);
+//    ui->displayprofile->setPixmap(scaled);
+//    QPixmap scaled_1 = PixmapToRound(source,50);
+//    ui->user_pic->setPixmap(scaled_1);
     client->connectToServer();
     for(int i = 0; i < ui->user_list->count(); ++i)
     {
@@ -123,9 +150,13 @@ MainWindow::MainWindow(QWidget *parent) :
     if (ui->user_list->count() > 0) {
       ui->user_list->item(0)->setSelected(true);
     }
+<<<<<<< HEAD
     ui->stackedWidget->setCurrentWidget(ui->chat);
 
+=======
+>>>>>>> 341a4053c62c31f61969265637ed645d6e12baea
 }
+
 MainWindow::~MainWindow()
 {
     delete loading;
@@ -465,32 +496,23 @@ void MainWindow::on_minimize_butt_clicked()
     this->setWindowState(this->windowState()^Qt::WindowMinimized);
 }
 
-QPixmap PixmapToRound(const QPixmap &src, int radius)
-{
-    if (src.isNull()) {
-        return QPixmap();
-    }
-    QSize size(8*radius, 8*radius);
-    QBitmap mask(size);
-    QPainter painter(&mask);
-    painter.setRenderHint(QPainter::Antialiasing);
-    painter.setRenderHint(QPainter::SmoothPixmapTransform);
-    painter.fillRect(0, 0, size.width(), size.height(), Qt::white);
-    painter.setBrush(QColor(0, 0, 0));
-    painter.drawRoundedRect(0, 0, size.width(), size.height(), 99, 99);
-    QPixmap image = src.scaled(size);
-    image.setMask(mask);
-    return image;
-}
-
 void MainWindow::on_changeprofilepic_clicked()
 {
     QString filename = QFileDialog::getOpenFileName(this, tr("Choose"), "", tr("Images (*.png *.jpg *.jpeg *bmp *.gif)"));
+    if(filename == ""){
+        filename = ":/images/pic/profile.png";
+        //filename = "/Users/robertren/Desktop/Google_SC/Client/pic/profile.png";
+    }
     QPixmap source(filename);
     QPixmap scaled = PixmapToRound(source,65);
     ui->displayprofile->setPixmap(scaled);
     QPixmap scaled_1 = PixmapToRound(source,50);
     ui->user_pic->setPixmap(scaled_1);
+    client->profile["profile_pic_path"] = filename;
+    QImage img_to_save = scaled_1.toImage();
+    QPixmap pixmap_to_change(":/profilepic/pic/profile.png");
+    pixmap_to_change = source;
+    pixmap_to_change.save("new_profile");
 }
 
 void MainWindow::on_pushButton_clicked()
@@ -500,7 +522,11 @@ void MainWindow::on_pushButton_clicked()
     msg_receive(msg, "no time");
 }
 
+<<<<<<< HEAD
 void MainWindow::msg_send(QString content, QString time_in){
+=======
+void MainWindow::msg_send(QString content){
+>>>>>>> 341a4053c62c31f61969265637ed645d6e12baea
     QWidget *window = new QWidget;
     QLabel *text_msg = new QLabel(this);
     text_msg->setText(content);
@@ -518,7 +544,7 @@ void MainWindow::msg_send(QString content, QString time_in){
     text_msg->setSizePolicy(QSizePolicy::Maximum,QSizePolicy::Minimum);
     QHBoxLayout *layout = new QHBoxLayout(window);
     layout->addStretch(0);
-    QFont f( "Poppins", 11);
+    QFont f("Poppins", 11);
     QFont t("Poppins", 9);
     text_msg->setFont(f);
     layout->addWidget(text_msg);
@@ -577,6 +603,7 @@ void MainWindow::msg_receive(QString content, QString time_in){
     ui->layout_scroll->insertWidget(count_num-1,complex);
     ui->chat_input->setText("");
 }
+<<<<<<< HEAD
 
 QString MainWindow::cur_time(const QString intime){
     if(intime=="no time"){
@@ -599,6 +626,20 @@ void MainWindow::remove ( QLayout* layout )
 
         delete child;
     }
+=======
+QString MainWindow::cur_time(){
+     time_t rawtime;
+     struct tm * timeinfo;
+     char buffer[80];
+
+     time (&rawtime);
+     timeinfo = localtime(&rawtime);
+
+     strftime(buffer,sizeof(buffer),"%d-%m-%Y %H:%M",timeinfo);
+     std::string str(buffer);
+     QString time = QString::fromStdString(str);
+     return time;
+>>>>>>> 341a4053c62c31f61969265637ed645d6e12baea
 }
 
 void MainWindow::on_user_list_clicked(const QModelIndex &index)
