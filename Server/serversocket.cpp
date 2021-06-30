@@ -26,12 +26,14 @@ ServerSocket::~ServerSocket(){
     delete socket;
 }
 
-void ServerSocket::sendMessageInfo(const QString &ID){
+void ServerSocket::sendFriendMessageInfo(const QString &ID, QHash<QString,QHash<QString,QString>> &all_users){
     QDataStream clientStream(socket);
     clientStream.setVersion(QDataStream::Qt_5_7);
     // Create the JSON we want to send
     QJsonObject messageInfo;
+    QJsonObject friendInfo;
     messageInfo[QStringLiteral("type")] = QStringLiteral("message information");
+    friendInfo[QStringLiteral("type")] = QStringLiteral("friend information");
     QDir dir("../Server/messages/"+ID);
     QStringList files = dir.entryList(QStringList() << "*.json", QDir::Files);
     for(const QString& friend_ID: files) {
@@ -41,9 +43,15 @@ void ServerSocket::sendMessageInfo(const QString &ID){
         message_file.close();
         QJsonArray friend_messages= data.array();
         messageInfo[friend_ID.split('.')[0]] = friend_messages;
+        QJsonObject friendprofile;
+        for(const QString& key: all_users[friend_ID.split('.')[0]].keys()) {
+            friendprofile[key]=all_users[friend_ID.split('.')[0]][key];
+        }
+        friendInfo.insert(friend_ID.split('.')[0],friendprofile);
     }
     // send the JSON using QDataStream
     clientStream << QJsonDocument(messageInfo).toJson();
+    clientStream << QJsonDocument(friendInfo).toJson();
 }
 
 void ServerSocket::sendPersonalInfo(QHash<QString,QString> &user){
@@ -144,6 +152,15 @@ void ServerSocket::jsonReceived(const QJsonObject &data)
             }
         }
         emit changeProfile(profile);
+    //recieved message
+    }else if (typeVal.toString().compare(QLatin1String("send message"))==0) {
+        QHash<QString,QString> message;
+        foreach(const QString& key, data.keys()){
+            if(key!="type" && key!="reciever"){
+                message.insert(key,data.value(key).toString());
+            }
+        }
+        emit messageRecieved(data.value("reciever").toString(), message);
     //signout
     }else if (typeVal.toString().compare(QLatin1String("signout"))==0) {
         emit signout(ID);

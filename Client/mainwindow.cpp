@@ -1,4 +1,3 @@
-
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include <iomanip>
@@ -14,26 +13,6 @@
 #include <QSizePolicy>
 #include <stdio.h>
 #include <QBitMap>
-
-
-QPixmap PixmapToRound(const QPixmap &src, int radius)
-{
-    if (src.isNull()) {
-        return QPixmap();
-    }
-    QSize size(8*radius, 8*radius);
-    QBitmap mask(size);
-    QPainter painter(&mask);
-    painter.setRenderHint(QPainter::Antialiasing);
-    painter.setRenderHint(QPainter::SmoothPixmapTransform);
-    painter.fillRect(0, 0, size.width(), size.height(), Qt::white);
-    painter.setBrush(QColor(0, 0, 0));
-    painter.drawRoundedRect(0, 0, size.width(), size.height(), 99, 99);
-    QPixmap image = src.scaled(size);
-    image.setMask(mask);
-    return image;
-}
-
 
 MainWindow::MainWindow(QWidget *parent) :
     QWidget(parent),
@@ -69,20 +48,6 @@ MainWindow::MainWindow(QWidget *parent) :
     setWindowFlags(Qt::FramelessWindowHint);
     setAttribute(Qt::WA_NoSystemBackground);
     setAttribute(Qt::WA_TranslucentBackground);
-
-    /* stack widget
-    QHBoxLayout *layout = new QHBoxLayout(this);
-    QStackedWidget *stack = new QStackedWidget(this);
-    connect(sidebar, &Sidebar::show_profile,
-            stack, std::bind(&QStackedWidget::setCurrentIndex, stack, 0));
-    connect(sidebar, &Sidebar::show_chat,
-            stack, std::bind(&QStackedWidget::setCurrentIndex, stack, 1));
-    stack->addWidget(profile);
-    stack->addWidget(chat);
-    layout->addWidget(sidebar);
-    layout->addWidget(stack);
-    this->setLayout(layout);
-    */
 
     QGraphicsDropShadowEffect* shadowEffect = new QGraphicsDropShadowEffect(this);
     shadowEffect->setColor(QColor(0,0,0,120));
@@ -142,14 +107,7 @@ MainWindow::MainWindow(QWidget *parent) :
 //    QPixmap scaled_1 = PixmapToRound(source,50);
 //    ui->user_pic->setPixmap(scaled_1);
     client->connectToServer();
-    for(int i = 0; i < ui->user_list->count(); ++i)
-    {
-        QListWidgetItem* item = ui->user_list->item(i);
-        item->setTextAlignment(Qt::AlignCenter);
-    }
-    if (ui->user_list->count() > 0) {
-      ui->user_list->item(0)->setSelected(true);
-    }
+
     ui->stackedWidget->setCurrentWidget(ui->chat);
 }
 
@@ -163,8 +121,124 @@ MainWindow::~MainWindow()
 void MainWindow::startApplication(){
     loading->hide();
     this->show();
-    //put all info on screen
-    //client->friend_messages.keys() ***
+    //initialize friend list
+    //  get IDs sorted by most recent messsage ***
+    QVector<QString> friend_IDs=client->friend_messages.keys();
+
+    //  display
+    for(const QString& ID: friend_IDs){
+        QListWidgetItem *user = new QListWidgetItem;
+        user->setData(Qt::UserRole, ID);
+        user->setText(client->friend_profiles[ID]["username"]);
+        user->setTextAlignment(Qt::AlignCenter);
+        ui->user_list->addItem(user);
+    }
+    if (ui->user_list->count() > 0) {
+        ui->user_list->setCurrentItem(ui->user_list->item(0));
+        on_user_list_clicked(ui->user_list->currentIndex());
+    }
+}
+
+void MainWindow::on_info_butt_clicked()
+{
+    ui->stackedWidget->setCurrentWidget(ui->chat_profile);
+    //display friend profile based on current selected chat ***
+
+}
+
+void MainWindow::on_user_list_clicked(const QModelIndex &index)
+{
+    //initiallize chat
+    ui->stackedWidget->setCurrentWidget(ui->chat);
+    //  username
+    QString friendname = index.data(Qt::DisplayRole).toString();
+    remove(ui->layout_scroll);
+    ui->layout_scroll->addStretch(0);
+    ui->chat_username->setText(friendname);
+    // chat messages
+    for(const QHash<QString,QString> &message:client->friend_messages[index.data(Qt::UserRole).toString()]){
+        display_message(message);
+    }
+}
+
+void MainWindow::on_pushButton_clicked()
+{
+    if (ui->chat_input->text()==""){
+        return;
+    }
+
+    //create message
+    QHash<QString,QString> message;
+    message["content"]=ui->chat_input->text();
+    message["sender"]=client->ID;
+    message["time"]=cur_time();
+
+    ui->chat_input->setText("");
+
+    //display message on screen
+    display_message(message);
+
+    //add meessage to friend_messages
+    QString friend_ID=ui->user_list->currentIndex().data(Qt::UserRole).toString();
+    client->friend_messages[friend_ID].push_back(message);
+
+    //send message to server based on current selected chat
+    client->sendMessage(friend_ID,message);
+}
+
+void MainWindow::display_message(QHash<QString,QString> message){
+    // get info from message object
+    QString content = message["content"];
+    bool sender = message["sender"]==client->ID;
+    QString sent_time = message["time"];
+
+    //display on screen
+    QWidget *window = new QWidget;
+    QLabel *text_msg = new QLabel(this);
+    text_msg->setText(content);
+    text_msg->setWordWrap(true);
+    text_msg->setMaximumWidth(500);
+    text_msg->setMinimumHeight(50);
+    text_msg->setSizePolicy(QSizePolicy::Maximum,QSizePolicy::Minimum);
+    QFont f("Poppins", 11);
+    QFont t("Poppins", 9);
+    text_msg->setFont(f);
+    QHBoxLayout *layout = new QHBoxLayout(window);
+    if (sender){
+        text_msg->setStyleSheet("QLabel{background-color:#6781C3;"
+                                " color:#EBF0FF;"
+                                " border:1px solid rgba(0,0,0,0);"
+                                " border-radius:25px;"
+                                " padding-left:15px;"
+                                " padding-right:15px;"
+                                " padding-top:15px;"
+                                " padding-bottom:15px;}");
+        layout->addStretch(0);
+        layout->addWidget(text_msg);
+    }else{
+        text_msg->setStyleSheet("QLabel{background-color:#EBF0FF;"
+                                " color:#6781C3;"
+                                " border:1px solid rgba(0,0,0,0);"
+                                " border-radius:25px;"
+                                " padding-left:15px;"
+                                " padding-right:15px;"
+                                " padding-top:15px;"
+                                " padding-bottom:15px;}");
+        layout->addWidget(text_msg);
+        layout->addStretch(0);
+    }
+    QWidget *complex = new QWidget;
+    QVBoxLayout *H_layout = new QVBoxLayout(complex);
+    H_layout->addWidget(window);
+    QLabel *time = new QLabel(this);
+    time->setText(sent_time);
+    if (sender){
+        time->setAlignment(Qt::AlignRight);
+    }
+    time->setFont(t);
+    H_layout->addWidget(time);
+    int count_num = ui->chat_content->layout()->count();
+    ui->layout_scroll->insertWidget(count_num-1,complex);
 }
 
 void MainWindow::profileError(const QString &reason){
@@ -511,14 +585,59 @@ void MainWindow::on_changeprofilepic_clicked()
     pixmap_to_change.save("new_profile");
 }
 
-void MainWindow::on_pushButton_clicked()
+void MainWindow::on_pushButton_2_clicked()
 {
-    QString msg = ui->chat_input->text();
-    msg_send(msg,"no time");
-    msg_receive(msg, "no time");
+    ui->stackedWidget->setCurrentWidget(ui->chat);
 }
 
+QString MainWindow::cur_time(){
+    time_t rawtime;
+    struct tm * timeinfo;
+    char buffer[80];
 
+    time (&rawtime);
+    timeinfo = localtime(&rawtime);
+
+    strftime(buffer,sizeof(buffer),"%d-%m-%Y %H:%M",timeinfo);
+    std::string str(buffer);
+    QString time = QString::fromStdString(str);
+    return time;
+}
+
+void MainWindow::remove(QLayout* layout)
+{
+    QLayoutItem* child;
+    while ( layout->count() != 0 ) {
+        child = layout->takeAt ( 0 );
+        if ( child->layout() != 0 ) {
+            remove ( child->layout() );
+        } else if ( child->widget() != 0 ) {
+            delete child->widget();
+        }
+
+        delete child;
+    }
+}
+
+QPixmap MainWindow::PixmapToRound(const QPixmap &src, int radius)
+{
+    if (src.isNull()) {
+        return QPixmap();
+    }
+    QSize size(8*radius, 8*radius);
+    QBitmap mask(size);
+    QPainter painter(&mask);
+    painter.setRenderHint(QPainter::Antialiasing);
+    painter.setRenderHint(QPainter::SmoothPixmapTransform);
+    painter.fillRect(0, 0, size.width(), size.height(), Qt::white);
+    painter.setBrush(QColor(0, 0, 0));
+    painter.drawRoundedRect(0, 0, size.width(), size.height(), 99, 99);
+    QPixmap image = src.scaled(size);
+    image.setMask(mask);
+    return image;
+}
+
+/*
 void MainWindow::msg_send(QString content, QString time_in){
     QWidget *window = new QWidget;
     QLabel *text_msg = new QLabel(this);
@@ -535,11 +654,11 @@ void MainWindow::msg_send(QString content, QString time_in){
     text_msg->setMaximumWidth(500);
     text_msg->setMinimumHeight(50);
     text_msg->setSizePolicy(QSizePolicy::Maximum,QSizePolicy::Minimum);
-    QHBoxLayout *layout = new QHBoxLayout(window);
-    layout->addStretch(0);
     QFont f("Poppins", 11);
     QFont t("Poppins", 9);
     text_msg->setFont(f);
+    QHBoxLayout *layout = new QHBoxLayout(window);
+    layout->addStretch(0);
     layout->addWidget(text_msg);
     QWidget *complex = new QWidget;
 //    complex->setStyleSheet("background-color:yellow");
@@ -596,56 +715,4 @@ void MainWindow::msg_receive(QString content, QString time_in){
     ui->layout_scroll->insertWidget(count_num-1,complex);
     ui->chat_input->setText("");
 }
-
-QString MainWindow::cur_time(const QString intime){
-    if(intime=="no time"){
-        time_t rawtime;
-        struct tm * timeinfo;
-        char buffer[80];
-
-        time (&rawtime);
-        timeinfo = localtime(&rawtime);
-
-        strftime(buffer,sizeof(buffer),"%d-%m-%Y %H:%M",timeinfo);
-        std::string str(buffer);
-        QString time = QString::fromStdString(str);
-        return time;
-    }else{
-        //return history time
-    }
-}
-
-void MainWindow::remove ( QLayout* layout )
-{
-    QLayoutItem* child;
-    while ( layout->count() != 0 ) {
-        child = layout->takeAt ( 0 );
-        if ( child->layout() != 0 ) {
-            remove ( child->layout() );
-        } else if ( child->widget() != 0 ) {
-            delete child->widget();
-        }
-
-        delete child;
-    }
-}
-void MainWindow::on_user_list_clicked(const QModelIndex &index)
-{
-    QString itemText = index.data(Qt::DisplayRole).toString();
-    QString past_name = ui->chat_username->text();
-    if(itemText!=past_name){
-        remove(ui->layout_scroll);
-        ui->layout_scroll->addStretch(0);
-        ui->chat_username->setText(itemText);}
-}
-
-void MainWindow::on_info_butt_clicked()
-{
-    ui->stackedWidget->setCurrentWidget(ui->chat_profile);
-}
-
-void MainWindow::on_pushButton_2_clicked()
-{
-    ui->stackedWidget->setCurrentWidget(ui->chat);
-}
-
+*/

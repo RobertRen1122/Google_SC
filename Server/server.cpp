@@ -44,6 +44,47 @@ Server::~Server(){
 
 }
 
+//CHANGE STUFF HERE
+QString Server::new_ID(){
+    for(int i=0;i<10;i++){
+        if (all_users.contains(QString::number(i))==0){
+            return QString::number(i);
+        }
+    }
+    qDebug()<<"Something went wrong or >10 users";
+    return "error";
+}
+
+void Server::messageRecieved(ServerSocket* client, const QString &reciever, QHash<QString,QString> &message){
+    //message
+    QJsonObject message_json;
+    for(const QString& key: message.keys()){
+        message_json.insert(key,message[key]);
+    }
+    //sender side
+    QFile file("../Server/messages/"+client->ID+"/"+reciever+".json");
+    file.open(QIODevice::ReadOnly | QIODevice::Text);
+    QJsonDocument jsonDoc = QJsonDocument::fromJson(file.readAll());
+    file.close();
+    QJsonArray jsonArray=jsonDoc.array();
+    jsonArray.push_back(message_json);
+    jsonDoc.setArray(jsonArray);
+    file.open(QFile::WriteOnly | QFile::Text | QFile::Truncate);
+    file.write(jsonDoc.toJson());
+    file.close();
+    //reciever side
+    file.setFileName("../Server/messages/"+reciever+"/"+client->ID+".json");
+    file.open(QIODevice::ReadOnly | QIODevice::Text);
+    jsonDoc = QJsonDocument::fromJson(file.readAll());
+    file.close();
+    jsonArray=jsonDoc.array();
+    jsonArray.push_back(message_json);
+    jsonDoc.setArray(jsonArray);
+    file.open(QFile::WriteOnly | QFile::Text | QFile::Truncate);
+    file.write(jsonDoc.toJson());
+    file.close();
+}
+
 void Server::remove_user(const QString &ID){
     //active
     //force signout the user
@@ -94,17 +135,6 @@ void Server::make_friend(const QString &ID1,const QString &ID2){
     file2.close();
 }
 
-//CHANGE STUFF HERE
-QString Server::new_ID(){
-    for(int i=0;i<10;i++){
-        if (all_users.contains(QString::number(i))==0){
-            return QString::number(i);
-        }
-    }
-    qDebug()<<"Something went wrong or >10 users";
-    return "error";
-}
-
 void Server::attemptSignup(ServerSocket *client,const QString &email,const QString &username,const QString &password){
     if(registered_emails.contains(email)){
         client->loginError("Email already taken");
@@ -151,7 +181,7 @@ void Server::attemptSignup(ServerSocket *client,const QString &email,const QStri
 
         //send info to client
         client->sendPersonalInfo(user);
-        client->sendMessageInfo(ID);
+        client->sendFriendMessageInfo(ID,all_users);
     }
 }
 
@@ -163,7 +193,7 @@ void Server::attemptLogin(ServerSocket *client,const QString &username,const QSt
             //get client info and send
             client->sendPersonalInfo(all_users[registered_usernames[username]]);
             //get message info and send
-            client->sendMessageInfo(registered_usernames[username]);
+            client->sendFriendMessageInfo(registered_usernames[username], all_users);
 
             qDebug()<<"Current users:";
             foreach(const QString& ID, active_users) {
@@ -180,7 +210,7 @@ void Server::attemptLogin(ServerSocket *client,const QString &username,const QSt
             //get client info and send
             client->sendPersonalInfo(all_users[registered_emails[username]]);
             //get message info and send
-            client->sendMessageInfo(registered_emails[username]);
+            client->sendFriendMessageInfo(registered_emails[username], all_users);
 
             qDebug()<<"Current users:";
             foreach(const QString& ID, active_users) {
@@ -249,6 +279,9 @@ void Server::newConnection(){
     connect(client, &ServerSocket::changeProfile, this,
             std::bind(&Server::changeProfile, this, client, std::placeholders::_1));
     connect(client, &ServerSocket::signout, this, &Server::signout);
+    connect(client, &ServerSocket::messageRecieved, this,
+            std::bind(&Server::messageRecieved, this, client, std::placeholders::_1, std::placeholders::_2));
+
     clients.append(client);
     qDebug() << "New client Connected";
 }

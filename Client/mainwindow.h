@@ -14,9 +14,6 @@ class MainWindow : public QWidget{
 public:
     explicit MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
-    void mousePressEvent(QMouseEvent *event);
-    void mouseMoveEvent(QMouseEvent *event);
-
 
 private:
     Ui::MainWindow *ui;
@@ -24,6 +21,12 @@ private:
     LoginWindow* login;
     Client* client;
     QPoint m_startPoint;
+
+    //chat
+    void display_message(QHash<QString,QString> message);
+    void modify_message(int index, QHash<QString,QString> message);
+    QString cur_time();
+
     // Added for resizing window
     QPoint mpos; //For dragging, relative mouse position to upper left
     QPoint global_mpos; //For resizing, global mouse position at mouse click
@@ -31,36 +34,44 @@ private:
     int storeWidth; //fix window size at mouseclick for resizing
     int storeHeight;
 
+    //utility functions
+    void mousePressEvent(QMouseEvent *event);
+    void mouseMoveEvent(QMouseEvent *event);
+    void remove(QLayout* layout);
+    QPixmap PixmapToRound(const QPixmap &src, int radius);
+
+
 signals:
 
 private slots:
+    //connect
     void connected();
     void serverError(QAbstractSocket::SocketError socketError);
 
+    //login
     void loginError(const QString &reason);
     void loggedIn();
     void startApplication();
+    void on_signout_clicked();
 
+    //profile
     void profileChanged();
     void profileError(const QString &reason);
-
     void on_settingbutton_clicked();
-    void on_dictionary_2_clicked();
     void on_changeProfile_clicked();
-    void on_signout_clicked();
-    void on_new_conversation_clicked();
-
-    void on_maximize_butt_clicked();
-    void on_minimize_butt_clicked();
     void on_changeprofilepic_clicked();
-    void on_pushButton_clicked();
-    void msg_send(QString content, QString time_in);
-    void msg_receive(QString content, QString time_in);
-    QString cur_time(const QString intime);
+
+    //chat
+    void on_pushButton_clicked(); //send button
     void on_user_list_clicked(const QModelIndex &index);
     void on_info_butt_clicked();
-    void on_pushButton_2_clicked();
-    void remove ( QLayout* layout);
+    void on_pushButton_2_clicked(); //back to chat buttonn
+
+    //ui
+    void on_dictionary_2_clicked();
+    void on_new_conversation_clicked();
+    void on_maximize_butt_clicked();
+    void on_minimize_butt_clicked();
 };
 
 
