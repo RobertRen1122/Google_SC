@@ -17,7 +17,7 @@ public:
     void updateProfile();
 
     QHash<QString,QVector<QHash<QString,QString>>> friend_messages;
-    QHash<QString,QString> friend_names;
+    QHash<QString,QHash<QString,QString>> friend_profiles;
 
 private:
     QTcpSocket* socket;
@@ -40,7 +40,7 @@ public slots:
     void attemptSignup(const QString &email,const QString &username,const QString &password);
 
     //void newConversation();
-    //void sendMessage();
+    void sendMessage(const QString &ID, QHash<QString,QString> &message);
 
 private slots:
     void onReadyRead();

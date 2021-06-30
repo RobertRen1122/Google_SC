@@ -24,7 +24,7 @@ Client::Client(QObject *parent):
 
 void Client::jsonReceived(const QJsonObject &data)
 {
-    qDebug()<<"message";
+    qDebug()<<"messages";
     foreach(const QString& key, data.keys()){
         qDebug()<<key<<"->"<<data.value(key).toString();
     }
@@ -74,7 +74,6 @@ void Client::jsonReceived(const QJsonObject &data)
                 QJsonArray messages_json = data[key].toArray();
                 QVector<QHash<QString,QString>> messages;
                 for(const QJsonValue& msg: messages_json){
-                    qDebug()<<"11111";
                     QJsonObject message_json = msg.toObject();
                     QHash<QString,QString> message;
                     for(const QString& key2: message_json.keys()){
@@ -85,11 +84,33 @@ void Client::jsonReceived(const QJsonObject &data)
                 friend_messages[key]=messages;
             }
         }
+    }else if(typeVal.toString().compare(QLatin1String("friend information"))==0) {
+        for(const QString& key: data.keys()){
+            if(key!="type"){
+                QJsonObject friend_profile_json = data[key].toObject();
+                QHash<QString,QString> friend_profile;
+                for(const QString& key2: friend_profile_json.keys()){
+                    friend_profile[key2]=friend_profile_json[key2].toString();
+                }
+                friend_profiles[key]=friend_profile;
+            }
+        }
         emit informationRecieved();
     }
 }
 
 // ------------------------------ message to server ------------------------------
+void Client::sendMessage(const QString &ID, QHash<QString,QString> &message_sent){
+    QDataStream clientStream(socket);
+    clientStream.setVersion(QDataStream::Qt_5_7);
+    QJsonObject message;
+    message[QStringLiteral("type")] = QStringLiteral("send message");
+    message[QStringLiteral("reciever")] = ID;
+    foreach(const QString& key, message_sent.keys()) {
+        message[key] = message_sent[key];
+    }
+    clientStream << QJsonDocument(message).toJson();
+}
 
 void Client::updateProfile(){
     QDataStream clientStream(socket);

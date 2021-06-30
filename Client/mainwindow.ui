@@ -621,96 +621,6 @@ background-color: none;
               <property name="currentRow">
                <number>-1</number>
               </property>
-              <item>
-               <property name="text">
-                <string>HiBot</string>
-               </property>
-              </item>
-              <item>
-               <property name="text">
-                <string>Lindy</string>
-               </property>
-              </item>
-              <item>
-               <property name="text">
-                <string>Robert</string>
-               </property>
-              </item>
-              <item>
-               <property name="text">
-                <string>Serena</string>
-               </property>
-              </item>
-              <item>
-               <property name="text">
-                <string>Cathy</string>
-               </property>
-              </item>
-              <item>
-               <property name="text">
-                <string>User_1</string>
-               </property>
-              </item>
-              <item>
-               <property name="text">
-                <string>User_2</string>
-               </property>
-              </item>
-              <item>
-               <property name="text">
-                <string>User_3</string>
-               </property>
-              </item>
-              <item>
-               <property name="text">
-                <string>User_4</string>
-               </property>
-              </item>
-              <item>
-               <property name="text">
-                <string>User_5</string>
-               </property>
-              </item>
-              <item>
-               <property name="text">
-                <string>User_6</string>
-               </property>
-              </item>
-              <item>
-               <property name="text">
-                <string>User_7</string>
-               </property>
-              </item>
-              <item>
-               <property name="text">
-                <string>User_8</string>
-               </property>
-              </item>
-              <item>
-               <property name="text">
-                <string>user_9</string>
-               </property>
-              </item>
-              <item>
-               <property name="text">
-                <string>user_10</string>
-               </property>
-              </item>
-              <item>
-               <property name="text">
-                <string>user_11</string>
-               </property>
-              </item>
-              <item>
-               <property name="text">
-                <string>user_12</string>
-               </property>
-              </item>
-              <item>
-               <property name="text">
-                <string>user_13</string>
-               </property>
-              </item>
              </widget>
             </item>
            </layout>
@@ -1093,7 +1003,7 @@ background-color: none;
                               <x>0</x>
                               <y>0</y>
                               <width>348</width>
-                              <height>843</height>
+                              <height>794</height>
                              </rect>
                             </property>
                             <layout class="QVBoxLayout" name="verticalLayout_11">
@@ -2066,8 +1976,8 @@ background-color: none;
                              <rect>
                               <x>0</x>
                               <y>0</y>
-                              <width>68</width>
-                              <height>16</height>
+                              <width>616</width>
+                              <height>701</height>
                              </rect>
                             </property>
                             <layout class="QVBoxLayout" name="layout_scroll" stretch="0">
@@ -2386,7 +2296,7 @@ background-color: none;
                            <x>0</x>
                            <y>0</y>
                            <width>634</width>
-                           <height>790</height>
+                           <height>795</height>
                           </rect>
                          </property>
                          <layout class="QVBoxLayout" name="verticalLayout_45">
@@ -2480,7 +2390,7 @@ background-color: none;
                                   <x>0</x>
                                   <y>0</y>
                                   <width>476</width>
-                                  <height>754</height>
+                                  <height>759</height>
                                  </rect>
                                 </property>
                                 <layout class="QVBoxLayout" name="verticalLayout_37">
