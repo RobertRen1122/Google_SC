@@ -123,7 +123,7 @@ void MainWindow::startApplication(){
     this->show();
     //initialize friend list
     //  get IDs sorted by most recent messsage ***
-    QVector<QString> friend_IDs=client->friend_messages.keys();
+    QList<QString> friend_IDs= client->friend_messages.keys();
 
     //  display
     for(const QString& ID: friend_IDs){
