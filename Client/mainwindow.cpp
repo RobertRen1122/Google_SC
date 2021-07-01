@@ -125,7 +125,12 @@ void MainWindow::startApplication(){
     //  get IDs sorted by most recent messsage ***
     QList<QString> friend_IDs= client->friend_messages.keys();
 
-    //  display
+    // display own name
+    QString my_name = client->profile["username"];
+    //QListWidgetItem *me = new QListWidgetItem;
+    ui->username->setText(my_name);
+
+    //  display friends
     for(const QString& ID: friend_IDs){
         QListWidgetItem *user = new QListWidgetItem;
         user->setData(Qt::UserRole, ID);
@@ -143,7 +148,9 @@ void MainWindow::on_info_butt_clicked()
 {
     ui->stackedWidget->setCurrentWidget(ui->chat_profile);
     //display friend profile based on current selected chat ***
-
+    QString friend_ID=ui->user_list->currentIndex().data(Qt::UserRole).toString();
+    QString my_friends_name = client->friend_profiles[friend_ID]["username"];
+    ui->friend_name->setText(my_friends_name);
 }
 
 void MainWindow::on_user_list_clicked(const QModelIndex &index)
@@ -256,6 +263,8 @@ void MainWindow::on_changeProfile_clicked(){
         ui->profileError->setText("Email is not valid");
     }else{
         client->profile["username"]=ui->username_enter->text();
+        //client->profile["username"]=client->profile["username"];
+        //client->profile["username"]="喵";
         client->profile["email"]=ui->enter_email->text();
         client->profile["intro"]=ui->textEdit->toPlainText();
         client->profile["pronoun"]=ui->pro_comboBox->currentText();
