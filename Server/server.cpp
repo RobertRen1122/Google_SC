@@ -115,8 +115,9 @@ QString Server::new_ID(){
         return id_;
     }else{
         qDebug()<<"something went wrong";
-        return "error";
+        return new_ID();
     }
+    return "error";
 }
 
 void Server::attemptSignup(ServerSocket *client,const QString &email,const QString &username,const QString &password){
