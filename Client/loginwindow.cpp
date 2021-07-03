@@ -120,7 +120,9 @@ bool LoginWindow::validate_email(const QString &email){
 
 bool LoginWindow::validate_pwd(const QString &password){
     // pwd policy:
-    // length must be between 8-16，at least 1 capitalized letter and 1 non-capitalized letter, other symbols are allowed.
+    // - password length must be between 8-16
+    // - password must contains at least 1 capitalized letter and 1 non-capitalized letter
+    // - other symbols (such as _,!?) are allowed.
 
     QRegularExpression regPsw("^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)[\\s\\S]{8,16}$");
          if(regPsw.match(password).hasMatch()){
