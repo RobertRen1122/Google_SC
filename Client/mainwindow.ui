@@ -327,7 +327,7 @@ border-radius: 30px;
                   <property name="font">
                    <font>
                     <family>Poppins</family>
-                    <pointsize>12</pointsize>
+                    <pointsize>16</pointsize>
                     <weight>75</weight>
                     <bold>true</bold>
                    </font>
@@ -338,7 +338,7 @@ color: white;
 }</string>
                   </property>
                   <property name="text">
-                   <string/>
+                   <string>Bot</string>
                   </property>
                  </widget>
                  <widget class="QPushButton" name="settingbutton">
@@ -1003,7 +1003,7 @@ background-color: none;
                               <x>0</x>
                               <y>0</y>
                               <width>348</width>
-                              <height>806</height>
+                              <height>794</height>
                              </rect>
                             </property>
                             <layout class="QVBoxLayout" name="verticalLayout_11">
@@ -1976,8 +1976,8 @@ background-color: none;
                              <rect>
                               <x>0</x>
                               <y>0</y>
-                              <width>100</width>
-                              <height>30</height>
+                              <width>616</width>
+                              <height>701</height>
                              </rect>
                             </property>
                             <layout class="QVBoxLayout" name="layout_scroll" stretch="0">
@@ -2102,7 +2102,7 @@ border: 1.5px solid rgba(100, 127, 194, 255);
                      <property name="autoFillBackground">
                       <bool>false</bool>
                      </property>
-                     <layout class="QHBoxLayout" name="horizontalLayout_13" stretch="0,0">
+                     <layout class="QHBoxLayout" name="horizontalLayout_13" stretch="0,20">
                       <property name="topMargin">
                        <number>0</number>
                       </property>
@@ -2156,7 +2156,7 @@ color: rgb(255, 255, 255);
 }</string>
                         </property>
                         <property name="text">
-                         <string/>
+                         <string>This is #USERNAME</string>
                         </property>
                         <property name="alignment">
                          <set>Qt::AlignCenter</set>
