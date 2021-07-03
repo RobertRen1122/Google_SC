@@ -60,6 +60,11 @@ private slots:
     void on_settingbutton_clicked();
     void on_changeProfile_clicked();
     void on_changeprofilepic_clicked();
+    void on_dictionary_2_clicked();
+    void on_signout_clicked();
+    void on_new_conversation_clicked();
+    void on_maximize_butt_clicked();
+    void on_minimize_butt_clicked();
 
     //chat
     void on_pushButton_clicked(); //send button
