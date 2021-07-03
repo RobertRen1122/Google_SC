@@ -7,6 +7,8 @@
 #include <QJsonObject>
 #include <QJsonArray>
 #include <QJsonValue>
+#include <time.h>
+#include <sys/timeb.h>
 
 Server::Server(QObject *parent) :
     QObject(parent),
@@ -46,12 +48,25 @@ Server::~Server(){
 
 //CHANGE STUFF HERE
 QString Server::new_ID(){
-    for(int i=0;i<10;i++){
-        if (all_users.contains(QString::number(i))==0){
-            return QString::number(i);
-        }
+    QString id_;
+    int length = 32;
+    QString strTmp = "abcdefghigklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
+    struct timeb timer;
+    ftime(&timer);
+    srand(timer.time * 1000 + timer.millitm);
+
+    for(int i = 0; i < length; i++ )
+    {
+    int j = rand()%61;
+    id_ += strTmp.at(j);
     }
-    qDebug()<<"Something went wrong or >10 users";
+    // qDebug() << id_;
+    if(all_users.contains(id_)==0){
+        return id_;
+    }else{
+        qDebug()<<"something went wrong";
+        return new_ID();
+    }
     return "error";
 }
 
