@@ -110,7 +110,7 @@ QString Server::new_ID(){
     int j = rand()%61;
     id_ += strTmp.at(j);
     }
-    qDebug() << id_;
+    // qDebug() << id_;
     if(all_users.contains(id_)==0){
         return id_;
     }else{
