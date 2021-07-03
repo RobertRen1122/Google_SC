@@ -10,6 +10,7 @@
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <QJsonValue>
+#include <QRegularExpression>
 
 LoginWindow::LoginWindow(QWidget *parent) :
     QWidget(parent),
@@ -118,10 +119,17 @@ bool LoginWindow::validate_email(const QString &email){
 }
 
 bool LoginWindow::validate_pwd(const QString &password){
-    //ADD STUFF HERE
-    if (password==""){
-        return false;
-    }
+    // pwd policy:
+    // length must be between 8-16，at least 1 capitalized letter and 1 non-capitalized letter, other symbol is allowed.
+
+    QRegularExpression regPsw("^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)[\\s\\S]{8,16}$");
+         if(regPsw.match(password).hasMatch()){
+                return true;
+         }else {
+//             qDebug()<<password;
+//             qDebug()<<"does not allow\n";
+             return false;
+         }
     return true;
 }
 

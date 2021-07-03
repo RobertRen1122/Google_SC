@@ -7,6 +7,8 @@
 #include <QJsonObject>
 #include <QJsonArray>
 #include <QJsonValue>
+#include <time.h>
+#include <sys/timeb.h>
 
 Server::Server(QObject *parent) :
     QObject(parent),
@@ -96,13 +98,25 @@ void Server::make_friend(const QString &ID1,const QString &ID2){
 
 //CHANGE STUFF HERE
 QString Server::new_ID(){
-    for(int i=0;i<10;i++){
-        if (all_users.contains(QString::number(i))==0){
-            return QString::number(i);
-        }
+    QString id_;
+    int length = 32;
+    QString strTmp = "abcdefghigklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
+    struct timeb timer;
+    ftime(&timer);
+    srand(timer.time * 1000 + timer.millitm);
+
+    for(int i = 0; i < length; i++ )
+    {
+    int j = rand()%61;
+    id_ += strTmp.at(j);
     }
-    qDebug()<<"Something went wrong or >10 users";
-    return "error";
+    qDebug() << id_;
+    if(all_users.contains(id_)==0){
+        return id_;
+    }else{
+        qDebug()<<"something went wrong";
+        return "error";
+    }
 }
 
 void Server::attemptSignup(ServerSocket *client,const QString &email,const QString &username,const QString &password){
@@ -111,7 +125,7 @@ void Server::attemptSignup(ServerSocket *client,const QString &email,const QStri
     }else if(registered_usernames.contains(username)){
         client->loginError("Username already taken");
     }else{
-        QString ID=new_ID();
+        QString ID = new_ID();
         client->loginSuccessful(ID);
         active_users.append(ID);
 
