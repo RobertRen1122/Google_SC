@@ -109,6 +109,7 @@ MainWindow::MainWindow(QWidget *parent) :
     client->connectToServer();
 
     ui->stackedWidget->setCurrentWidget(ui->chat);
+
 }
 
 MainWindow::~MainWindow()
@@ -118,6 +119,17 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
+void MainWindow::user_list_edit(){
+    for(const QString& key: client->friend_messages.keys()){
+        QListWidgetItem *user = new QListWidgetItem;
+        user->setText(key);
+        user->setTextAlignment(Qt::AlignCenter);
+        ui->user_list->addItem(user);
+    }
+    if (ui->user_list->count() > 0) {
+        ui->user_list->item(0)->setSelected(true);
+    }
+}
 void MainWindow::startApplication(){
     loading->hide();
     this->show();
@@ -246,6 +258,7 @@ void MainWindow::display_message(QHash<QString,QString> message){
     H_layout->addWidget(time);
     int count_num = ui->chat_content->layout()->count();
     ui->layout_scroll->insertWidget(count_num-1,complex);
+    user_list_edit();
 }
 
 void MainWindow::profileError(const QString &reason){
@@ -628,6 +641,7 @@ void MainWindow::remove(QLayout* layout)
     }
 }
 
+
 QPixmap MainWindow::PixmapToRound(const QPixmap &src, int radius)
 {
     if (src.isNull()) {
@@ -725,3 +739,57 @@ void MainWindow::msg_receive(QString content, QString time_in){
     ui->chat_input->setText("");
 }
 */
+
+QString MainWindow::cur_time(const QString intime){
+    if(intime=="no time"){
+        time_t rawtime;
+        struct tm * timeinfo;
+        char buffer[80];
+
+        time (&rawtime);
+        timeinfo = localtime(&rawtime);
+
+        strftime(buffer,sizeof(buffer),"%d-%m-%Y %H:%M",timeinfo);
+        std::string str(buffer);
+        QString time = QString::fromStdString(str);
+        return time;
+    }else{
+        //return history time
+    }
+}
+
+void MainWindow::remove ( QLayout* layout )
+{
+    QLayoutItem* child;
+    while ( layout->count() != 0 ) {
+        child = layout->takeAt ( 0 );
+        if ( child->layout() != 0 ) {
+            remove ( child->layout() );
+        } else if ( child->widget() != 0 ) {
+            delete child->widget();
+        }
+
+        delete child;
+    }
+}
+
+void MainWindow::on_user_list_clicked(const QModelIndex &index)
+{
+    QString itemText = index.data(Qt::DisplayRole).toString();
+    QString past_name = ui->chat_username->text();
+    if(itemText!=past_name){
+        remove(ui->layout_scroll);
+        ui->layout_scroll->addStretch(0);
+        ui->chat_username->setText(itemText);}
+}
+
+void MainWindow::on_info_butt_clicked()
+{
+    ui->stackedWidget->setCurrentWidget(ui->chat_profile);
+}
+
+void MainWindow::on_pushButton_2_clicked()
+{
+    ui->stackedWidget->setCurrentWidget(ui->chat);
+}
+

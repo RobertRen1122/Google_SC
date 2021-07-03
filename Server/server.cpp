@@ -7,6 +7,8 @@
 #include <QJsonObject>
 #include <QJsonArray>
 #include <QJsonValue>
+#include <time.h>
+#include <sys/timeb.h>
 
 Server::Server(QObject *parent) :
     QObject(parent),
@@ -135,13 +137,37 @@ void Server::make_friend(const QString &ID1,const QString &ID2){
     file2.close();
 }
 
+//CHANGE STUFF HERE
+QString Server::new_ID(){
+    QString id_;
+    int length = 32;
+    QString strTmp = "abcdefghigklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
+    struct timeb timer;
+    ftime(&timer);
+    srand(timer.time * 1000 + timer.millitm);
+
+    for(int i = 0; i < length; i++ )
+    {
+    int j = rand()%61;
+    id_ += strTmp.at(j);
+    }
+    // qDebug() << id_;
+    if(all_users.contains(id_)==0){
+        return id_;
+    }else{
+        qDebug()<<"something went wrong";
+        return new_ID();
+    }
+    return "error";
+}
+
 void Server::attemptSignup(ServerSocket *client,const QString &email,const QString &username,const QString &password){
     if(registered_emails.contains(email)){
         client->loginError("Email already taken");
     }else if(registered_usernames.contains(username)){
         client->loginError("Username already taken");
     }else{
-        QString ID=new_ID();
+        QString ID = new_ID();
         client->loginSuccessful(ID);
         active_users.append(ID);
 
