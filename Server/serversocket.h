@@ -22,6 +22,7 @@ public:
     void changeProfileError(const QString &reason, QHash<QString,QString> &profile);
 
     void sendFriendMessageInfo(const QString &ID, QHash<QString,QHash<QString,QString>> &all_users);
+    void sendMessage(QJsonObject &message);
 
 private:
     QTcpSocket *socket;
@@ -39,7 +40,7 @@ signals:
 
     //chat related
     //void newConversation();
-    void messageRecieved(const QString &reciever, QHash<QString,QString> &message);
+    void messageReceived(QHash<QString,QString> &message);
 
 public slots:
 

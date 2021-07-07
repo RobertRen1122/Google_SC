@@ -31,9 +31,11 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(client,&Client::loggedIn, login,&LoginWindow::loggedIn);
     connect(client,&Client::loginError, this,&MainWindow::loginError);
     //profile
-    connect(client,&Client::informationRecieved, this,&MainWindow::startApplication);
+    connect(client,&Client::informationReceived, this,&MainWindow::startApplication);
     connect(client,&Client::profileChanged, this,&MainWindow::profileChanged);
     connect(client,&Client::profileError, this,&MainWindow::profileError);
+    //message
+    connect(client,&Client::messageReceived, this,&MainWindow::messageReceived);
 
     //initialization
     ui->setupUi(this);
@@ -123,9 +125,14 @@ void MainWindow::startApplication(){
     this->show();
     //initialize friend list
     //  get IDs sorted by most recent messsage ***
-    QVector<QString> friend_IDs=client->friend_messages.keys();
+    QList<QString> friend_IDs= client->friend_messages.keys();
 
-    //  display
+    // display own name
+    QString my_name = client->profile["username"];
+    QListWidgetItem *me = new QListWidgetItem;
+    ui->username->setText(my_name);
+
+    //  display friends
     for(const QString& ID: friend_IDs){
         QListWidgetItem *user = new QListWidgetItem;
         user->setData(Qt::UserRole, ID);
@@ -139,11 +146,13 @@ void MainWindow::startApplication(){
     }
 }
 
+// DO ENTIRE PROFILE NOT JUST NAME OK?
 void MainWindow::on_info_butt_clicked()
 {
     ui->stackedWidget->setCurrentWidget(ui->chat_profile);
-    //display friend profile based on current selected chat ***
-
+    QString friend_ID=ui->user_list->currentIndex().data(Qt::UserRole).toString();
+    QString my_friends_name = client->friend_profiles[friend_ID]["username"];
+    ui->friend_name->setText(my_friends_name);
 }
 
 void MainWindow::on_user_list_clicked(const QModelIndex &index)
@@ -167,24 +176,28 @@ void MainWindow::on_pushButton_clicked()
         return;
     }
 
+    QString friend_ID=ui->user_list->currentIndex().data(Qt::UserRole).toString();
     //create message
     QHash<QString,QString> message;
     message["content"]=ui->chat_input->text();
     message["sender"]=client->ID;
+    message["receiver"]=friend_ID;
     message["time"]=cur_time();
 
     ui->chat_input->setText("");
-
-    //display message on screen
     display_message(message);
-
-    //add meessage to friend_messages
-    QString friend_ID=ui->user_list->currentIndex().data(Qt::UserRole).toString();
     client->friend_messages[friend_ID].push_back(message);
 
-    //send message to server based on current selected chat
-    client->sendMessage(friend_ID,message);
+    client->sendMessage(message);
 }
+
+void MainWindow::messageReceived(QHash<QString,QString> &message){
+    if(ui->stackedWidget->currentWidget()==ui->chat){
+        QString friend_ID=ui->user_list->currentIndex().data(Qt::UserRole).toString();
+        display_message(message);
+    }
+}
+
 
 void MainWindow::display_message(QHash<QString,QString> message){
     // get info from message object
@@ -636,6 +649,9 @@ QPixmap MainWindow::PixmapToRound(const QPixmap &src, int radius)
     image.setMask(mask);
     return image;
 }
+
+
+
 
 /*
 void MainWindow::msg_send(QString content, QString time_in){

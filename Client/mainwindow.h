@@ -66,6 +66,7 @@ private slots:
     void on_user_list_clicked(const QModelIndex &index);
     void on_info_butt_clicked();
     void on_pushButton_2_clicked(); //back to chat buttonn
+    void messageReceived(QHash<QString,QString> &message);
 
     //ui
     void on_dictionary_2_clicked();

@@ -35,7 +35,7 @@ private slots:
     void attemptSignup(ServerSocket* client, const QString &email, const QString &username, const QString &password);
     void changeProfile(ServerSocket* client, QHash<QString,QString> profile);
 
-    void messageRecieved(ServerSocket* client, const QString &reciever, QHash<QString,QString> &message);
+    void messageReceived(ServerSocket* client, QHash<QString,QString> &message);
 };
 
 #endif // SERVER_H

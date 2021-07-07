@@ -95,17 +95,26 @@ void Client::jsonReceived(const QJsonObject &data)
                 friend_profiles[key]=friend_profile;
             }
         }
-        emit informationRecieved();
+        emit informationReceived();
+
+    }else if(typeVal.toString().compare(QLatin1String("message received"))==0) {
+        QHash<QString,QString> message;
+        for(const QString& key: data.keys()){
+            if(key!="type"){
+                message[key]=data[key].toString();
+            }
+        }
+        friend_messages[message["sender"]].push_back(message);
+        emit messageReceived(message);
     }
 }
 
 // ------------------------------ message to server ------------------------------
-void Client::sendMessage(const QString &ID, QHash<QString,QString> &message_sent){
+void Client::sendMessage(QHash<QString,QString> &message_sent){
     QDataStream clientStream(socket);
     clientStream.setVersion(QDataStream::Qt_5_7);
     QJsonObject message;
     message[QStringLiteral("type")] = QStringLiteral("send message");
-    message[QStringLiteral("reciever")] = ID;
     foreach(const QString& key, message_sent.keys()) {
         message[key] = message_sent[key];
     }
