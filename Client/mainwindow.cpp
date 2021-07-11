@@ -1,5 +1,7 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
+#include <stdio.h>
+#include <stdlib.h>
 #include <iomanip>
 #include <ctime>
 #include <QDebug>
@@ -11,7 +13,7 @@
 #include <QPainter>
 #include <QPixmap>
 #include <QSizePolicy>
-#include <stdio.h>
+#include <algorithm>
 #include <QBitMap>
 
 MainWindow::MainWindow(QWidget *parent) :
@@ -124,12 +126,21 @@ void MainWindow::startApplication(){
     loading->hide();
     this->show();
     //initialize friend list
-    //  get IDs sorted by most recent messsage ***
-    QList<QString> friend_IDs= client->friend_messages.keys();
+    //  get IDs sorted by most recent messsage
+    QList<QString> friend_IDs = client->friend_messages.keys();
+
+    std::sort(friend_IDs.begin(), friend_IDs.end(), [this](const QString id_1, const QString id_2)->bool {
+        QHash<QString,QString> message_1 = client->friend_messages[id_1].at(client->friend_messages[id_1].count()-1);
+        QHash<QString,QString> message_2 = client->friend_messages[id_2].at(client->friend_messages[id_2].count()-1);
+        QDateTime time_1 = QDateTime::fromString(message_1["time"],"dd-MM-yyyy hh:mm");
+        QDateTime time_2 = QDateTime::fromString(message_2["time"],"dd-MM-yyyy hh:mm");
+//        qDebug()<<time_1<<": this is time_1";
+//        qDebug()<<time_2<<": this is time_2";
+        return time_1 > time_2;
+    });
 
     // display own name
     QString my_name = client->profile["username"];
-    QListWidgetItem *me = new QListWidgetItem;
     ui->username->setText(my_name);
 
     //  display friends
@@ -187,17 +198,29 @@ void MainWindow::on_pushButton_clicked()
     ui->chat_input->setText("");
     display_message(message);
     client->friend_messages[friend_ID].push_back(message);
-
     client->sendMessage(message);
+
+    if(ui->user_list->currentRow()!=0){
+    QListWidgetItem *latest_user = ui->user_list->takeItem(ui->user_list->currentRow());
+    ui->user_list->insertItem(0,latest_user);
+    ui->user_list->setCurrentItem(ui->user_list->item(0));
+    }
+
 }
 
 void MainWindow::messageReceived(QHash<QString,QString> &message){
     if(ui->stackedWidget->currentWidget()==ui->chat){
         QString friend_ID=ui->user_list->currentIndex().data(Qt::UserRole).toString();
+//        qDebug()<<friend_ID;
         display_message(message);
-    }
-}
+        QString ID = message["sender"];
+//        qDebug()<<ui->user_list->row(ui->user_list->findItems(client->friend_profiles[ID]["username"],Qt::MatchExactly)[0]);
+        QListWidgetItem *latest_user = ui->user_list->takeItem(ui->user_list->row(ui->user_list->findItems(client->friend_profiles[ID]["username"],Qt::MatchExactly)[0]));
+        ui->user_list->insertItem(0,latest_user);
+        ui->user_list->setCurrentItem(ui->user_list->item(0));
+        }
 
+}
 
 void MainWindow::display_message(QHash<QString,QString> message){
     // get info from message object
@@ -211,6 +234,7 @@ void MainWindow::display_message(QHash<QString,QString> message){
     text_msg->setText(content);
     text_msg->setWordWrap(true);
     text_msg->setMaximumWidth(500);
+    text_msg->setMinimumWidth(50);
     text_msg->setMinimumHeight(50);
     text_msg->setSizePolicy(QSizePolicy::Maximum,QSizePolicy::Minimum);
     QFont f("Poppins", 11);
@@ -353,7 +377,6 @@ void MainWindow::mousePressEvent(QMouseEvent *event){
 //        if (event->button() == Qt::LeftButton) {
 //            m_startPoint = frameGeometry().topLeft() - event->globalPos();
 //        }
-
         //From Qt Documentation:
         //Reason why pos() wasn't working is because the global
         //position at time of event may be very different
@@ -649,9 +672,6 @@ QPixmap MainWindow::PixmapToRound(const QPixmap &src, int radius)
     image.setMask(mask);
     return image;
 }
-
-
-
 
 /*
 void MainWindow::msg_send(QString content, QString time_in){
