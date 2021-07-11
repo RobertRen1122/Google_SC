@@ -39,6 +39,7 @@ private:
     void mouseMoveEvent(QMouseEvent *event);
     void remove(QLayout* layout);
     QPixmap PixmapToRound(const QPixmap &src, int radius);
+    int compareQdatetime (const QString id_1, const QString id_2);
 
 
 signals:
@@ -53,7 +54,6 @@ private slots:
     void loggedIn();
     void startApplication();
     void on_signout_clicked();
-
     //profile
     void profileChanged();
     void profileError(const QString &reason);
