@@ -2,13 +2,13 @@
     "0": {
         "email": "robert@gmail.com",
         "intro": "This is your intro.",
-        "language1": "",
-        "language2": "",
-        "language3": "",
+        "language1": "English",
+        "language2": "Chinese (Simplified)",
+        "language3": "Chinese (Traditional)",
         "password": "1234",
         "profile_pic_path": ":/images/pic/profile.png",
-        "pronoun": "",
-        "username": "robert"
+        "pronoun": "he/him/his",
+        "username": "Robert"
     },
     "1": {
         "email": "serena@gmail.com",
@@ -33,7 +33,7 @@
         "username": "lindy"
     },
     "3": {
-        "email": "nofriend@gmail.com",
+        "email": "cathy@gmail.com",
         "intro": "This is your intro.",
         "language1": "",
         "language2": "",
@@ -41,6 +41,6 @@
         "password": "1234",
         "profile_pic_path": ":/images/pic/profile.png",
         "pronoun": "",
-        "username": "nofriend"
+        "username": "cathy"
     }
 }
