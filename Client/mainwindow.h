@@ -39,6 +39,7 @@ private:
     void mouseMoveEvent(QMouseEvent *event);
     void remove(QLayout* layout);
     QPixmap PixmapToRound(const QPixmap &src, int radius);
+    int compareQdatetime (const QString id_1, const QString id_2);
 
 
 signals:
@@ -53,7 +54,6 @@ private slots:
     void loggedIn();
     void startApplication();
     void on_signout_clicked();
-
     //profile
     void profileChanged();
     void profileError(const QString &reason);
@@ -66,6 +66,7 @@ private slots:
     void on_user_list_clicked(const QModelIndex &index);
     void on_info_butt_clicked();
     void on_pushButton_2_clicked(); //back to chat buttonn
+    void messageReceived(QHash<QString,QString> &message);
 
     //ui
     void on_dictionary_2_clicked();

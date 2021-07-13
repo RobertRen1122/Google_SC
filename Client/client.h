@@ -30,17 +30,17 @@ signals:
     //signals fired after analyzing message from the server
     void loginError(const QString &reason);
     void loggedIn();
-    void informationRecieved();
-    //void messageReceived(const QString &sender, const QString &text);
+    void informationReceived();
     void profileChanged();
     void profileError(const QString &reason);
+    void messageReceived(QHash<QString,QString> &message);
 
 public slots:
     void attemptLogin(const QString &username,const QString &password);
     void attemptSignup(const QString &email,const QString &username,const QString &password);
 
     //void newConversation();
-    void sendMessage(const QString &ID, QHash<QString,QString> &message);
+    void sendMessage(QHash<QString,QString> &message);
 
 private slots:
     void onReadyRead();

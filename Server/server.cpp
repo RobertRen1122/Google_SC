@@ -40,13 +40,13 @@ Server::Server(QObject *parent) :
     }
 
     //manually add friends or remove users here
+    //make_friend(registered_usernames["robert"],registered_usernames["serena"]);
 }
 
 Server::~Server(){
 
 }
 
-//CHANGE STUFF HERE
 QString Server::new_ID(){
     QString id_;
     int length = 32;
@@ -57,8 +57,8 @@ QString Server::new_ID(){
 
     for(int i = 0; i < length; i++ )
     {
-    int j = rand()%61;
-    id_ += strTmp.at(j);
+        int j = rand()%61;
+        id_ += strTmp.at(j);
     }
     // qDebug() << id_;
     if(all_users.contains(id_)==0){
@@ -70,14 +70,16 @@ QString Server::new_ID(){
     return "error";
 }
 
-void Server::messageRecieved(ServerSocket* client, const QString &reciever, QHash<QString,QString> &message){
+void Server::messageReceived(ServerSocket* client, QHash<QString,QString> &message){
     //message
     QJsonObject message_json;
     for(const QString& key: message.keys()){
         message_json.insert(key,message[key]);
     }
-    //sender side
-    QFile file("../Server/messages/"+client->ID+"/"+reciever+".json");
+    QString sender=client->ID;
+    QString receiver=message["receiver"];
+    //save to sender side
+    QFile file("../Server/messages/"+sender+"/"+receiver+".json");
     file.open(QIODevice::ReadOnly | QIODevice::Text);
     QJsonDocument jsonDoc = QJsonDocument::fromJson(file.readAll());
     file.close();
@@ -87,8 +89,8 @@ void Server::messageRecieved(ServerSocket* client, const QString &reciever, QHas
     file.open(QFile::WriteOnly | QFile::Text | QFile::Truncate);
     file.write(jsonDoc.toJson());
     file.close();
-    //reciever side
-    file.setFileName("../Server/messages/"+reciever+"/"+client->ID+".json");
+    //save to receiver side
+    file.setFileName("../Server/messages/"+receiver+"/"+sender+".json");
     file.open(QIODevice::ReadOnly | QIODevice::Text);
     jsonDoc = QJsonDocument::fromJson(file.readAll());
     file.close();
@@ -98,6 +100,14 @@ void Server::messageRecieved(ServerSocket* client, const QString &reciever, QHas
     file.open(QFile::WriteOnly | QFile::Text | QFile::Truncate);
     file.write(jsonDoc.toJson());
     file.close();
+    //notify receiver if active
+    if (active_users.contains(receiver)){
+        for (ServerSocket* receiving_client:clients){
+            if (receiving_client->ID==receiver){
+                receiving_client->sendMessage(message_json);
+            }
+        }
+    }
 }
 
 void Server::remove_user(const QString &ID){
@@ -294,8 +304,8 @@ void Server::newConnection(){
     connect(client, &ServerSocket::changeProfile, this,
             std::bind(&Server::changeProfile, this, client, std::placeholders::_1));
     connect(client, &ServerSocket::signout, this, &Server::signout);
-    connect(client, &ServerSocket::messageRecieved, this,
-            std::bind(&Server::messageRecieved, this, client, std::placeholders::_1, std::placeholders::_2));
+    connect(client, &ServerSocket::messageReceived, this,
+            std::bind(&Server::messageReceived, this, client, std::placeholders::_1));
 
     clients.append(client);
     qDebug() << "New client Connected";

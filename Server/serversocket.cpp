@@ -26,6 +26,14 @@ ServerSocket::~ServerSocket(){
     delete socket;
 }
 
+void ServerSocket::sendMessage(QJsonObject &message){
+    QDataStream clientStream(socket);
+    clientStream.setVersion(QDataStream::Qt_5_7);
+    // Create the JSON we want to send
+    message[QStringLiteral("type")] = QStringLiteral("message received");
+    clientStream << QJsonDocument(message).toJson();
+}
+
 void ServerSocket::sendFriendMessageInfo(const QString &ID, QHash<QString,QHash<QString,QString>> &all_users){
     QDataStream clientStream(socket);
     clientStream.setVersion(QDataStream::Qt_5_7);
@@ -152,15 +160,15 @@ void ServerSocket::jsonReceived(const QJsonObject &data)
             }
         }
         emit changeProfile(profile);
-    //recieved message
+    //received message
     }else if (typeVal.toString().compare(QLatin1String("send message"))==0) {
         QHash<QString,QString> message;
         foreach(const QString& key, data.keys()){
-            if(key!="type" && key!="reciever"){
+            if(key!="type"){
                 message.insert(key,data.value(key).toString());
             }
         }
-        emit messageRecieved(data.value("reciever").toString(), message);
+        emit messageReceived(message);
     //signout
     }else if (typeVal.toString().compare(QLatin1String("signout"))==0) {
         emit signout(ID);
