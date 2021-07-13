@@ -1976,8 +1976,8 @@ background-color: none;
                              <rect>
                               <x>0</x>
                               <y>0</y>
-                              <width>100</width>
-                              <height>30</height>
+                              <width>68</width>
+                              <height>16</height>
                              </rect>
                             </property>
                             <layout class="QVBoxLayout" name="layout_scroll" stretch="0">
@@ -2611,7 +2611,7 @@ font: 12pt &quot;Poppins&quot;;
 }</string>
                                    </property>
                                    <property name="text">
-                                    <string>They/ Them</string>
+                                    <string/>
                                    </property>
                                    <property name="alignment">
                                     <set>Qt::AlignBottom|Qt::AlignHCenter</set>
@@ -2656,7 +2656,7 @@ font: 12pt &quot;Poppins&quot;;
 }</string>
                                    </property>
                                    <property name="text">
-                                    <string>English (Canada)</string>
+                                    <string/>
                                    </property>
                                    <property name="alignment">
                                     <set>Qt::AlignBottom|Qt::AlignHCenter</set>
@@ -2701,7 +2701,7 @@ font: 12pt &quot;Poppins&quot;;
 }</string>
                                    </property>
                                    <property name="text">
-                                    <string>English (Canada)</string>
+                                    <string/>
                                    </property>
                                    <property name="alignment">
                                     <set>Qt::AlignBottom|Qt::AlignHCenter</set>
@@ -2746,7 +2746,7 @@ font: 12pt &quot;Poppins&quot;;
 }</string>
                                    </property>
                                    <property name="text">
-                                    <string>English (Canada)</string>
+                                    <string/>
                                    </property>
                                    <property name="alignment">
                                     <set>Qt::AlignBottom|Qt::AlignHCenter</set>

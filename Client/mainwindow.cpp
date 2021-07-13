@@ -162,8 +162,21 @@ void MainWindow::on_info_butt_clicked()
 {
     ui->stackedWidget->setCurrentWidget(ui->chat_profile);
     QString friend_ID=ui->user_list->currentIndex().data(Qt::UserRole).toString();
+
     QString my_friends_name = client->friend_profiles[friend_ID]["username"];
     ui->friend_name->setText(my_friends_name);
+
+    QString intro = client->friend_profiles[friend_ID]["intro"];
+    ui->textEdit_3->setText(intro);
+
+    QString pronoun = client->friend_profiles[friend_ID]["pronoun"];
+    ui->pronoun_content->setText(pronoun);
+
+    ui->pronoun_content_2->setText(client->friend_profiles[friend_ID]["language1"]);
+    ui->pronoun_content_3->setText(client->friend_profiles[friend_ID]["language2"]);
+
+    QString language3 = client->friend_profiles[friend_ID]["language3"];
+    ui->pronoun_content_4->setText(language3);
 }
 
 void MainWindow::on_user_list_clicked(const QModelIndex &index)
