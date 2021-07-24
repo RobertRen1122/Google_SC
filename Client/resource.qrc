@@ -11,5 +11,10 @@
         <file>pic/edit.png</file>
         <file>pic/search.png</file>
         <file>pic/ellipsis.png</file>
+        <file>pic/004-bold.png</file>
+        <file>pic/024-italic.png</file>
+        <file>pic/048-strikethrough.png</file>
+        <file>pic/059-underline.png</file>
+        <file>pic/013-fill.png</file>
     </qresource>
 </RCC>
