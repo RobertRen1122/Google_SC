@@ -15,6 +15,8 @@
 #include <QSizePolicy>
 #include <algorithm>
 #include <QBitMap>
+#include <QMenu>
+#include <QClipboard>
 
 MainWindow::MainWindow(QWidget *parent) :
     QWidget(parent),
@@ -113,6 +115,10 @@ MainWindow::MainWindow(QWidget *parent) :
     client->connectToServer();
 
     ui->stackedWidget->setCurrentWidget(ui->chat);
+    ui->quote_widget->hide();
+
+
+
 }
 
 MainWindow::~MainWindow()
@@ -157,7 +163,7 @@ void MainWindow::startApplication(){
     }
 }
 
-// DO ENTIRE PROFILE NOT JUST NAME OK?
+
 void MainWindow::on_info_butt_clicked()
 {
     ui->stackedWidget->setCurrentWidget(ui->chat_profile);
@@ -196,19 +202,32 @@ void MainWindow::on_user_list_clicked(const QModelIndex &index)
 
 void MainWindow::on_pushButton_clicked()
 {
-    if (ui->chat_input->text()==""){
+    QString html_code = ui->chat_input->toHtml();
+    QString empty_text = "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\"><html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">p, li { white-space: pre-wrap; }</style></head><body style=\" font-family:\'Poppins\'; font-size:12pt; font-weight:400; font-style:normal;\"><p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><br /></p></body></html>";
+
+    if(ui->chat_input->toHtml()== empty_text){
         return;
     }
 
     QString friend_ID=ui->user_list->currentIndex().data(Qt::UserRole).toString();
-    //create message
+    QString quote_or_not;
+//    //create message
+    if(ui->quote_widget->isHidden()){
+        quote_or_not = "-1"; }
+    else{
+        // change here for the quoting reference
+        quote_or_not = "1";
+    }
+
     QHash<QString,QString> message;
-    message["content"]=ui->chat_input->text();
+    message["content"]=html_code;
     message["sender"]=client->ID;
     message["receiver"]=friend_ID;
     message["time"]=cur_time();
+    message["is_quote"] = quote_or_not;
 
-    ui->chat_input->setText("");
+    ui->chat_input->setHtml(empty_text);
+
     display_message(message);
     client->friend_messages[friend_ID].push_back(message);
     client->sendMessage(message);
@@ -217,6 +236,10 @@ void MainWindow::on_pushButton_clicked()
     QListWidgetItem *latest_user = ui->user_list->takeItem(ui->user_list->currentRow());
     ui->user_list->insertItem(0,latest_user);
     ui->user_list->setCurrentItem(ui->user_list->item(0));
+    }
+
+    if(!ui->quote_widget->isHidden()){
+        ui->quote_widget->hide();
     }
 
 }
@@ -232,6 +255,141 @@ void MainWindow::messageReceived(QHash<QString,QString> &message){
         ui->user_list->insertItem(0,latest_user);
         ui->user_list->setCurrentItem(ui->user_list->item(0));
         }
+}
+
+void MainWindow::display_past_request(QString user_ID){
+    // somehow find the username from the given id parameter (this id here needs to carry other useful
+    // info to be later displayed in the info page)
+    QListWidgetItem *user = new QListWidgetItem;
+    user->setData(Qt::UserRole,user_ID);
+    QWidget * user_container = new QWidget;
+    QPushButton * username = new QPushButton(this);
+    username->setStyleSheet("QPushButton{color: rgb(80, 103, 156);"
+                            "padding-left:15px;"
+                            "background-color:rgba(0,0,0,0);}"
+                            "QPushButton:hover{color:white;}");
+    QFont name("Poppins", 13);
+    QFont butt("Poppins",10);
+//    name.setBold(true);
+    username->setFont(name);
+
+    // change this stupid line pls, tbh it's just for testing purposes
+    username->setText("YuanBao");
+
+    QPushButton * add = new QPushButton("Add");
+    QPushButton * del = new QPushButton("Delete");
+
+    connect(username,SIGNAL(clicked()),SLOT(display_new_friend_profile()));
+
+    del->setMinimumSize(50,24);
+    del->setFont(butt);
+    add->setMinimumSize(50,24);
+    add->setFont(butt);
+    QString stylesheet_del = "QPushButton{"
+                            "background-color: rgb(81, 111, 194);"
+                            "border-radius: 10px;"
+                            "color: #E1EAFE;"
+                            "padding-left:15px;padding-right:15px;"
+                            "}"
+                            "QPushButton:hover{"
+                            "border: 1px solid rgba(0,0,0,0);"
+                            "border-radius: 10px;"
+                            "background:#E8907A;"
+                            "color: #FFFBDB;"
+                            "}";
+    QString stylesheet_add = "QPushButton{"
+                            "background-color: rgb(81, 111, 194);"
+                            "border-radius: 10px;"
+                            "color: #E1EAFE;"
+                            "padding-left:15px;padding-right:15px;"
+                            "}"
+                            "QPushButton:hover{"
+                            "border: 1px solid rgba(0,0,0,0);"
+                            "border-radius: 10px;"
+                            "background:#d4ff8e;"
+                            "color: #4c5b33;"
+                            "}";
+    del->setStyleSheet(stylesheet_del);
+    add->setStyleSheet(stylesheet_add);
+
+    QHBoxLayout * layout = new QHBoxLayout(user_container);
+    layout->addWidget(username);
+    layout->addStretch(0);
+    layout->addWidget(add);
+    layout->addWidget(del);
+    ui->past_request_list->addItem(user);
+    ui->past_request_list->setItemWidget(user,user_container);
+}
+
+void MainWindow::display_new_request(QString user_ID){
+    // somehow find the username from the given id parameter (this id here needs to carry other useful
+    // info to be later displayed in the info page)
+    QListWidgetItem *user = new QListWidgetItem;
+    user->setData(Qt::UserRole,user_ID);
+    QWidget * user_container = new QWidget;
+    QPushButton * username = new QPushButton(this);
+    username->setStyleSheet("QPushButton{color: rgb(80, 103, 156);"
+                            "padding-left:15px;"
+                            "background-color:rgba(0,0,0,0);}"
+                            "QPushButton:hover{color:white;}");
+    QFont name("Poppins", 13);
+    QFont butt("Poppins",10);
+//    name.setBold(true);
+    username->setFont(name);
+
+
+    // change this stupid line pls, tbh it's just for testing purposes
+    username->setText("YuanBao");
+
+    QPushButton * add = new QPushButton("Add");
+    QPushButton * del = new QPushButton("Delete");
+
+    connect(username,SIGNAL(clicked()),SLOT(display_new_friend_profile()));
+
+    del->setMinimumSize(50,24);
+    del->setFont(butt);
+    add->setMinimumSize(50,24);
+    add->setFont(butt);
+    QString stylesheet_del = "QPushButton{"
+                            "background-color: rgb(81, 111, 194);"
+                            "border-radius: 10px;"
+                            "color: #E1EAFE;"
+                            "padding-left:15px;padding-right:15px;"
+                            "}"
+                            "QPushButton:hover{"
+                            "border: 1px solid rgba(0,0,0,0);"
+                            "border-radius: 10px;"
+                            "background:#E8907A;"
+                            "color: #FFFBDB;"
+                            "}";
+    QString stylesheet_add = "QPushButton{"
+                            "background-color: rgb(81, 111, 194);"
+                            "border-radius: 10px;"
+                            "color: #E1EAFE;"
+                            "padding-left:15px;padding-right:15px;"
+                            "}"
+                            "QPushButton:hover{"
+                            "border: 1px solid rgba(0,0,0,0);"
+                            "border-radius: 10px;"
+                            "background:#d4ff8e;"
+                            "color: #4c5b33;"
+                            "}";
+    del->setStyleSheet(stylesheet_del);
+    add->setStyleSheet(stylesheet_add);
+
+    QHBoxLayout * layout = new QHBoxLayout(user_container);
+    layout->addWidget(username);
+    layout->addStretch(0);
+    layout->addWidget(add);
+    layout->addWidget(del);
+    ui->new_request_list->addItem(user);
+    ui->new_request_list->setItemWidget(user,user_container);
+}
+
+void MainWindow::display_new_friend_profile(){
+    ui->stackedWidget->setCurrentWidget(ui->chat_profile);
+//    QString friend_ID=ui->past_request_list->currentIndex().data(Qt::UserRole).toString();
+//    qDebug()<<friend_ID;
 
 }
 
@@ -280,15 +438,163 @@ void MainWindow::display_message(QHash<QString,QString> message){
     QWidget *complex = new QWidget;
     QVBoxLayout *H_layout = new QVBoxLayout(complex);
     H_layout->addWidget(window);
+
+    QWidget *subblock = new QWidget;
+    QHBoxLayout *subblock_layout = new QHBoxLayout(subblock);
     QLabel *time = new QLabel(this);
+
+
+    QPushButton *Q = new QPushButton();
+    Q->setText("Q");
+    QFont q_font("Poppins", 8);
+    Q->setFont(q_font);
+    Q->setStyleSheet("QPushButton{"
+                    "border: 1px solid #E8907A;"
+                    "border-radius: 9px;"
+                    "background:rgb(232, 177, 163);"
+                    "color: #FFFBDB;"
+                    "}"
+                    "QPushButton:hover{"
+                    "border: 1px solid #FFFBDB;"
+                    "border-radius: 9px;"
+                    "background:rgb(221, 148, 139);"
+                    "color: #FFFBDB;"
+                    "}");
+    Q->setMinimumWidth(18);
+    Q->setMaximumWidth(18);
+
     time->setText(sent_time);
     if (sender){
+        subblock_layout->addStretch(0);
         time->setAlignment(Qt::AlignRight);
+        subblock_layout->addWidget(Q);
+        subblock_layout->addWidget(time);
+    }else{
+//        time->setAlignment(Qt::AlignRight);
+        subblock_layout->addWidget(time);
+        subblock_layout->addWidget(Q);
+        subblock_layout->addStretch(0);
     }
     time->setFont(t);
-    H_layout->addWidget(time);
+    H_layout->addWidget(subblock);
+    if(message["is_quote"]=="-1"){
+        Q->hide();
+    }
     int count_num = ui->chat_content->layout()->count();
     ui->layout_scroll->insertWidget(count_num-1,complex);
+
+    complex->setContextMenuPolicy(Qt::CustomContextMenu);
+    connect(complex,SIGNAL(customContextMenuRequested(const QPoint&)),this, SLOT(msg_customContextMenuRequested(const QPoint&)));
+}
+
+void MainWindow::msg_customContextMenuRequested(const QPoint &)
+{
+
+    QWidget * new_w = qobject_cast<QWidget *>(this->sender());
+    int pos = ui->layout_scroll->indexOf(new_w);
+
+    QMenu *pMenu = new QMenu(this);
+
+    QAction *pcopy = new QAction(tr("Copy message"), this);
+    QAction *pquote = new QAction(tr("Quote message"), this);
+    QAction *ptranslate = new QAction(tr("Translate message"), this);
+    QAction *pdelete = new QAction(tr("Delete message"),this);
+
+    pcopy->setData(pos);
+    pquote->setData(pos);
+    ptranslate->setData(pos);
+    pdelete->setData(pos);
+
+    pMenu->addAction(pcopy);
+    pMenu->addAction(pquote);
+    pMenu->addAction(ptranslate);
+    pMenu->addAction(pdelete);
+
+    connect(ptranslate, SIGNAL(triggered()), SLOT(transalte_msg()));
+    connect(pcopy, SIGNAL(triggered()), SLOT(copy_msg()));
+    connect(pquote, SIGNAL(triggered()), SLOT(debug_msg()));
+    connect(pdelete, SIGNAL(triggered()), SLOT(delete_msg()));
+    QString  menuStyle(
+               "QMenu::item{"
+               "background-color: rgb(157, 180, 237);"
+               "color: rgb(255, 255, 255);"
+               "font: 9pt 'Poppins';"
+               "padding-top: 5px;"
+               "padding-bottom: 5px;"
+               "padding-left: 10px;"
+               "padding-right: 10px;"
+               "margin-left: 5px;"
+               "margin-right: 5px;"
+               "}"
+               "QMenu{"
+               "background-color:rgb(157, 180, 237);"
+               "}"
+               "QMenu::item:selected{"
+               "background-color: rgba(100, 127, 194, 255);"
+               "border-radius:10px;"
+               "color: rgb(255, 255, 255);"
+               "font: 9pt 'Poppins';"
+               "}"
+            );
+
+     pMenu->setStyleSheet(menuStyle);
+
+    // show menu
+    pMenu->exec(cursor().pos());
+
+    // free spaces in case two rc-menu bars appear
+    QList<QAction*> list = pMenu->actions();
+    foreach (QAction* pAction, list) delete pAction;
+    delete pMenu;
+}
+
+void MainWindow::debug_msg(){
+
+    QAction *position = qobject_cast<QAction *>(this->sender());
+    int index = position->data().toInt();
+
+    QString friend_ID=ui->user_list->currentIndex().data(Qt::UserRole).toString();
+    QString msg = client->friend_messages[friend_ID].at(index)["content"];
+    ui->quote_msg->setText(msg);
+    ui->quote_widget->show();
+}
+
+void MainWindow::delete_msg(){
+    QAction *position = qobject_cast<QAction *>(this->sender());
+
+    int index = position->data().toInt();
+    QLayoutItem* child;
+    child = ui->layout_scroll->takeAt(index);
+    if ( child->layout() != 0 ) {
+        remove ( child->layout() );
+    } else if ( child->widget() != 0 ) {
+        delete child->widget();
+    }
+    delete child;
+    // finish this function by deleting the according message in the server
+    // or a better way might be adding a parameter (is_del:bool) in the message
+    // json file so that we always have the root file in hand.
+}
+
+void MainWindow::transalte_msg(){
+    QAction *position = qobject_cast<QAction *>(this->sender());
+    int index = position->data().toInt();
+
+    QString friend_ID=ui->user_list->currentIndex().data(Qt::UserRole).toString();
+    QString msg = client->friend_messages[friend_ID].at(index)["content"];
+    on_dictionary_2_clicked();
+    ui->dic_input->setText(msg);
+
+}
+
+void MainWindow::copy_msg(){
+    QAction *position = qobject_cast<QAction *>(this->sender());
+    int index = position->data().toInt();
+
+    QString friend_ID=ui->user_list->currentIndex().data(Qt::UserRole).toString();
+    QString msg = client->friend_messages[friend_ID].at(index)["content"];
+    QClipboard *clipboard = QApplication::clipboard();
+    clipboard->setText(msg);
 }
 
 void MainWindow::profileError(const QString &reason){
@@ -601,7 +907,13 @@ void MainWindow::on_signout_clicked()
 
 void MainWindow::on_new_conversation_clicked()
 {
-    ui->stackedWidget->setCurrentWidget(ui->chat);
+    ui->stackedWidget->setCurrentWidget(ui->matching);
+
+
+    // for ui-testing purpose
+    for(int i; i<=20; i++){
+    display_past_request("Yuanbao");}
+    //
 }
 
 void MainWindow::on_maximize_butt_clicked()
@@ -635,8 +947,14 @@ void MainWindow::on_changeprofilepic_clicked()
 }
 
 void MainWindow::on_pushButton_2_clicked()
-{
-    ui->stackedWidget->setCurrentWidget(ui->chat);
+{   if(ui->user_list->findItems(ui->friend_name->text(),Qt::MatchExactly).count()!=0){
+       ui->stackedWidget->setCurrentWidget(ui->chat);
+    }else{
+        ui->stackedWidget->setCurrentWidget(ui->matching);
+    }
+
+//    qDebug()<<ui->user_list->findItems("hello",Qt::MatchExactly).count();
+//    ui->stackedWidget->setCurrentWidget(ui->chat);
 }
 
 QString MainWindow::cur_time(){
@@ -685,6 +1003,14 @@ QPixmap MainWindow::PixmapToRound(const QPixmap &src, int radius)
     image.setMask(mask);
     return image;
 }
+
+void MainWindow::on_quote_close_butt_clicked()
+{
+    ui->quote_widget->hide();
+}
+
+
+
 
 /*
 void MainWindow::msg_send(QString content, QString time_in){
@@ -765,3 +1091,10 @@ void MainWindow::msg_receive(QString content, QString time_in){
     ui->chat_input->setText("");
 }
 */
+
+
+
+void MainWindow::on_tabWidget_currentChanged(int index)
+{
+    display_new_request("yuanbao");
+}

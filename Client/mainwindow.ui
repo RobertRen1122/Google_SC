@@ -628,6 +628,9 @@ background-color: none;
          </item>
          <item>
           <widget class="QStackedWidget" name="stackedWidget">
+           <property name="enabled">
+            <bool>true</bool>
+           </property>
            <property name="styleSheet">
             <string notr="true">QWidget#chat
 {
@@ -1003,7 +1006,7 @@ background-color: none;
                               <x>0</x>
                               <y>0</y>
                               <width>348</width>
-                              <height>806</height>
+                              <height>843</height>
                              </rect>
                             </property>
                             <layout class="QVBoxLayout" name="verticalLayout_11">
@@ -1763,7 +1766,7 @@ color: white;
                <layout class="QVBoxLayout" name="verticalLayout_20" stretch="0">
                 <item>
                  <widget class="QWidget" name="chat_entrance" native="true">
-                  <layout class="QVBoxLayout" name="verticalLayout_21" stretch="1,23,2">
+                  <layout class="QVBoxLayout" name="verticalLayout_21" stretch="1,23,0,2">
                    <item>
                     <widget class="QWidget" name="title_container_2" native="true">
                      <layout class="QVBoxLayout" name="verticalLayout_22">
@@ -2017,6 +2020,324 @@ background-color: none;
                     </widget>
                    </item>
                    <item>
+                    <widget class="QWidget" name="button_bar" native="true">
+                     <layout class="QHBoxLayout" name="horizontalLayout_11">
+                      <property name="spacing">
+                       <number>15</number>
+                      </property>
+                      <item>
+                       <widget class="QToolButton" name="bold_butt">
+                        <property name="minimumSize">
+                         <size>
+                          <width>35</width>
+                          <height>35</height>
+                         </size>
+                        </property>
+                        <property name="focusPolicy">
+                         <enum>Qt::TabFocus</enum>
+                        </property>
+                        <property name="styleSheet">
+                         <string notr="true">QToolButton{
+
+border:2px solid rgba(0,0,0,0);
+border-radius: 10px;
+background-color: #dceafe;
+
+}
+
+QToolButton:checked{
+
+border:2px solid rgb(77, 107, 162);
+border-radius: 10px;
+background-color: rgb(236, 245, 254);
+
+}
+
+QToolButton:hover{
+
+border:2px solid rgb(117, 136, 179);
+border-radius: 10px;
+
+}</string>
+                        </property>
+                        <property name="text">
+                         <string>...</string>
+                        </property>
+                        <property name="icon">
+                         <iconset resource="resource.qrc">
+                          <normaloff>:/images/pic/004-bold.png</normaloff>:/images/pic/004-bold.png</iconset>
+                        </property>
+                        <property name="checkable">
+                         <bool>true</bool>
+                        </property>
+                       </widget>
+                      </item>
+                      <item>
+                       <widget class="QToolButton" name="italic_butt">
+                        <property name="minimumSize">
+                         <size>
+                          <width>35</width>
+                          <height>35</height>
+                         </size>
+                        </property>
+                        <property name="styleSheet">
+                         <string notr="true">QToolButton{
+
+border:1px solid rgba(0,0,0,0);
+border-radius: 10px;
+background-color: #dceafe;
+
+}
+
+QToolButton:checked{
+
+border:2px solid rgb(77, 107, 162);
+border-radius: 10px;
+background-color: rgb(236, 245, 254);
+
+}
+
+QToolButton:hover{
+
+border:2px solid rgb(117, 136, 179);
+border-radius: 10px;
+
+}</string>
+                        </property>
+                        <property name="text">
+                         <string>...</string>
+                        </property>
+                        <property name="icon">
+                         <iconset resource="resource.qrc">
+                          <normaloff>:/images/pic/024-italic.png</normaloff>:/images/pic/024-italic.png</iconset>
+                        </property>
+                        <property name="checkable">
+                         <bool>true</bool>
+                        </property>
+                       </widget>
+                      </item>
+                      <item>
+                       <widget class="QToolButton" name="underline_butt">
+                        <property name="minimumSize">
+                         <size>
+                          <width>35</width>
+                          <height>35</height>
+                         </size>
+                        </property>
+                        <property name="styleSheet">
+                         <string notr="true">QToolButton{
+
+border:1px solid rgba(0,0,0,0);
+border-radius: 10px;
+background-color: #dceafe;
+
+}
+
+QToolButton:checked{
+
+border:2px solid rgb(77, 107, 162);
+border-radius: 10px;
+background-color: rgb(236, 245, 254);
+
+}
+
+QToolButton:hover{
+
+border:2px solid rgb(117, 136, 179);
+border-radius: 10px;
+
+}</string>
+                        </property>
+                        <property name="text">
+                         <string>...</string>
+                        </property>
+                        <property name="icon">
+                         <iconset resource="resource.qrc">
+                          <normaloff>:/images/pic/059-underline.png</normaloff>:/images/pic/059-underline.png</iconset>
+                        </property>
+                        <property name="checkable">
+                         <bool>true</bool>
+                        </property>
+                       </widget>
+                      </item>
+                      <item>
+                       <widget class="QToolButton" name="strike_butt">
+                        <property name="minimumSize">
+                         <size>
+                          <width>35</width>
+                          <height>35</height>
+                         </size>
+                        </property>
+                        <property name="styleSheet">
+                         <string notr="true">QToolButton{
+
+border:1px solid rgba(0,0,0,0);
+border-radius: 10px;
+background-color: #dceafe;
+
+}
+
+QToolButton:checked{
+
+border:2px solid rgb(77, 107, 162);
+border-radius: 10px;
+background-color: rgb(236, 245, 254);
+
+}
+
+QToolButton:hover{
+
+border:2px solid rgb(117, 136, 179);
+border-radius: 10px;
+
+}</string>
+                        </property>
+                        <property name="text">
+                         <string>...</string>
+                        </property>
+                        <property name="icon">
+                         <iconset resource="resource.qrc">
+                          <normaloff>:/images/pic/048-strikethrough.png</normaloff>:/images/pic/048-strikethrough.png</iconset>
+                        </property>
+                        <property name="checkable">
+                         <bool>true</bool>
+                        </property>
+                       </widget>
+                      </item>
+                      <item>
+                       <widget class="QToolButton" name="color_butt">
+                        <property name="minimumSize">
+                         <size>
+                          <width>35</width>
+                          <height>35</height>
+                         </size>
+                        </property>
+                        <property name="styleSheet">
+                         <string notr="true">QToolButton{
+
+border:1px solid rgba(0,0,0,0);
+border-radius: 10px;
+background-color: #dceafe;
+
+}
+
+QToolButton:checked{
+
+border:2px solid rgb(77, 107, 162);
+border-radius: 10px;
+background-color: rgb(236, 245, 254);
+
+}
+
+QToolButton:hover{
+
+border:2px solid rgb(117, 136, 179);
+border-radius: 10px;
+
+}</string>
+                        </property>
+                        <property name="text">
+                         <string>...</string>
+                        </property>
+                        <property name="icon">
+                         <iconset resource="resource.qrc">
+                          <normaloff>:/images/pic/013-fill.png</normaloff>:/images/pic/013-fill.png</iconset>
+                        </property>
+                        <property name="checkable">
+                         <bool>true</bool>
+                        </property>
+                       </widget>
+                      </item>
+                      <item>
+                       <widget class="QWidget" name="quote_widget" native="true">
+                        <property name="maximumSize">
+                         <size>
+                          <width>16777215</width>
+                          <height>35</height>
+                         </size>
+                        </property>
+                        <property name="styleSheet">
+                         <string notr="true">QWidget{
+
+border-radius: 10px;
+background-color: rgb(236, 245, 254);
+
+}</string>
+                        </property>
+                        <layout class="QHBoxLayout" name="horizontalLayout_12">
+                         <item>
+                          <widget class="QPushButton" name="quote_close_butt">
+                           <property name="sizePolicy">
+                            <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+                             <horstretch>0</horstretch>
+                             <verstretch>0</verstretch>
+                            </sizepolicy>
+                           </property>
+                           <property name="minimumSize">
+                            <size>
+                             <width>18</width>
+                             <height>18</height>
+                            </size>
+                           </property>
+                           <property name="font">
+                            <font>
+                             <family>Webdings</family>
+                             <weight>50</weight>
+                             <bold>false</bold>
+                            </font>
+                           </property>
+                           <property name="styleSheet">
+                            <string notr="true">QPushButton{
+border: 1px solid #E8907A;
+border-radius: 9px;
+background:#E8907A;
+color: #FFFBDB;
+
+}
+QPushButton:hover{
+border: 1px solid #707070;
+border-radius: 9px;
+background:#DD6243;
+color: #707070;
+}</string>
+                           </property>
+                           <property name="text">
+                            <string>r</string>
+                           </property>
+                          </widget>
+                         </item>
+                         <item>
+                          <widget class="QLabel" name="quote_msg">
+                           <property name="font">
+                            <font>
+                             <family>Poppins</family>
+                            </font>
+                           </property>
+                           <property name="text">
+                            <string/>
+                           </property>
+                          </widget>
+                         </item>
+                        </layout>
+                       </widget>
+                      </item>
+                      <item>
+                       <spacer name="horizontalSpacer_3">
+                        <property name="orientation">
+                         <enum>Qt::Horizontal</enum>
+                        </property>
+                        <property name="sizeHint" stdset="0">
+                         <size>
+                          <width>40</width>
+                          <height>20</height>
+                         </size>
+                        </property>
+                       </spacer>
+                      </item>
+                     </layout>
+                    </widget>
+                   </item>
+                   <item>
                     <widget class="QWidget" name="widget_6" native="true">
                      <property name="styleSheet">
                       <string notr="true">
@@ -2027,12 +2348,37 @@ color: #647FC2;
                      </property>
                      <layout class="QHBoxLayout" name="horizontalLayout_9">
                       <item>
-                       <widget class="QLineEdit" name="chat_input">
+                       <widget class="QTextEdit" name="chat_input">
+                        <property name="sizePolicy">
+                         <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+                          <horstretch>0</horstretch>
+                          <verstretch>0</verstretch>
+                         </sizepolicy>
+                        </property>
+                        <property name="minimumSize">
+                         <size>
+                          <width>0</width>
+                          <height>43</height>
+                         </size>
+                        </property>
                         <property name="font">
                          <font>
                           <family>Poppins</family>
-                          <pointsize>11</pointsize>
+                          <pointsize>12</pointsize>
                          </font>
+                        </property>
+                        <property name="inputMethodHints">
+                         <set>Qt::ImhNone</set>
+                        </property>
+                        <property name="sizeAdjustPolicy">
+                         <enum>QAbstractScrollArea::AdjustToContents</enum>
+                        </property>
+                        <property name="html">
+                         <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Poppins'; font-size:12pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;br /&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                         </property>
                        </widget>
                       </item>
@@ -2069,6 +2415,231 @@ border: 1.5px solid rgba(100, 127, 194, 255);
                  </widget>
                 </item>
                </layout>
+              </widget>
+             </item>
+            </layout>
+           </widget>
+           <widget class="QWidget" name="matching">
+            <layout class="QHBoxLayout" name="horizontalLayout_17">
+             <item>
+              <widget class="QTabWidget" name="tabWidget">
+               <property name="font">
+                <font>
+                 <family>Poppins</family>
+                 <weight>75</weight>
+                 <bold>true</bold>
+                </font>
+               </property>
+               <property name="styleSheet">
+                <string notr="true">QTabWidget::pane {
+  border: 1px solid rgba(0,0,0,0);
+  top:-1px; 
+  background: #E1EAFE;
+border-top-right-radius: 15px;
+border-bottom-left-radius: 15px;
+border-bottom-right-radius: 15px;
+} 
+
+QTabBar::tab {
+border-top-right-radius: 15px;
+border-top-left-radius: 15px;
+  background:rgb(100, 128, 194);
+color: rgb(236, 241, 254);
+  border: 1px solid lightgray; 
+padding: 15px;
+} 
+
+QTabBar::tab:selected { 
+border-top-right-radius: 15px;
+border-top-left-radius: 15px;
+  background:#E1EAFE; 
+color: rgb(80, 103, 156);
+  margin-bottom: -1px; 
+padding: 15px;
+
+}</string>
+               </property>
+               <property name="tabPosition">
+                <enum>QTabWidget::North</enum>
+               </property>
+               <property name="tabShape">
+                <enum>QTabWidget::Rounded</enum>
+               </property>
+               <property name="currentIndex">
+                <number>1</number>
+               </property>
+               <widget class="QWidget" name="past_request">
+                <attribute name="title">
+                 <string>Past Request</string>
+                </attribute>
+                <layout class="QHBoxLayout" name="horizontalLayout_18">
+                 <item>
+                  <widget class="QListWidget" name="past_request_list">
+                   <property name="focusPolicy">
+                    <enum>Qt::NoFocus</enum>
+                   </property>
+                   <property name="styleSheet">
+                    <string notr="true">
+QListWidget{
+background:rgba(0,0,0,0);
+border:1px solid rgba(0,0,0,0);}
+
+QListWidget::item{
+color: rgba(100, 127, 194, 255);
+height: 35px;
+border-bottom: 1px solid rgba(100, 127, 194, 120);
+border-top: 1px solid rgba(100, 127, 194, 0);
+border-left: 1px solid rgba(100, 127, 194, 0);
+border-right: 1px solid rgba(100, 127, 194, 0);
+border-radius: 25px;
+padding: 15px;
+}
+
+QListWidget::item:selected{
+color: white;
+height: 35px;
+border-bottom: 1px solid rgba(100, 127, 194, 120);
+border-top: 1px solid rgba(100, 127, 194, 0);
+border-left: 1px solid rgba(100, 127, 194, 0);
+border-right: 1px solid rgba(100, 127, 194, 0);
+border-radius: 25px;
+}
+
+
+QScrollArea{
+border: none;
+background-color: none;
+}
+
+    QScrollBar {
+        background-color: #7B95D8;
+        border-radius: 5px;
+    }
+
+    QScrollBar:horizontal {
+        height: 13px;
+    }
+
+    QScrollBar:vertical {
+        width: 13px;
+    }
+
+    QScrollBar::handle {
+        background: #E1EAFE;
+        border-radius: 5px;
+    }
+
+    QScrollBar::handle:horizontal {
+        height: 25px;
+        min-width: 10px;
+    }
+
+    QScrollBar::handle:vertical {
+        width: 25px;
+        min-height: 10px;
+    }
+
+    QScrollBar::add-line {
+        border: none;
+        background: none;
+    }
+
+    QScrollBar::sub-line {
+        border: none;
+        background: none;
+    }
+</string>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
+               </widget>
+               <widget class="QWidget" name="new_matches">
+                <attribute name="title">
+                 <string>New Matches</string>
+                </attribute>
+                <layout class="QHBoxLayout" name="horizontalLayout_19">
+                 <item>
+                  <widget class="QListWidget" name="new_request_list">
+                   <property name="focusPolicy">
+                    <enum>Qt::NoFocus</enum>
+                   </property>
+                   <property name="styleSheet">
+                    <string notr="true">
+QListWidget{
+background:rgba(0,0,0,0);
+border:1px solid rgba(0,0,0,0);}
+
+QListWidget::item{
+color: rgba(100, 127, 194, 255);
+height: 35px;
+border-bottom: 1px solid rgba(100, 127, 194, 120);
+border-top: 1px solid rgba(100, 127, 194, 0);
+border-left: 1px solid rgba(100, 127, 194, 0);
+border-right: 1px solid rgba(100, 127, 194, 0);
+border-radius: 25px;
+padding: 15px;
+}
+
+QListWidget::item:selected{
+color: white;
+height: 35px;
+border-bottom: 1px solid rgba(100, 127, 194, 120);
+border-top: 1px solid rgba(100, 127, 194, 0);
+border-left: 1px solid rgba(100, 127, 194, 0);
+border-right: 1px solid rgba(100, 127, 194, 0);
+border-radius: 25px;
+}
+
+
+QScrollArea{
+border: none;
+background-color: none;
+}
+
+    QScrollBar {
+        background-color: #7B95D8;
+        border-radius: 5px;
+    }
+
+    QScrollBar:horizontal {
+        height: 13px;
+    }
+
+    QScrollBar:vertical {
+        width: 13px;
+    }
+
+    QScrollBar::handle {
+        background: #E1EAFE;
+        border-radius: 5px;
+    }
+
+    QScrollBar::handle:horizontal {
+        height: 25px;
+        min-width: 10px;
+    }
+
+    QScrollBar::handle:vertical {
+        width: 25px;
+        min-height: 10px;
+    }
+
+    QScrollBar::add-line {
+        border: none;
+        background: none;
+    }
+
+    QScrollBar::sub-line {
+        border: none;
+        background: none;
+    }
+</string>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
+               </widget>
               </widget>
              </item>
             </layout>
@@ -2295,8 +2866,8 @@ background-color: none;
                           <rect>
                            <x>0</x>
                            <y>0</y>
-                           <width>634</width>
-                           <height>795</height>
+                           <width>51</width>
+                           <height>48</height>
                           </rect>
                          </property>
                          <layout class="QVBoxLayout" name="verticalLayout_45">
@@ -2389,8 +2960,8 @@ background-color: none;
                                  <rect>
                                   <x>0</x>
                                   <y>0</y>
-                                  <width>476</width>
-                                  <height>759</height>
+                                  <width>318</width>
+                                  <height>745</height>
                                  </rect>
                                 </property>
                                 <layout class="QVBoxLayout" name="verticalLayout_37">

@@ -2,6 +2,7 @@
 #define MAINWINDOW_H
 
 #include <QWidget>
+#include <QListWidgetItem>
 #include "loadingwindow.h"
 #include "loginwindow.h"
 #include "client.h"
@@ -41,6 +42,10 @@ private:
     QPixmap PixmapToRound(const QPixmap &src, int radius);
     int compareQdatetime (const QString id_1, const QString id_2);
 
+    //match friends
+    void display_past_request(QString user_ID);
+    void display_new_request(QString user_ID);
+
 
 signals:
 
@@ -73,6 +78,14 @@ private slots:
     void on_new_conversation_clicked();
     void on_maximize_butt_clicked();
     void on_minimize_butt_clicked();
+    void msg_customContextMenuRequested(const QPoint &);
+    void delete_msg();
+    void copy_msg();
+    void transalte_msg();
+    void debug_msg();
+    void on_quote_close_butt_clicked();
+    void display_new_friend_profile();
+    void on_tabWidget_currentChanged(int index);
 };
 
 
