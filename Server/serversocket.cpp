@@ -26,6 +26,45 @@ ServerSocket::~ServerSocket(){
     delete socket;
 }
 
+void ServerSocket::returnRequests(QVector<QHash<QString,QString>> requests,
+                                  QHash<QString,QHash<QString,QString>> &all_users, int match){
+    QDataStream clientStream(socket);
+    clientStream.setVersion(QDataStream::Qt_5_7);
+    // Create the JSON we want to send
+    QJsonObject message;
+    message[QStringLiteral("type")] = QStringLiteral("requests");
+    QJsonObject friendInfo;
+    friendInfo[QStringLiteral("type")] = QStringLiteral("friend information");
+
+    QJsonArray matches_json;
+    for(const QHash<QString,QString>& match:requests)
+    {
+        QJsonObject match_json;
+        for (const QString& key:match.keys()){
+            match_json[key]=match[key];
+        }
+        matches_json.push_back(match_json);
+
+        QJsonObject friendprofile;
+        for(const QString& key: all_users[match["ID"]].keys()) {
+            if(key!="password"){
+                friendprofile[key]=all_users[match["ID"]][key];
+            }
+        }
+        friendInfo.insert(match["ID"],friendprofile);
+    }
+    message[QStringLiteral("requests")] = matches_json;
+    if (match){
+        message[QStringLiteral("match")] = "yes";
+    }else{
+        message[QStringLiteral("match")] = "no";
+    }
+
+    // send the JSON using QDataStream
+    clientStream << QJsonDocument(friendInfo).toJson();
+    clientStream << QJsonDocument(message).toJson();
+}
+
 void ServerSocket::sendMessage(QJsonObject &message){
     QDataStream clientStream(socket);
     clientStream.setVersion(QDataStream::Qt_5_7);
@@ -53,13 +92,15 @@ void ServerSocket::sendFriendMessageInfo(const QString &ID, QHash<QString,QHash<
         messageInfo[friend_ID.split('.')[0]] = friend_messages;
         QJsonObject friendprofile;
         for(const QString& key: all_users[friend_ID.split('.')[0]].keys()) {
-            friendprofile[key]=all_users[friend_ID.split('.')[0]][key];
+            if(key!="password"){
+                friendprofile[key]=all_users[friend_ID.split('.')[0]][key];
+            }
         }
         friendInfo.insert(friend_ID.split('.')[0],friendprofile);
     }
     // send the JSON using QDataStream
-    clientStream << QJsonDocument(messageInfo).toJson();
     clientStream << QJsonDocument(friendInfo).toJson();
+    clientStream << QJsonDocument(messageInfo).toJson();
 }
 
 void ServerSocket::sendPersonalInfo(QHash<QString,QString> &user){
@@ -169,6 +210,9 @@ void ServerSocket::jsonReceived(const QJsonObject &data)
             }
         }
         emit messageReceived(message);
+    //matching
+    }else if (typeVal.toString().compare(QLatin1String("get requests"))==0) {
+        emit getRequests();
     //signout
     }else if (typeVal.toString().compare(QLatin1String("signout"))==0) {
         emit signout(ID);

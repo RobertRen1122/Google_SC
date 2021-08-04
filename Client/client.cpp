@@ -84,6 +84,7 @@ void Client::jsonReceived(const QJsonObject &data)
                 friend_messages[key]=messages;
             }
         }
+        emit informationReceived();
     }else if(typeVal.toString().compare(QLatin1String("friend information"))==0) {
         for(const QString& key: data.keys()){
             if(key!="type"){
@@ -95,8 +96,6 @@ void Client::jsonReceived(const QJsonObject &data)
                 friend_profiles[key]=friend_profile;
             }
         }
-        emit informationReceived();
-
     }else if(typeVal.toString().compare(QLatin1String("message received"))==0) {
         QHash<QString,QString> message;
         for(const QString& key: data.keys()){
@@ -106,10 +105,36 @@ void Client::jsonReceived(const QJsonObject &data)
         }
         friend_messages[message["sender"]].push_back(message);
         emit messageReceived(message);
+
+    //received requests
+    }else if(typeVal.toString().compare(QLatin1String("requests"))==0) {
+        QJsonArray messages_json = data["requests"].toArray();
+        QVector<QHash<QString,QString>> found_matches;
+        for(const QJsonValue& msg: messages_json){
+            QJsonObject message_json = msg.toObject();
+            QHash<QString,QString> message;
+            for(const QString& key2: message_json.keys()){
+                message[key2]=message_json[key2].toString();
+            }
+            found_matches.push_back(message);
+        }
+        if (data["match"].toString()=="yes"){
+            emit requestsReceived(found_matches, 1);
+        }else{
+            emit requestsReceived(found_matches, 0);
+        }
     }
 }
 
 // ------------------------------ message to server ------------------------------
+void Client::getRequests(){
+    QDataStream clientStream(socket);
+    clientStream.setVersion(QDataStream::Qt_5_7);
+    QJsonObject message;
+    message[QStringLiteral("type")] = QStringLiteral("get requests");
+    clientStream << QJsonDocument(message).toJson();
+}
+
 void Client::sendMessage(QHash<QString,QString> &message_sent){
     QDataStream clientStream(socket);
     clientStream.setVersion(QDataStream::Qt_5_7);

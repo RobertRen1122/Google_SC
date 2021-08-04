@@ -24,6 +24,8 @@ public:
     void sendFriendMessageInfo(const QString &ID, QHash<QString,QHash<QString,QString>> &all_users);
     void sendMessage(QJsonObject &message);
 
+    void returnRequests(QVector<QHash<QString,QString>> matches,
+                        QHash<QString,QHash<QString,QString>> &all_users, int match);
 private:
     QTcpSocket *socket;
     void jsonReceived(const QJsonObject &data);
@@ -39,8 +41,10 @@ signals:
     void changeProfile(QHash<QString,QString> &profile);
 
     //chat related
-    //void newConversation();
     void messageReceived(QHash<QString,QString> &message);
+
+    //matching
+    void getRequests();
 
 public slots:
 

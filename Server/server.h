@@ -20,6 +20,8 @@ private:
     QHash<QString,QString> registered_emails;
     QVector<QString> active_users;
 
+    QHash<QString,QVector<QHash<QString,QString>>> friend_requests;
+
     QString new_ID();
     void remove_user(const QString &ID);
     void make_friend(const QString &ID1,const QString &ID2);
@@ -36,6 +38,8 @@ private slots:
     void changeProfile(ServerSocket* client, QHash<QString,QString> profile);
 
     void messageReceived(ServerSocket* client, QHash<QString,QString> &message);
+
+    void getRequests(ServerSocket* client);
 };
 
 #endif // SERVER_H

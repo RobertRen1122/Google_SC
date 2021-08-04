@@ -38,6 +38,10 @@ Server::Server(QObject *parent) :
         registered_usernames.insert(user["username"],ID);
         registered_emails.insert(user["email"],ID);
     }
+    //load friend requests***
+
+    //clear expired requests***
+
 
     //manually add friends or remove users here
     //make_friend(registered_usernames["robert"],registered_usernames["serena"]);
@@ -68,6 +72,32 @@ QString Server::new_ID(){
         return new_ID();
     }
     return "error";
+}
+
+void Server::getRequests(ServerSocket* client){
+    //get current friends
+    QDir dir("../Server/messages/"+client->ID);
+    QStringList files = dir.entryList(QStringList() << "*.json", QDir::Files);
+    QSet<QString> friend_IDs;
+    for(const QString& friend_ID: files){
+        friend_IDs.insert(friend_ID.split('.')[0]);
+    }
+
+    //get matches
+    QVector<QHash<QString,QString>> matches;
+    //currently returns all users, change later ***
+    for(const QString& key: all_users.keys()){
+        if (key!=client->ID && friend_IDs.contains(key)==0){
+            QHash<QString,QString> match;
+            match["ID"]=key;
+            match["username"]=all_users[key]["username"];
+            matches.push_back(match);
+        }
+    }
+    client->returnRequests(matches, all_users, 1);
+
+    //get existing requests ***
+
 }
 
 void Server::messageReceived(ServerSocket* client, QHash<QString,QString> &message){
@@ -207,6 +237,7 @@ void Server::attemptSignup(ServerSocket *client,const QString &email,const QStri
         //send info to client
         client->sendPersonalInfo(user);
         client->sendFriendMessageInfo(ID,all_users);
+        //send incoming friend requests***
     }
 }
 
@@ -219,6 +250,7 @@ void Server::attemptLogin(ServerSocket *client,const QString &username,const QSt
             client->sendPersonalInfo(all_users[registered_usernames[username]]);
             //get message info and send
             client->sendFriendMessageInfo(registered_usernames[username], all_users);
+            //send incoming friend requests***
 
             qDebug()<<"Current users:";
             foreach(const QString& ID, active_users) {
@@ -236,6 +268,7 @@ void Server::attemptLogin(ServerSocket *client,const QString &username,const QSt
             client->sendPersonalInfo(all_users[registered_emails[username]]);
             //get message info and send
             client->sendFriendMessageInfo(registered_emails[username], all_users);
+            //send incoming friend requests***
 
             qDebug()<<"Current users:";
             foreach(const QString& ID, active_users) {
@@ -306,6 +339,8 @@ void Server::newConnection(){
     connect(client, &ServerSocket::signout, this, &Server::signout);
     connect(client, &ServerSocket::messageReceived, this,
             std::bind(&Server::messageReceived, this, client, std::placeholders::_1));
+    connect(client, &ServerSocket::getRequests, this,
+            std::bind(&Server::getRequests, this, client));
 
     clients.append(client);
     qDebug() << "New client Connected";

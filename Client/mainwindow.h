@@ -2,6 +2,7 @@
 #define MAINWINDOW_H
 
 #include <QWidget>
+#include <QListWidgetItem>
 #include "loadingwindow.h"
 #include "loginwindow.h"
 #include "client.h"
@@ -39,6 +40,10 @@ private:
     void mouseMoveEvent(QMouseEvent *event);
     void remove(QLayout* layout);
     QPixmap PixmapToRound(const QPixmap &src, int radius);
+    int compareQdatetime (const QString id_1, const QString id_2);
+
+    //requests
+    void display_request(QHash<QString,QString> request, int match);
 
 
 signals:
@@ -53,7 +58,6 @@ private slots:
     void loggedIn();
     void startApplication();
     void on_signout_clicked();
-
     //profile
     void profileChanged();
     void profileError(const QString &reason);
@@ -65,14 +69,26 @@ private slots:
     void on_pushButton_clicked(); //send button
     void on_user_list_clicked(const QModelIndex &index);
     void on_info_butt_clicked();
+    void display_friend_profile(const QString& ID);
     void on_pushButton_2_clicked(); //back to chat buttonn
     void messageReceived(QHash<QString,QString> &message);
+
+    //requests
+    void requestsReceived(QVector<QHash<QString,QString>> requests, int match);
+    void display_new_friend_profile(const QString& username);
 
     //ui
     void on_dictionary_2_clicked();
     void on_new_conversation_clicked();
     void on_maximize_butt_clicked();
     void on_minimize_butt_clicked();
+    void msg_customContextMenuRequested(const QPoint &);
+    void delete_msg();
+    void copy_msg();
+    void transalte_msg();
+    void debug_msg();
+    void on_quote_close_butt_clicked();
+    void on_tabWidget_currentChanged(int index);
 };
 
 

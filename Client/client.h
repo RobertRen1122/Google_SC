@@ -34,6 +34,8 @@ signals:
     void profileChanged();
     void profileError(const QString &reason);
     void messageReceived(QHash<QString,QString> &message);
+    //requests
+    void requestsReceived(QVector<QHash<QString,QString>> requests, int match);
 
 public slots:
     void attemptLogin(const QString &username,const QString &password);
@@ -41,6 +43,7 @@ public slots:
 
     //void newConversation();
     void sendMessage(QHash<QString,QString> &message);
+    void getRequests();
 
 private slots:
     void onReadyRead();
