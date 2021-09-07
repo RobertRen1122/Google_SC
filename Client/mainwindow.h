@@ -3,6 +3,7 @@
 
 #include <QWidget>
 #include <QListWidgetItem>
+#include <QPushButton>
 #include "loadingwindow.h"
 #include "loginwindow.h"
 #include "client.h"
@@ -45,6 +46,7 @@ private:
     //requests
     void display_request(QHash<QString,QString> request, int match);
 
+    void delete_friend(QPushButton *del);
 
 signals:
 
@@ -66,11 +68,11 @@ private slots:
     void on_changeprofilepic_clicked();
 
     //chat
-    void on_pushButton_clicked(); //send button
+    void on_send_clicked(); //send button
     void on_user_list_clicked(const QModelIndex &index);
     void on_info_butt_clicked();
     void display_friend_profile(const QString& ID);
-    void on_pushButton_2_clicked(); //back to chat buttonn
+    void on_profile_back_clicked(); //back to chat buttonn
     void messageReceived(QHash<QString,QString> &message);
 
     //requests
