@@ -46,7 +46,6 @@ private:
     //requests
     void display_request(QHash<QString,QString> request, int match);
 
-    void delete_friend(QPushButton *del);
 
 signals:
 
