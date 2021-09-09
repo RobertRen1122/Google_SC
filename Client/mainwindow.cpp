@@ -42,6 +42,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(client,&Client::messageReceived, this,&MainWindow::messageReceived);
     //matches
     connect(client,&Client::requestsReceived, this,&MainWindow::requestsReceived);
+    connect(client,&Client::getWelcomeMessage, this,&MainWindow::generateWelcomeMessage);
 
     //initialization
     ui->setupUi(this);
@@ -149,6 +150,7 @@ void MainWindow::startApplication(){
     ui->username->setText(my_name);
 
     //  display friends
+    ui->user_list->clear();
     for(const QString& ID: friend_IDs){
         QListWidgetItem *user = new QListWidgetItem;
         user->setData(Qt::UserRole, ID);
@@ -159,10 +161,9 @@ void MainWindow::startApplication(){
     if (ui->user_list->count() > 0) {
         ui->user_list->setCurrentItem(ui->user_list->item(0));
         on_user_list_clicked(ui->user_list->currentIndex());
+    }else{
+        on_settingbutton_clicked();
     }
-
-    // create incoming requests object***
-
 }
 
 void MainWindow::display_friend_profile(const QString& friend_ID){
@@ -173,28 +174,17 @@ void MainWindow::display_friend_profile(const QString& friend_ID){
     ui->friend_name->setText(my_friends_name);
 
     QString intro = client->friend_profiles[friend_ID]["intro"];
-    ui->textEdit_3->setText(intro);
+    ui->intro_content->setText(intro);
 
     QString pronoun = client->friend_profiles[friend_ID]["pronoun"];
     ui->pronoun_content->setText(pronoun);
 
-    ui->pronoun_content_2->setText(client->friend_profiles[friend_ID]["language1"]);
-    ui->pronoun_content_3->setText(client->friend_profiles[friend_ID]["language2"]);
+    ui->lan_1st_label->setText(client->friend_profiles[friend_ID]["language1"]);
+    ui->lan_2nd_label->setText(client->friend_profiles[friend_ID]["language2"]);
+    ui->lan_3rd_label->setText(client->friend_profiles[friend_ID]["language3"]);
 
-    QString language3 = client->friend_profiles[friend_ID]["language3"];
-    ui->pronoun_content_4->setText(language3);
 }
 
-void MainWindow::display_new_friend_profile(const QString& username){
-    QString friend_ID;
-    for (const QString& key:client->friend_profiles.keys()){
-        if (client->friend_profiles[key]["username"]==username){
-            friend_ID=key;
-            break;
-        }
-    }
-    display_friend_profile(friend_ID);
-}
 
 void MainWindow::on_info_butt_clicked()
 {
@@ -217,7 +207,19 @@ void MainWindow::on_user_list_clicked(const QModelIndex &index)
     }
 }
 
-void MainWindow::on_pushButton_clicked()
+void MainWindow::generateWelcomeMessage(const QString& ID){
+    QHash<QString,QString> message;
+    QString html_code = "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\"><html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">p, li { white-space: pre-wrap; }</style></head><body style=\" font-family:\'Poppins\'; font-size:12pt; font-weight:400; font-style:normal;\"><p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><br /></p>hi</body></html>";
+    message["content"]=html_code;
+    message["sender"]=client->ID;
+    message["receiver"]=ID;
+    message["time"]=cur_time();
+    message["is_quote"] = "-1";
+    client->friend_messages[ID].push_back(message);
+    client->sendMessage(message);
+}
+
+void MainWindow::on_send_clicked()
 {
     QString html_code = ui->chat_input->toHtml();
     QString empty_text = "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\"><html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">p, li { white-space: pre-wrap; }</style></head><body style=\" font-family:\'Poppins\'; font-size:12pt; font-weight:400; font-style:normal;\"><p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><br /></p></body></html>";
@@ -274,33 +276,75 @@ void MainWindow::messageReceived(QHash<QString,QString> &message){
     }
 }
 
+void MainWindow::add_friend(QPushButton* add){
+    QString ID=add->property("ID").toString();
+    if(ui->matching_tab->currentIndex()==0){
+        //accept
+        client->acceptRequest(ID);
+    }else{
+        //send request
+        client->sendRequest(ID);
+    }
+    delete_friend(add);
+}
+
+void MainWindow::delete_friend(QPushButton* del){
+    if(ui->matching_tab->currentIndex()==0){
+        for(int i = 0; i < ui->past_request_list->count(); ++i)
+        {
+            if(ui->past_request_list->item(i)->data(Qt::UserRole).toString()==del->property("ID")){
+                ui->past_request_list->takeItem(i);
+            }
+            //tell server to delete from save too ***
+
+        }
+    }else{
+        for(int i = 0; i < ui->new_request_list->count(); ++i)
+        {
+            if(ui->new_request_list->item(i)->data(Qt::UserRole).toString()==del->property("ID")){
+                ui->new_request_list->takeItem(i);
+            }
+
+        }
+    }
+}
+
 void MainWindow::display_request(QHash<QString,QString> request, int match){
     // somehow find the username from the given id parameter (this id here needs to carry other useful
     // info to be later displayed in the info page)
     QString user_ID=request["ID"];
+    qDebug()<<user_ID<<"!!!";
 
     QListWidgetItem *user = new QListWidgetItem;
     user->setData(Qt::UserRole,user_ID);
     QWidget * user_container = new QWidget;
     QPushButton * username = new QPushButton(this);
+    username->setProperty("ID",user_ID);
+    connect(username,&QPushButton::clicked,this,
+            std::bind(&MainWindow::display_friend_profile, this,  username->property("ID").toString()));
+
+
     username->setStyleSheet("QPushButton{color: rgb(80, 103, 156);"
                             "padding-left:15px;"
                             "background-color:rgba(0,0,0,0);}"
                             "QPushButton:hover{color:white;}");
     QFont name("Poppins", 13);
     QFont butt("Poppins",10);
-//    name.setBold(true);
+    //name.setBold(true);
     username->setFont(name);
-
-    // change this stupid line pls, tbh it's just for testing purposes
     username->setText(request["username"]);
 
     QPushButton * add = new QPushButton("Add");
-    QPushButton * del = new QPushButton("Delete");
+    add->setProperty("ID",user_ID);
+    //add->setProperty("username",request["username"]);
+    connect(add,&QPushButton::clicked,this,
+            std::bind(&MainWindow::add_friend, this, add));
 
-    //connect(username,SIGNAL(clicked()),SLOT(display_new_friend_profile()));
-    connect(username,&QPushButton::clicked,this,
-            std::bind(&MainWindow::display_new_friend_profile, this,  username->text()));
+    QPushButton * del = new QPushButton("Delete");
+    del->setProperty("ID",user_ID);
+    //del->setProperty("username",request["username"]);
+    connect(del,&QPushButton::clicked,this,
+            std::bind(&MainWindow::delete_friend, this, del));
 
     del->setMinimumSize(50,24);
     del->setFont(butt);
@@ -350,6 +394,7 @@ void MainWindow::display_request(QHash<QString,QString> request, int match){
 void MainWindow::requestsReceived(QVector<QHash<QString,QString>> requests, int match){
     ui->new_request_list->clear();
     ui->past_request_list->clear();
+    //could sort here by time ***
     for(const QHash<QString,QString>& request:requests){
         display_request(request, match);
     }
@@ -911,7 +956,7 @@ void MainWindow::on_changeprofilepic_clicked()
     pixmap_to_change.save("new_profile");
 }
 
-void MainWindow::on_pushButton_2_clicked()
+void MainWindow::on_profile_back_clicked()
 {   if(ui->user_list->findItems(ui->friend_name->text(),Qt::MatchExactly).count()!=0){
        ui->stackedWidget->setCurrentWidget(ui->chat);
     }else{

@@ -20,11 +20,8 @@ private:
     QHash<QString,QString> registered_emails;
     QVector<QString> active_users;
 
-    QHash<QString,QVector<QHash<QString,QString>>> friend_requests;
-
     QString new_ID();
     void remove_user(const QString &ID);
-    void make_friend(const QString &ID1,const QString &ID2);
 
 signals:
 
@@ -40,6 +37,8 @@ private slots:
     void messageReceived(ServerSocket* client, QHash<QString,QString> &message);
 
     void getRequests(ServerSocket* client);
+    void sendRequest(ServerSocket *client, const QString &receiver_ID);
+    void makeFriend(ServerSocket *client, const QString &ID2);
 };
 
 #endif // SERVER_H

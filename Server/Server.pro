@@ -23,4 +23,5 @@ HEADERS += \
     serversocket.h
 
 DISTFILES += \
-    all_users.json
+    all_users.json \
+    friend_requests.json

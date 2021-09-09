@@ -26,6 +26,23 @@ ServerSocket::~ServerSocket(){
     delete socket;
 }
 
+void ServerSocket::newFriend(const QString& ID, bool acceptor, QHash<QString,QHash<QString,QString>> &all_users){
+    QDataStream clientStream(socket);
+    clientStream.setVersion(QDataStream::Qt_5_7);
+
+    QJsonObject friendInfo;
+    friendInfo[QStringLiteral("type")] = QStringLiteral("new friend");
+    friendInfo[QStringLiteral("acceptor")] = acceptor ? "1" : "0";;
+    QJsonObject friendprofile;
+    for(const QString& key: all_users[ID].keys()) {
+        if(key!="password"){
+            friendprofile[key]=all_users[ID][key];
+        }
+    }
+    friendInfo.insert(ID,friendprofile);
+    clientStream << QJsonDocument(friendInfo).toJson();
+}
+
 void ServerSocket::returnRequests(QVector<QHash<QString,QString>> requests,
                                   QHash<QString,QHash<QString,QString>> &all_users, int match){
     QDataStream clientStream(socket);
@@ -213,6 +230,11 @@ void ServerSocket::jsonReceived(const QJsonObject &data)
     //matching
     }else if (typeVal.toString().compare(QLatin1String("get requests"))==0) {
         emit getRequests();
+    }else if (typeVal.toString().compare(QLatin1String("send request"))==0) {
+        emit sendRequest(data.value("ID").toString());
+    }else if (typeVal.toString().compare(QLatin1String("accept request"))==0) {
+        emit makeFriend(data.value("ID").toString());
+
     //signout
     }else if (typeVal.toString().compare(QLatin1String("signout"))==0) {
         emit signout(ID);

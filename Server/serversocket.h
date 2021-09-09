@@ -26,6 +26,8 @@ public:
 
     void returnRequests(QVector<QHash<QString,QString>> matches,
                         QHash<QString,QHash<QString,QString>> &all_users, int match);
+    void newFriend(const QString& ID, bool acceptor, QHash<QString,QHash<QString,QString>> &all_users);
+
 private:
     QTcpSocket *socket;
     void jsonReceived(const QJsonObject &data);
@@ -45,6 +47,8 @@ signals:
 
     //matching
     void getRequests();
+    void sendRequest(const QString &ID);
+    void makeFriend(const QString &ID);
 
 public slots:
 

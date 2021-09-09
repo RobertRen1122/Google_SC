@@ -19,6 +19,9 @@ public:
     QHash<QString,QVector<QHash<QString,QString>>> friend_messages;
     QHash<QString,QHash<QString,QString>> friend_profiles;
 
+    void sendRequest(const QString &ID);
+    void acceptRequest(const QString &ID);
+
 private:
     QTcpSocket* socket;
     void jsonReceived(const QJsonObject &data);
@@ -36,6 +39,7 @@ signals:
     void messageReceived(QHash<QString,QString> &message);
     //requests
     void requestsReceived(QVector<QHash<QString,QString>> requests, int match);
+    void getWelcomeMessage(const QString &ID);
 
 public slots:
     void attemptLogin(const QString &username,const QString &password);
