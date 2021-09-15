@@ -396,8 +396,11 @@ void MainWindow::display_request(QHash<QString,QString> request, int match){
 
 void MainWindow::requestsReceived(QVector<QHash<QString,QString>> requests, int match){
     // donno why there exist the following two lines but this is where the bugs coming from
-//    ui->new_request_list->clear();
-//    ui->past_request_list->clear();
+    if (match==1){
+        ui->new_request_list->clear();
+    }else{
+        ui->past_request_list->clear();
+    }
     //could sort here by time ***
     for(const QHash<QString,QString>& request:requests){
         display_request(request, match);

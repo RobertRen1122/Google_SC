@@ -1714,7 +1714,6 @@ public:
         horizontalLayout_18 = new QHBoxLayout(past_request);
         horizontalLayout_18->setObjectName(QString::fromUtf8("horizontalLayout_18"));
         past_request_list = new QListWidget(past_request);
-        new QListWidgetItem(past_request_list);
         past_request_list->setObjectName(QString::fromUtf8("past_request_list"));
         past_request_list->setFocusPolicy(Qt::NoFocus);
         past_request_list->setStyleSheet(QString::fromUtf8("\n"
@@ -2022,7 +2021,7 @@ public:
         profile_info_scroll_Area->setAlignment(Qt::AlignCenter);
         info_content = new QWidget();
         info_content->setObjectName(QString::fromUtf8("info_content"));
-        info_content->setGeometry(QRect(0, 0, 87, 48));
+        info_content->setGeometry(QRect(0, 0, 51, 48));
         verticalLayout_45 = new QVBoxLayout(info_content);
         verticalLayout_45->setObjectName(QString::fromUtf8("verticalLayout_45"));
         info_block = new QWidget(info_content);
@@ -2524,13 +2523,6 @@ public:
 "</style></head><body style=\" font-family:'Poppins'; font-size:12pt; font-weight:400; font-style:normal;\">\n"
 "<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><br /></p></body></html>", nullptr));
         send->setText(QCoreApplication::translate("MainWindow", "Send", nullptr));
-
-        const bool __sortingEnabled = past_request_list->isSortingEnabled();
-        past_request_list->setSortingEnabled(false);
-        QListWidgetItem *___qlistwidgetitem = past_request_list->item(0);
-        ___qlistwidgetitem->setText(QCoreApplication::translate("MainWindow", "Iron Anna", nullptr));
-        past_request_list->setSortingEnabled(__sortingEnabled);
-
         matching_tab->setTabText(matching_tab->indexOf(past_request), QCoreApplication::translate("MainWindow", "Past Request", nullptr));
         matching_tab->setTabText(matching_tab->indexOf(new_matches), QCoreApplication::translate("MainWindow", "New Matches", nullptr));
         profile_back->setText(QString());
