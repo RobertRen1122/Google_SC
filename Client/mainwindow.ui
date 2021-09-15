@@ -2548,11 +2548,6 @@ background-color: none;
     }
 </string>
                    </property>
-                   <item>
-                    <property name="text">
-                     <string>Iron Anna</string>
-                    </property>
-                   </item>
                   </widget>
                  </item>
                 </layout>
@@ -2869,7 +2864,7 @@ background-color: none;
                           <rect>
                            <x>0</x>
                            <y>0</y>
-                           <width>87</width>
+                           <width>51</width>
                            <height>48</height>
                           </rect>
                          </property>
