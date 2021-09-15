@@ -640,7 +640,7 @@ background-color: none;
 }</string>
            </property>
            <property name="currentIndex">
-            <number>0</number>
+            <number>2</number>
            </property>
            <widget class="QWidget" name="Profile">
             <property name="styleSheet">
@@ -2548,6 +2548,11 @@ background-color: none;
     }
 </string>
                    </property>
+                   <item>
+                    <property name="text">
+                     <string>Iron Anna</string>
+                    </property>
+                   </item>
                   </widget>
                  </item>
                 </layout>
@@ -2864,8 +2869,8 @@ background-color: none;
                           <rect>
                            <x>0</x>
                            <y>0</y>
-                           <width>634</width>
-                           <height>788</height>
+                           <width>87</width>
+                           <height>48</height>
                           </rect>
                          </property>
                          <layout class="QVBoxLayout" name="verticalLayout_45">
@@ -2958,8 +2963,8 @@ background-color: none;
                                  <rect>
                                   <x>0</x>
                                   <y>0</y>
-                                  <width>476</width>
-                                  <height>752</height>
+                                  <width>318</width>
+                                  <height>745</height>
                                  </rect>
                                 </property>
                                 <layout class="QVBoxLayout" name="verticalLayout_37">

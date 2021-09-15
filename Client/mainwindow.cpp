@@ -315,6 +315,7 @@ void MainWindow::display_request(QHash<QString,QString> request, int match){
     QString user_ID=request["ID"];
     qDebug()<<user_ID<<"!!!";
 
+    // create a new listwidget item(not including styling)
     QListWidgetItem *user = new QListWidgetItem;
     user->setData(Qt::UserRole,user_ID);
     QWidget * user_container = new QWidget;
@@ -382,6 +383,8 @@ void MainWindow::display_request(QHash<QString,QString> request, int match){
     layout->addStretch(0);
     layout->addWidget(add);
     layout->addWidget(del);
+//    qDebug()<<"hello";
+
     if (match==0){
         ui->past_request_list->addItem(user);
         ui->past_request_list->setItemWidget(user,user_container);
@@ -392,8 +395,9 @@ void MainWindow::display_request(QHash<QString,QString> request, int match){
 }
 
 void MainWindow::requestsReceived(QVector<QHash<QString,QString>> requests, int match){
-    ui->new_request_list->clear();
-    ui->past_request_list->clear();
+    // donno why there exist the following two lines but this is where the bugs coming from
+//    ui->new_request_list->clear();
+//    ui->past_request_list->clear();
     //could sort here by time ***
     for(const QHash<QString,QString>& request:requests){
         display_request(request, match);
@@ -407,11 +411,6 @@ void MainWindow::on_new_conversation_clicked()
 
     // send message to server
     client->getRequests();
-}
-
-void MainWindow::on_tabWidget_currentChanged(int index)
-{
-    //display_new_request("yuanbao");
 }
 
 void MainWindow::display_message(QHash<QString,QString> message){

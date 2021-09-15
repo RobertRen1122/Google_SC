@@ -91,7 +91,7 @@ private slots:
     void transalte_msg();
     void debug_msg();
     void on_quote_close_butt_clicked();
-    void on_tabWidget_currentChanged(int index);
+//    void on_tabWidget_currentChanged(int index);
 };
 
 
