@@ -39,8 +39,8 @@ Server::Server(QObject *parent) :
         registered_emails.insert(user["email"],ID);
     }
 
-    //manually add friends or remove users here
-    //make_friend(registered_usernames["robert"],registered_usernames["serena"]);
+    //remove_user(registered_usernames["cathy"]);
+
 }
 
 Server::~Server(){
@@ -68,6 +68,60 @@ QString Server::new_ID(){
         return new_ID();
     }
     return "error";
+}
+
+void Server::getRequests(ServerSocket* client){
+    //get current friends
+    QDir dir("../Server/messages/"+client->ID);
+    QStringList files = dir.entryList(QStringList() << "*.json", QDir::Files);
+    QSet<QString> friend_IDs;
+    for(const QString& friend_ID: files){
+        friend_IDs.insert(friend_ID.split('.')[0]);
+    }
+
+    //get matches
+    QVector<QHash<QString,QString>> matches;
+    //currently returns all users, change later *** dont give already requested people!
+    for(const QString& key: all_users.keys()){
+        if (key!=client->ID && friend_IDs.contains(key)==0){
+            QHash<QString,QString> match;
+            match["ID"]=key;
+            match["username"]=all_users[key]["username"];
+            matches.push_back(match);
+        }
+    }
+    client->returnRequests(matches, all_users, 1);
+
+    //get existing requests
+    QFile file("../Server/friend_requests.json");
+    file.open(QIODevice::ReadOnly | QIODevice::Text);
+    QJsonDocument data = QJsonDocument::fromJson(file.readAll());
+    file.close();
+    QJsonObject all_requests = data.object();
+    QJsonObject incoming_requests = all_requests.value(client->ID).toObject();
+    QVector<QHash<QString,QString>> requests;
+    for(const QString& key: incoming_requests.keys()){
+        //clear invalid (user donesn't exist) requests ***
+        //if key not in all users
+        //  remove key from incoming_requests
+        //  continue
+        //clear expired (need server time and add time to requests) ***
+        //if expired
+        //  countinue
+
+        QHash<QString,QString> request;
+        request["ID"]=key;
+        request["username"]=incoming_requests.value(key).toObject().value("username").toString();
+        //request["time"]=incoming_requests.value(key).toObject().value("time").toString();
+        requests.push_back(request);
+    }
+    client->returnRequests(requests, all_users, 0);
+    //save back to local
+    all_requests.insert(client->ID,incoming_requests);
+    data.setObject(all_requests);
+    file.open(QFile::WriteOnly | QFile::Text | QFile::Truncate);
+    file.write(data.toJson());
+    file.close();
 }
 
 void Server::messageReceived(ServerSocket* client, QHash<QString,QString> &message){
@@ -139,12 +193,36 @@ void Server::remove_user(const QString &ID){
     dir.removeRecursively();
 }
 
-void Server::make_friend(const QString &ID1,const QString &ID2){
+void Server::sendRequest(ServerSocket *client, const QString &receiver_ID){
+    //save request to local
+    QFile file("../Server/friend_requests.json");
+    file.open(QIODevice::ReadOnly | QIODevice::Text);
+    QJsonDocument data = QJsonDocument::fromJson(file.readAll());
+    file.close();
+    QJsonObject requests = data.object();
+    QJsonObject specific = requests.value(receiver_ID).toObject();
+    QJsonObject request;
+    request.insert("username",all_users[client->ID]["username"]);
+    //request.insert("time", <some server time>) ***
+    specific.insert(client->ID,request);
+    requests.insert(receiver_ID,specific);
+    data.setObject(requests);
+    file.open(QFile::WriteOnly | QFile::Text | QFile::Truncate);
+    file.write(data.toJson());
+    file.close();
+}
+
+
+void Server::makeFriend(ServerSocket *client, const QString &ID2){
+    QString ID1=client->ID;
+
+    //check if user exists***
+
+    //save on server side
     //create message json file for ID1
     QFile file("../Server/messages/"+ID1+"/"+ID2+".json");
     file.open(QFile::WriteOnly | QFile::Text | QFile::Truncate);
     QJsonArray jsonArray;
-
     QJsonDocument jsonDoc;
     jsonDoc.setArray(jsonArray);
     file.write(jsonDoc.toJson());
@@ -153,11 +231,53 @@ void Server::make_friend(const QString &ID1,const QString &ID2){
     QFile file2("../Server/messages/"+ID2+"/"+ID1+".json");
     file2.open(QFile::WriteOnly | QFile::Text | QFile::Truncate);
     QJsonArray jsonArray2;
-
     QJsonDocument jsonDoc2;
     jsonDoc2.setArray(jsonArray2);
     file2.write(jsonDoc2.toJson());
     file2.close();
+
+    //notify clients
+    //receiver
+    if (active_users.contains(ID2)){
+        for (ServerSocket* receiving_client:clients){
+            if (receiving_client->ID==ID2){
+                receiving_client->newFriend(ID1, false, all_users);
+            }
+        }
+    }
+    //sender
+    client->newFriend(ID2, true, all_users);
+
+    //remove request from local
+    QFile file3("../Server/friend_requests.json");
+    file3.open(QIODevice::ReadOnly | QIODevice::Text);
+    QJsonDocument data = QJsonDocument::fromJson(file3.readAll());
+    file3.close();
+    QJsonObject requests = data.object();
+    QJsonObject specific = requests.value(ID1).toObject();
+    specific.remove(ID2);
+    requests[ID1]=specific;
+    data.setObject(requests);
+    file3.open(QFile::WriteOnly | QFile::Text | QFile::Truncate);
+    file3.write(data.toJson());
+    file3.close();
+}
+
+void Server::deleteRequest(ServerSocket *client, const QString &ID2){
+    //remove request from local
+    QString ID1=client->ID;
+    QFile file3("../Server/friend_requests.json");
+    file3.open(QIODevice::ReadOnly | QIODevice::Text);
+    QJsonDocument data = QJsonDocument::fromJson(file3.readAll());
+    file3.close();
+    QJsonObject requests = data.object();
+    QJsonObject specific = requests.value(ID1).toObject();
+    specific.remove(ID2);
+    requests[ID1]=specific;
+    data.setObject(requests);
+    file3.open(QFile::WriteOnly | QFile::Text | QFile::Truncate);
+    file3.write(data.toJson());
+    file3.close();
 }
 
 void Server::attemptSignup(ServerSocket *client,const QString &email,const QString &username,const QString &password){
@@ -290,6 +410,9 @@ void Server::changeProfile(ServerSocket* client, QHash<QString,QString> profile)
     file.open(QFile::WriteOnly | QFile::Text | QFile::Truncate);
     file.write(data.toJson());
     file.close();
+
+    //update active friends ***
+
 }
 
 void Server::newConnection(){
@@ -306,6 +429,15 @@ void Server::newConnection(){
     connect(client, &ServerSocket::signout, this, &Server::signout);
     connect(client, &ServerSocket::messageReceived, this,
             std::bind(&Server::messageReceived, this, client, std::placeholders::_1));
+    connect(client, &ServerSocket::getRequests, this,
+            std::bind(&Server::getRequests, this, client));
+
+    connect(client, &ServerSocket::sendRequest, this,
+            std::bind(&Server::sendRequest, this, client, std::placeholders::_1));
+    connect(client, &ServerSocket::makeFriend, this,
+            std::bind(&Server::makeFriend, this, client, std::placeholders::_1));
+    connect(client, &ServerSocket::deleteRequest, this,
+            std::bind(&Server::deleteRequest, this, client, std::placeholders::_1));
 
     clients.append(client);
     qDebug() << "New client Connected";

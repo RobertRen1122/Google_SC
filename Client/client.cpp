@@ -12,7 +12,6 @@ Client::Client(QObject *parent):
     QObject(parent),
     socket(new QTcpSocket(this))
 {
-    ID="";
     //connect to signals
     connect(socket, &QTcpSocket::connected, this, &Client::connected);
     connect(socket, &QAbstractSocket::errorOccurred, this,  &Client::serverError);
@@ -84,6 +83,7 @@ void Client::jsonReceived(const QJsonObject &data)
                 friend_messages[key]=messages;
             }
         }
+        emit informationReceived();
     }else if(typeVal.toString().compare(QLatin1String("friend information"))==0) {
         for(const QString& key: data.keys()){
             if(key!="type"){
@@ -95,8 +95,6 @@ void Client::jsonReceived(const QJsonObject &data)
                 friend_profiles[key]=friend_profile;
             }
         }
-        emit informationReceived();
-
     }else if(typeVal.toString().compare(QLatin1String("message received"))==0) {
         QHash<QString,QString> message;
         for(const QString& key: data.keys()){
@@ -106,10 +104,80 @@ void Client::jsonReceived(const QJsonObject &data)
         }
         friend_messages[message["sender"]].push_back(message);
         emit messageReceived(message);
+
+    //received requests
+    }else if(typeVal.toString().compare(QLatin1String("requests"))==0) {
+        QJsonArray messages_json = data["requests"].toArray();
+        QVector<QHash<QString,QString>> found_matches;
+        for(const QJsonValue& msg: messages_json){
+            QJsonObject message_json = msg.toObject();
+            QHash<QString,QString> message;
+            for(const QString& key2: message_json.keys()){
+                message[key2]=message_json[key2].toString();
+            }
+            found_matches.push_back(message);
+        }
+        if (data["match"].toString()=="yes"){
+            emit requestsReceived(found_matches, 1);
+        }else{
+            emit requestsReceived(found_matches, 0);
+        }
+    }else if(typeVal.toString().compare(QLatin1String("new friend"))==0) {
+        for(const QString& key: data.keys()){
+            if(key!="type" and key!="acceptor"){
+                QJsonObject friend_profile_json = data[key].toObject();
+                QHash<QString,QString> friend_profile;
+                for(const QString& key2: friend_profile_json.keys()){
+                    friend_profile[key2]=friend_profile_json[key2].toString();
+                }
+                friend_profiles[key]=friend_profile;
+
+                QVector<QHash<QString,QString>> messages;
+                friend_messages[key]=messages;
+
+                if (data["acceptor"].toString()=="1"){
+                   emit getWelcomeMessage(key);
+                }
+
+                emit newFriend();
+            }
+        }
     }
 }
 
 // ------------------------------ message to server ------------------------------
+void Client::deleteRequest(const QString &ID){
+    QDataStream clientStream(socket);
+    clientStream.setVersion(QDataStream::Qt_5_7);
+    QJsonObject message;
+    message[QStringLiteral("type")] = QStringLiteral("delete request");
+    message[QStringLiteral("ID")] = ID;
+    clientStream << QJsonDocument(message).toJson();
+}
+void Client::sendRequest(const QString &ID){
+    QDataStream clientStream(socket);
+    clientStream.setVersion(QDataStream::Qt_5_7);
+    QJsonObject message;
+    message[QStringLiteral("type")] = QStringLiteral("send request");
+    message[QStringLiteral("ID")] = ID;
+    clientStream << QJsonDocument(message).toJson();
+}
+void Client::acceptRequest(const QString &ID){
+    QDataStream clientStream(socket);
+    clientStream.setVersion(QDataStream::Qt_5_7);
+    QJsonObject message;
+    message[QStringLiteral("type")] = QStringLiteral("accept request");
+    message[QStringLiteral("ID")] = ID;
+    clientStream << QJsonDocument(message).toJson();
+}
+void Client::getRequests(){
+    QDataStream clientStream(socket);
+    clientStream.setVersion(QDataStream::Qt_5_7);
+    QJsonObject message;
+    message[QStringLiteral("type")] = QStringLiteral("get requests");
+    clientStream << QJsonDocument(message).toJson();
+}
+
 void Client::sendMessage(QHash<QString,QString> &message_sent){
     QDataStream clientStream(socket);
     clientStream.setVersion(QDataStream::Qt_5_7);
@@ -158,12 +226,17 @@ void Client::attemptSignup(const QString &email,const QString &username,const QS
 }
 
 void Client::signout(){
+    //initialize variables
+    ID="";
+    profile=QHash<QString,QString>();
+    friend_messages=QHash<QString,QVector<QHash<QString,QString>>>();
+    friend_profiles=QHash<QString,QHash<QString,QString>>();
+
+    // notify server
     QDataStream clientStream(socket);
     clientStream.setVersion(QDataStream::Qt_5_7);
-    // Create the JSON we want to send
     QJsonObject message;
     message[QStringLiteral("type")] = QStringLiteral("signout");
-    // send the JSON using QDataStream
     clientStream << QJsonDocument(message).toJson();
 }
 

@@ -69,7 +69,7 @@ border-radius: 20px;
           </spacer>
          </item>
          <item>
-          <widget class="QLabel" name="label_2">
+          <widget class="QLabel" name="title_label">
            <property name="text">
             <string>Hi, there.</string>
            </property>
@@ -1768,7 +1768,7 @@ color: white;
                  <widget class="QWidget" name="chat_entrance" native="true">
                   <layout class="QVBoxLayout" name="verticalLayout_21" stretch="1,23,0,2">
                    <item>
-                    <widget class="QWidget" name="title_container_2" native="true">
+                    <widget class="QWidget" name="title_container_chat" native="true">
                      <layout class="QVBoxLayout" name="verticalLayout_22">
                       <item>
                        <widget class="QWidget" name="widget_8" native="true">
@@ -1851,7 +1851,7 @@ QPushButton#info_butt:hover{
                        </widget>
                       </item>
                       <item>
-                       <widget class="Line" name="line_2">
+                       <widget class="Line" name="title_line">
                         <property name="styleSheet">
                          <string notr="true">color:white;</string>
                         </property>
@@ -1888,7 +1888,7 @@ QPushButton#info_butt:hover{
                        <number>0</number>
                       </property>
                       <item>
-                       <widget class="QWidget" name="widget_10" native="true">
+                       <widget class="QWidget" name="chatspace" native="true">
                         <property name="sizePolicy">
                          <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
                           <horstretch>0</horstretch>
@@ -1979,8 +1979,8 @@ background-color: none;
                              <rect>
                               <x>0</x>
                               <y>0</y>
-                              <width>68</width>
-                              <height>16</height>
+                              <width>616</width>
+                              <height>637</height>
                              </rect>
                             </property>
                             <layout class="QVBoxLayout" name="layout_scroll" stretch="0">
@@ -2338,10 +2338,9 @@ color: #707070;
                     </widget>
                    </item>
                    <item>
-                    <widget class="QWidget" name="widget_6" native="true">
+                    <widget class="QWidget" name="send_bar" native="true">
                      <property name="styleSheet">
-                      <string notr="true">
-background-color: rgb(236, 245, 254);
+                      <string notr="true">background-color: rgb(236, 245, 254);
 border-radius: 15px;
 color: #647FC2;
 </string>
@@ -2383,7 +2382,7 @@ p, li { white-space: pre-wrap; }
                        </widget>
                       </item>
                       <item>
-                       <widget class="QPushButton" name="pushButton">
+                       <widget class="QPushButton" name="send">
                         <property name="font">
                          <font>
                           <family>Poppins</family>
@@ -2394,8 +2393,7 @@ p, li { white-space: pre-wrap; }
                          <bool>false</bool>
                         </property>
                         <property name="styleSheet">
-                         <string notr="true">
-QPushButton{
+                         <string notr="true">QPushButton{
 background-color: rgb(255, 255, 255);
 padding:10px;}
 
@@ -2422,7 +2420,7 @@ border: 1.5px solid rgba(100, 127, 194, 255);
            <widget class="QWidget" name="matching">
             <layout class="QHBoxLayout" name="horizontalLayout_17">
              <item>
-              <widget class="QTabWidget" name="tabWidget">
+              <widget class="QTabWidget" name="matching_tab">
                <property name="font">
                 <font>
                  <family>Poppins</family>
@@ -2466,7 +2464,7 @@ padding: 15px;
                 <enum>QTabWidget::Rounded</enum>
                </property>
                <property name="currentIndex">
-                <number>1</number>
+                <number>0</number>
                </property>
                <widget class="QWidget" name="past_request">
                 <attribute name="title">
@@ -2663,13 +2661,13 @@ background-color: none;
               <widget class="QWidget" name="info_frame" native="true">
                <layout class="QVBoxLayout" name="verticalLayout_34" stretch="1,23">
                 <item>
-                 <widget class="QWidget" name="title_container_3" native="true">
+                 <widget class="QWidget" name="profile_top_container" native="true">
                   <layout class="QVBoxLayout" name="verticalLayout_35">
                    <property name="bottomMargin">
                     <number>0</number>
                    </property>
                    <item>
-                    <widget class="QWidget" name="widget_9" native="true">
+                    <widget class="QWidget" name="profile_topbar" native="true">
                      <property name="autoFillBackground">
                       <bool>false</bool>
                      </property>
@@ -2681,7 +2679,7 @@ background-color: none;
                        <number>0</number>
                       </property>
                       <item>
-                       <widget class="QPushButton" name="pushButton_2">
+                       <widget class="QPushButton" name="profile_back">
                         <property name="minimumSize">
                          <size>
                           <width>26</width>
@@ -2738,7 +2736,7 @@ color: rgb(255, 255, 255);
                     </widget>
                    </item>
                    <item>
-                    <widget class="Line" name="line_4">
+                    <widget class="Line" name="profile_top_line">
                      <property name="styleSheet">
                       <string notr="true">color:white;</string>
                      </property>
@@ -2872,7 +2870,7 @@ background-color: none;
                          </property>
                          <layout class="QVBoxLayout" name="verticalLayout_45">
                           <item>
-                           <widget class="QWidget" name="widget_14" native="true">
+                           <widget class="QWidget" name="info_block" native="true">
                             <property name="sizePolicy">
                              <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
                               <horstretch>0</horstretch>
@@ -2966,7 +2964,7 @@ background-color: none;
                                 </property>
                                 <layout class="QVBoxLayout" name="verticalLayout_37">
                                  <item>
-                                  <widget class="QWidget" name="intro_3" native="true">
+                                  <widget class="QWidget" name="intro_block" native="true">
                                    <property name="sizePolicy">
                                     <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
                                      <horstretch>0</horstretch>
@@ -2980,11 +2978,7 @@ background-color: none;
                                     </size>
                                    </property>
                                    <property name="styleSheet">
-                                    <string notr="true">QWidget#intro
-{
-background-color: qlineargradient(spread:pad, x1:1, y1:0, x2:1, y2:1, stop:0 rgba(100, 127, 194, 255), stop:1 rgba(123, 149, 216, 87));
-border-radius: 20px
-}</string>
+                                    <string notr="true"/>
                                    </property>
                                    <layout class="QVBoxLayout" name="verticalLayout_39">
                                     <property name="spacing">
@@ -3003,7 +2997,7 @@ border-radius: 20px
                                      <number>0</number>
                                     </property>
                                     <item alignment="Qt::AlignHCenter">
-                                     <widget class="QLabel" name="label">
+                                     <widget class="QLabel" name="profile_pic_friend">
                                       <property name="sizePolicy">
                                        <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
                                         <horstretch>0</horstretch>
@@ -3037,7 +3031,7 @@ border-radius: 20px
                                      </widget>
                                     </item>
                                     <item>
-                                     <widget class="QLabel" name="intro_ti_3">
+                                     <widget class="QLabel" name="intro_title">
                                       <property name="font">
                                        <font>
                                         <family>Poppins</family>
@@ -3048,10 +3042,10 @@ border-radius: 20px
                                        </font>
                                       </property>
                                       <property name="styleSheet">
-                                       <string notr="true">QLabel#intro_ti_3{
+                                       <string notr="true">QLabel#intro_title{
 background-color: none;
 font: bold 14pt &quot;Poppins&quot;;
-color: rgba(100, 127, 194, 255);
+color: rgb(100, 127, 194);
 border-top:1px solid rgba(101, 128, 195, 120);
 margin-top:15px;
 }</string>
@@ -3068,7 +3062,7 @@ margin-top:15px;
                                      </widget>
                                     </item>
                                     <item>
-                                     <widget class="QTextEdit" name="textEdit_3">
+                                     <widget class="QTextEdit" name="intro_content">
                                       <property name="styleSheet">
                                        <string notr="true">QTextEdit{
 background-color:rgba(255, 255, 255, 0);
@@ -3136,7 +3130,7 @@ QScrollArea {
                                   </widget>
                                  </item>
                                  <item>
-                                  <widget class="QLabel" name="perferred_pro_info">
+                                  <widget class="QLabel" name="perferred_pro_des">
                                    <property name="font">
                                     <font>
                                      <family>Poppins</family>
@@ -3147,7 +3141,7 @@ QScrollArea {
                                     </font>
                                    </property>
                                    <property name="styleSheet">
-                                    <string notr="true">QLabel#perferred_pro_info{
+                                    <string notr="true">QLabel#perferred_pro_des{
 background-color: none;
 font: bold 9pt &quot;Poppins&quot;;
 color: rgba(100, 127, 194, 255);
@@ -3190,7 +3184,7 @@ font: 12pt &quot;Poppins&quot;;
                                   </widget>
                                  </item>
                                  <item>
-                                  <widget class="QLabel" name="language_1st_til_3">
+                                  <widget class="QLabel" name="lan_1st_des">
                                    <property name="styleSheet">
                                     <string notr="true">QLabel{
 background-color: none;
@@ -3204,7 +3198,7 @@ color: rgba(100, 127, 194, 255);
                                   </widget>
                                  </item>
                                  <item>
-                                  <widget class="QLabel" name="pronoun_content_2">
+                                  <widget class="QLabel" name="lan_1st_label">
                                    <property name="sizePolicy">
                                     <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
                                      <horstretch>0</horstretch>
@@ -3235,7 +3229,7 @@ font: 12pt &quot;Poppins&quot;;
                                   </widget>
                                  </item>
                                  <item>
-                                  <widget class="QLabel" name="language_1st_til_4">
+                                  <widget class="QLabel" name="lan_2nd_des">
                                    <property name="styleSheet">
                                     <string notr="true">QLabel{
 background-color: none;
@@ -3249,7 +3243,7 @@ color: rgba(100, 127, 194, 255);
                                   </widget>
                                  </item>
                                  <item>
-                                  <widget class="QLabel" name="pronoun_content_3">
+                                  <widget class="QLabel" name="lan_2nd_label">
                                    <property name="sizePolicy">
                                     <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
                                      <horstretch>0</horstretch>
@@ -3280,7 +3274,7 @@ font: 12pt &quot;Poppins&quot;;
                                   </widget>
                                  </item>
                                  <item>
-                                  <widget class="QLabel" name="language_1st_til_5">
+                                  <widget class="QLabel" name="lan_3rd_des">
                                    <property name="styleSheet">
                                     <string notr="true">QLabel{
 background-color: none;
@@ -3294,7 +3288,7 @@ color: rgba(100, 127, 194, 255);
                                   </widget>
                                  </item>
                                  <item>
-                                  <widget class="QLabel" name="pronoun_content_4">
+                                  <widget class="QLabel" name="lan_3rd_label">
                                    <property name="sizePolicy">
                                     <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
                                      <horstretch>0</horstretch>
@@ -3382,7 +3376,7 @@ border-radius: 30px;
              <number>15</number>
             </property>
             <item>
-             <widget class="QWidget" name="widget_7" native="true">
+             <widget class="QWidget" name="side_bar_search_block" native="true">
               <property name="sizePolicy">
                <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
                 <horstretch>0</horstretch>
@@ -3493,7 +3487,7 @@ border-radius: 30px;
                 <number>20</number>
                </property>
                <item>
-                <widget class="QLabel" name="label_3">
+                <widget class="QLabel" name="sidebar_space">
                  <property name="text">
                   <string>All dictionary content will be displayed here. Details to be decided. </string>
                  </property>
